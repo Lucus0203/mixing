@@ -7,7 +7,7 @@ if(empty($httpsflag)){
 }else{
 	$urlprefix="http://";
 }
-define('APP_SITE', 'http://v2.mixing.win/');
+define('APP_SITE', 'http://v2.xn--8su10a.com/');
 define('SITE',$urlprefix.$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'],0,strrpos ($_SERVER['PHP_SELF'],'/')+1));
 define('BAIDU_AK', 'ho6LXkYw6eWBzWFlPvcMpLhR');
 
