@@ -1,0 +1,352 @@
+@charset "utf-8";
+/*------------------------------------------------------------
+	default
+------------------------------------------------------------*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    outline: 0;
+}
+body, table, input, textarea, select, option {
+    font-family: "Microsoft YaHei", SimHei, sans-serif;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+:focus {
+    outline: 0;
+}
+img {
+    vertical-align: top;
+}
+li img, dt img {
+    display: block;
+    vertical-align: baseline;
+}
+a {
+    color: #fff;
+    text-decoration: none;
+}
+* html .clearfix {
+    zoom: 1;
+}
+*+html .clearfix {
+    zoom: 1;
+}
+.clearfix:after {
+    height: 0;
+    visibility: hidden;
+    content: ".";
+    display: block;
+    clear: both;
+}
+.floatL {
+    float: left !important;
+}
+.floatR {
+    float: right !important;
+}
+/*------------------------------------------------------------
+	style
+------------------------------------------------------------*/
+
+html {
+	width: 100%;
+	height: 100%;
+	overflow-x:hidden;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+    text-align: left;
+    color: #fff;
+    font-size: 22px;
+    line-height: 1.5;
+    background-color: #fff;
+}
+.section {
+    position: relative;
+	width: 100%;
+	height: 100%;
+}
+.content,.content2 {
+	position: absolute;
+	top: 50%;
+	width:cover;
+    margin-top:-76px;
+}
+.content1 {
+	position: absolute;
+	top: 120px;
+	width:100%;
+	text-align:center;
+    background: url(../img/h2bg_line.png) repeat-x left 17px;
+}
+.content1 h2{
+    width:310px;
+    margin:0 auto 60px;
+	color:#000;
+	text-align:center;
+    background-color: #fff;
+}
+.content1 h2 span{
+    margin:0 40px;
+}
+.content1 h2 img{
+    vertical-align:middle;
+}
+.content1 p {
+	color:#959595;
+	text-align:center;
+    font-size: 18px;
+}
+.banner{
+	position: absolute;
+	left:50%;
+	top:50%;
+	width:cover;
+	text-align:center;
+	margin-left:-335px;
+	margin-top:-63px;
+}
+.inner {
+    width: 100%;
+    min-width: 960px;
+    z-index: 100;
+}
+h2, h3 {
+    margin-bottom: 60px;
+    font-size: 44px;
+    font-weight: bold;
+}
+.qq {
+    position: fixed;
+    right: 0;
+    top: 100px;
+    z-index: 999;
+}
+/*---------------------------sideNavi---------------------------*/
+
+#sideNavi {
+    position: fixed;
+    right: 1.2%;
+    top: 50%;
+    margin-top: -57px;
+    height: 114px;
+    width: 13px;
+    z-index: 9000;
+}
+#sideNavi li {
+    padding: 3px 0;
+    width: 13px;
+    float: left;
+}
+#sideNavi li a {
+    text-indent: -9999px;
+    display: block;
+    height: 13px;
+    background: url(../img/icon_off.png) no-repeat left top;
+}
+#sideNavi .on a, #sideNavi li a:hover {
+    background: url(../img/icon_ono.png) no-repeat left top;
+}
+/*---------------------------header---------------------------*/
+
+#header {
+    position: absolute;
+    width: 100%;
+    min-width: 960px;
+    left: 0;
+    top: 0;
+    z-index: 150;
+}
+#header .hdBox {
+    margin: 0 auto;
+    text-align: left;
+}
+#header h1 {
+    float: left;
+}
+#header div.left {
+    float: left;
+    margin:20px 0 0 40px;
+}
+
+#header div.right {
+	margin-right:30px;
+	float: right;
+}
+
+#header div.right ul{
+	margin-top:30px;
+}
+
+#header div.right ul li{
+	float:left;
+	padding:0px 23px 5px;
+	margin-left:10px;
+}
+
+#header div.right ul li.on{
+	border:#5f6160 solid 2px;
+	border-radius:10px;
+}
+
+#header div.right ul li.li05{
+	margin:0 60px;
+	border:#f86f05 solid 2px;
+	border-radius:10px;
+}
+
+#header div.right a {
+	color: #fff;
+	font-size: 14px;
+    display: inline-block;
+    _display: inline;
+    zoom: 1;
+}
+
+#header div div a:hover {
+	color:#F63;
+}
+/* bg-color */
+/*---------------------------page01---------------------------*/
+#page01 {	
+	background-image:url(../img/qrcode_ios.png);
+	background-size:cover;
+}
+
+#page01 .content {
+    width:100%;
+}
+
+#page01 .xiazai{
+	position: absolute;
+	bottom:80px;
+	left:30px;
+}
+
+#page01 .textBox {
+    text-align:center;
+    font-weight: inherit;
+}
+#page01 .textBox h2 {
+    font-size: 40px;
+    font-weight:bold;
+}
+/* --------------------------------page02---------------------------------- */
+
+#page02 {
+	height: 1200px;
+	text-align:center;
+}
+#page02 .content1 .tu {
+	margin-top:50px;
+	text-align:center;
+}
+	
+/* ------------------------page03---------------------------*/
+#page03 {	
+	background-image:url(../img/page03.png);
+	background-size:cover;
+}
+#page03 .content2 {
+    margin-top: -76px;
+    width:100%;
+}
+#page03 .textBox {    
+    font-weight: inherit;
+    text-align: center;
+}
+#page03 .textBox h2{      
+    font-size: 40px;
+    font-weight: bold;
+}
+/* -----------------------page04-------------------- */
+#page04{
+    height:1018px;
+}
+/* page05 */
+
+#page05 {
+    height:1000px;
+}
+#page05 .content1 h2 span {
+    margin: 0 40px;
+}
+#page05 .downloadBox{
+    margin: 110px auto 0;
+    width:1120px;
+    text-align: center;
+}
+#page05 .iosBox{
+    float: left;
+    width:550px;
+}
+#page05 .iosBox .iosimg02{
+    margin:88px 0 50px 0;
+}
+#page05 .iosBox p{
+    margin-bottom: 20px;
+}
+#page05 .androidBox{
+    float:right;
+    width:550px;
+    border-left: #e1e1e1 solid 1px;
+}
+#page05 .androidBox .androidimg02{
+    margin:88px 0 84px 0;
+}
+#page05 .androidBox p{
+    color:#e1e1e1;
+}
+#page05 .androidBox .androidp2{
+    margin-top: 24px;
+    color: #959595;
+    font-size:24px;
+}
+/* page06 */
+
+#page06 {
+    height:500px;
+}
+#page06 .linkBox{
+    width: 1230px;
+    text-align: center;
+    margin:0 auto 100px;
+}
+#page06 ul li{
+    margin: 0 53px;
+    float: left;
+}
+/*---------------------------footer---------------------------*/
+
+#footer {
+    width: 100%;
+    background-color: #31373a;
+    position: fixed;
+    bottom: 0;
+}
+#footer .left{
+    float:left;
+}
+#footer .left a{
+    padding:10px 40px 10px;
+    display: block;
+}
+#footer .right{
+    float: right;
+}
+#footer .right p {
+    color: #dddddd;
+    font-size:12px;
+    line-height: 66px;
+    margin-right: 40px;
+}
