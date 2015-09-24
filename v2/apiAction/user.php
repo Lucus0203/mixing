@@ -307,6 +307,8 @@ function info(){
         $info['constellation']=  get_zodiac_sign(date("n",strtotime($data['birthday'])), date("j",strtotime($data['birthday'])));
 
 	$info['user_photos']=$db->getAll('user_photo',array('user_id'=>$user_id,'isdelete'=>0),array('id','path'));
+        $diarysql="select diary.id as diary_id,img.img,note,voice,voice_time,diary.created from ".DB_PREFIX."diary diary left join ".DB_PREFIX."diary_img img on diary.id=img.diary_id where isdel=2 and diary.user_id = $user_id order by diary.created desc limit 0,1 ";//isdel 1删除2正常
+	$info['lastDiary']=$db->getRowBySql($diarysql);
 	if(is_array($info)){
 		echo json_result($info);
 	}else{

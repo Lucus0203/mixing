@@ -267,7 +267,7 @@ function share(){
             return ;
         }
         $shop=$db->getRow('shop',array('id'=>$shopid));
-        $url=WEB_SITE.'shopDetail.html?s='.base64_decode($shopid);
+        $url=WEB_SITE.'shopDetail.html?s='.  base64_encode($shopid);
         $title=$shop['title'];
         $img=$shop['img'];
         $share=array('url'=>$url,'title'=>$title,'img'=>$img);

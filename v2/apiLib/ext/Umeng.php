@@ -21,8 +21,8 @@ require_once(dirname(__FILE__) . '/' . 'Umeng/ios/IOSCustomizedcast.php');
 define('Android_umeng_appkey', '');
 define('Android_umeng_master_secret', '');
 define('Android_umeng_message_secret', '');
-define('IOS_umeng_appkey','54f462edfd98c51d67000385');
-define('IOS_master_secret','dha9fagbclfyotmycmdzjef2p6j6qdqj');
+define('IOS_umeng_appkey','55e80ab167e58e0337006051');
+define('IOS_master_secret','gx4vv8lkewrsoytxke2us4mgwx0rj2xb');
 
 class Umeng {
 
