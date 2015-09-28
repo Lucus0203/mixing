@@ -47,6 +47,9 @@ switch ($act){
 	case 'huanxinBlocks'://环信黑名单
 		huanxinBlocks();
 		break;
+	case 'searchUsersByMobiles'://根据多个手机号码查找用户
+		searchUsersByMobiles();
+		break;
 	default:
 		break;
 }
@@ -406,6 +409,44 @@ function huanxinBlocks(){
 	$HuanxinObj=Huanxin::getInstance();
 	$huserObj=$HuanxinObj->getBlocks($login['mobile']);
 	print_r($huserObj);
+}
+
+//根据多个手机号查找用户
+function searchUsersByMobiles(){
+	global $db;
+	$mobile=filter($_REQUEST['users']);
+	$loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
+	$page_no = isset ( $_GET ['page'] ) ? $_GET ['page'] : 1;
+	$page_size = PAGE_SIZE;
+	$start = ($page_no - 1) * $page_size;
+	if(empty($loginid)){
+		echo json_result(null,'2','请重新登录');
+		return;
+	}
+	$data=array();
+	if(!empty($mobile)){
+		$mobiles=explode(',', $mobile);
+		$cons='';
+		foreach ($mobiles as $m){
+			if(!empty($m)){
+				$cons.="or mobile='$m' ";
+			}
+		}
+		if(!empty($cons)){
+			$cons=substr($cons, 2);
+		}else{
+			echo json_result(null,'3','没有匹配到手机号');
+			return;
+		}
+		
+		$sql="select u.id as user_id,u.head_photo,if((trim(ur1.relation_name)<>'' and ur1.relation_name is not null),ur1.relation_name,u.nick_name) as nick_name,u.user_name from ".DB_PREFIX."user u 
+			left join ".DB_PREFIX."user_relation ur1 on u.id=ur1.relation_id and ur1.user_id=$loginid	
+			where u.user_name is not null and u.id <> $loginid and ( $cons ) ";
+		$sql .= " limit $start,$page_size";
+		$data = $db->getAllBySql($sql);
+		$res['users']=$data;
+	}
+	echo json_result($res);
 }
 
 function getRelationStatus($myself_id,$user_id){

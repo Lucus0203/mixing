@@ -404,10 +404,10 @@ function updateOrderEncouter($order){
                                 //环信创建群组
                                 $HuanxinObj=Huanxin::getInstance();
                                 $huserObj=$HuanxinObj->createGroup($encouter['topic'],$encouter['topic'],$maxusers,$user['user_name']);
-                                        //addNewAppUser(strtolower($mobile), md5($user_pass));
                                 $hxgroupid=$huserObj->data->groupid;
-                                if(!empty($groupid)){
+                                if(!empty($hxgroupid)){
                                         $db->create('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$user['id'],'encouter_id'=>$order['encouter_id'],'name'=>$encouter['topic']));
+                                        $HuanxinObj->sendmsgToGroup($user['id'],$hxgroupid,$user['nick_name'].'加入了'.$encouter['topic'].'话题组');
                                 }
                         }
                         //自己寄存的咖啡改变为可领取状态
