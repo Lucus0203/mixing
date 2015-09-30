@@ -1,6 +1,5 @@
 <?php
-
-ini_set('display_errors', 0);
+//ini_set('display_errors', 0);
 header('Content-Type: application/json');
 ini_set('date.timezone', 'Asia/Shanghai');
 define('APP_DIR', dirname(__FILE__));
@@ -57,6 +56,9 @@ if (!empty($c)) {
             break;
         case 'diary':
             include 'apiAction/diary.php';
+            break;
+        case 'chatgroup':
+            include 'apiAction/chatgroup.php';
             break;
         default:
             break;

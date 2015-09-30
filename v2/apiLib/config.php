@@ -1,5 +1,5 @@
 <?php
-define('SERVER_NAME', "rdsg15050y16nv5xags9.mysql.rds.aliyuncs.com");
+define('SERVER_NAME', "mixingdatabase.mysql.rds.aliyuncs.com");
 define('DB_USER_NAME', "kfyw");
 //define('DB_PASSWORD', "kfyw888");
 define('DB_PASSWORD', "kfyw6688");

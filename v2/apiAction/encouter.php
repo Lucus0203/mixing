@@ -304,14 +304,14 @@ function nearCafe() {
                 . "left join " . DB_PREFIX . "shop shop on encouter.shop_id=shop.id "
                 . "left join " . DB_PREFIX . "user user on encouter.user_id=user.id "
                 . "left join " . DB_PREFIX . "user_tag user_tag on user.id=user_tag.user_id "
-                . "where (TIMESTAMPDIFF(DAY,encouter.created,now())>encouter.days or encouter.days=0) and (encouter.status=2 or encouter.status=5) "; //1待付款2待领取3待到店领取4已领走4等候待付款5等候待到店领取6等候已领走
+                . "where (TIMESTAMPDIFF(DAY,encouter.created,now())<encouter.days or encouter.days=0) and (encouter.status=2 or encouter.status=5) "; //1待付款2待领取3待到店领取4已领走4等候待付款5等候待到店领取6等候已领走
         if (!empty($city_code)) {
                 $city = $db->getRow('shop_addcity', array('code' => $city_code));
                 $sql.=(!empty($city['id'])) ? " and addcity_id={$city['id']} " : '';
         }
         $sql.=(!empty($area_id)) ? " and addarea_id={$area_id} " : '';
         $sql.=(!empty($circle_id)) ? " and addcircle_id={$circle_id} " : '';
-        $sql.=(!empty($tag_sex)) ? " and tag_sex={$tag_sex} " : '';
+        $sql.=(!empty($tag_sex)) ? " and user.sex={$tag_sex} " : '';
         $sql.=(!empty($tag_ids)) ? " and user_tag.tag_id in ({$tag_ids}) " : '';
         if(!empty($type)){
                 $typeCond='';
@@ -321,7 +321,7 @@ function nearCafe() {
                 }
                 $sql.=" and ({$typeCond}) ";
         }
-
+        $sql.=" group by id ";
         $sql.=(!empty($lng) && !empty($lat)) ? " order by sqrt(power(shop.lng-{$lng},2)+power(shop.lat-{$lat},2)),id " : ' order by id ';
         $total = $db->getCountBySql($sql);
         

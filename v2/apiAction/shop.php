@@ -108,6 +108,39 @@ function shopInfo(){
                 if(!empty($first_img)){
                     array_unshift($shop['imgs'],$first_img);
                 }
+                if(!empty($shop['hours1'])){
+                        $hours=$shop['hours1'].'~'.$shop['hours2'];
+                        $holiday="";
+                        if($shop['holidayflag']!='1'){
+                                if(strpos($shop['holidays'] , '1')!==false){
+                                        $holiday.='一';
+                                }
+                                if(strpos($shop['holidays'] , '2')!==false){
+                                        $holiday.= empty($holiday)?'二':',二';
+                                }
+                                if(strpos($shop['holidays'] , '3')!==false){
+                                        $holiday.= empty($holiday)?'三':',三';
+                                }
+                                if(strpos($shop['holidays'] , '4')!==false){
+                                        $holiday.= empty($holiday)?'四':',四';
+                                }
+                                if(strpos($shop['holidays'] , '5')!==false){
+                                        $holiday.= empty($holiday)?'五':',五';
+                                }
+                                if(strpos($shop['holidays'] , '6')!==false){
+                                        $holiday.= empty($holiday)?'六':',六';
+                                }
+                                if(strpos($shop['holidays'] , '0')!==false){
+                                        $holiday.= empty($holiday)?'日':',日';
+                                }
+                        }
+                        if($shop['holidayflag']=='3'){
+                                $holiday = !empty($holiday)?' 周'.$holiday.':'.$shop['holidayhours1'].'~'.$shop['holidayhours2']:'';
+                        }elseif($shop['holidayflag']=='2'){
+                                $holiday = !empty($holiday)?' 休:周'.$holiday:'';
+                        }
+                }
+                $shop['hours']=$hours.$holiday;
 		//是否营业中 1营业中2休息
 		if($shop['holidayflag']!=1){
 			if(strpos($shop['holidays'] , date("w"))!==false){

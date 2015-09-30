@@ -1,13 +1,13 @@
 <?php
-define('CLIENTID', 'YXA6vnRlIFIYEeWj12kyHfmupA');
-define('CLIENTSECRET', 'YXA6g6LtoxBqg1RxydnugTJ4yk-B9XM');
+define('CLIENTID', 'YXA6QsMZ4HnIEeSoQhVnJpbyzQ');//YXA6vnRlIFIYEeWj12kyHfmupA  搅拌
+define('CLIENTSECRET', 'YXA6_WPJ7tDIfsPSljWqdzHae7SAUV0');//YXA6g6LtoxBqg1RxydnugTJ4yk-B9XM  搅拌
 Class Huanxin {
 	var $_access_token;
 	var $_token_file;
 	private $url;
 	private static $instance;
 	private function __construct() {
-		$this->url = 'https://a1.easemob.com/zcsy/mixing/';
+		$this->url = 'https://a1.easemob.com/zcsy/coffee/';
 			
 		$this->_token_file=dirname(__FILE__) . '/access_token.hx';
 		$ctime = filectime($this->_token_file);
@@ -104,7 +104,18 @@ Class Huanxin {
                     'target'=>array($to),
                     'msg'=>array('type'=>'txt','msg'=>$msg),
                     'from'=>$from);
-		$url = $this->url . "chatgroups";
+		$url = $this->url . "messages";
+		$access_token = $this->getToken ();
+		$header [] = 'Authorization: Bearer ' . $access_token;
+		return $this->postCurl ( $url, $data, $header, $type = "POST" );
+        }
+        //发送消息给群组
+        function sendmsgToGroup($from,$to,$msg){
+		$data=array('target_type'=>'chatgroups',
+                    'target'=>array($to),//groupid
+                    'msg'=>array('type'=>'txt','msg'=>$msg),
+                    'from'=>$from);
+		$url = $this->url . "messages";
 		$access_token = $this->getToken ();
 		$header [] = 'Authorization: Bearer ' . $access_token;
 		return $this->postCurl ( $url, $data, $header, $type = "POST" );
@@ -123,9 +134,16 @@ Class Huanxin {
 		$header [] = 'Authorization: Bearer ' . $access_token;
 		return $this->postCurl ( $url, $data, $header, $type = "POST" );
         }
-	//获取建群
+	//获取单个群
         function getGroup($groupid){
 		$url = $this->url . "chatgroups/{$groupid}";
+		$access_token = $this->getToken ();
+		$header [] = 'Authorization: Bearer ' . $access_token;
+		return $this->postCurl ( $url, '', $header, $type = "GET" );
+        }
+        //获取APP里所有群
+        function getAllGroup(){
+		$url = $this->url . "chatgroups";
 		$access_token = $this->getToken ();
 		$header [] = 'Authorization: Bearer ' . $access_token;
 		return $this->postCurl ( $url, '', $header, $type = "GET" );

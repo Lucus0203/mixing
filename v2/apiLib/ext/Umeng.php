@@ -323,7 +323,7 @@ class Umeng {
             $body=array(
             		// 通知展现内容:
             		"ticker"=>$alert,     // 必填 通知栏提示文字
-            		"title"=>"咖啡约我",      // 必填 通知标题
+            		"title"=>"搅拌",      // 必填 通知标题
             		"text"=>$alert,       // 必填 通知文字描述
             		// 点击"通知"的后续行为，默认为打开app。
             		"after_open"=> "go_app" // 必填 值可以为:
