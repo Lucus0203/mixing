@@ -1,4 +1,5 @@
 <?php
+require_once 'sendNotify.php';
 $act=filter($_REQUEST['act']);
 switch ($act){
 	case 'getEvents':
@@ -229,7 +230,9 @@ function togetherEvent(){
             $lng=$reslg['lng'];
             $lat=$reslg['lat'];
         }
-	$db->create('public_event_together_others', array('public_event_id'=>$eventid,'title'=>$event['title'],'user_id'=>$userid,'other_id'=>$loginid,'datetime'=>$datetime,'address'=>$address,'lng'=>$lng,'lat'=>$lat,'note'=>$note,'pay_type'=>$pay_type,'status'=>1,'isreaded_other'=>1));
+	$eventInvitationid=$db->create('public_event_together_others', array('public_event_id'=>$eventid,'title'=>$event['title'],'user_id'=>$userid,'other_id'=>$loginid,'datetime'=>$datetime,'address'=>$address,'lng'=>$lng,'lat'=>$lat,'note'=>$note,'pay_type'=>$pay_type,'status'=>1,'isreaded_other'=>1));
+        //发送通知 notify.php
+        publicEventTogether($loginid, $userid,$eventInvitationid);
 	echo json_result('success');
 }
 

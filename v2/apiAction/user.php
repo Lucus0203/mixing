@@ -75,7 +75,7 @@ function getVerificationCode(){
 		return;
 	}
 	//生成验证码
-	$code=rand(100000, 999999);
+	$code=rand(1000, 9999);
 	if(!empty($mobile)&&$db->getCount("user",array('mobile'=>$mobile))>0){
 		$db->update('user',array('captcha_code'=>$code),array('mobile'=>$mobile));
 	}else{

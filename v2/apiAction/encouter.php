@@ -430,7 +430,7 @@ function receive() {
                         }
                         if($encouter['paylock']!=1){
                                 $remenus=floor((time()-strtotime($encouter['updated'])) / 60);
-                                if($remenus<3){//8分钟锁定
+                                if($remenus<3){//3分钟锁定
                                         json_result(null, '206', '这杯咖啡正在等待他人操作,请稍后再来尝试');return;
                                 }
                         }
@@ -452,7 +452,7 @@ function receive() {
                         }
                         if($encouter['paylock']!=1){
                                 $remenus=floor((time()-strtotime($encouter['updated'])) / 60);
-                                if($remenus<3){//8分钟锁定
+                                if($remenus<3){//3分钟锁定
                                         json_result(null, '208', '这杯咖啡正在等待他人操作,请稍后再来尝试');return;
                                 }
                         }

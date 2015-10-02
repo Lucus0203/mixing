@@ -1,4 +1,5 @@
 <?php
+require_once 'sendNotify.php';
 //领取者领取成功发送消息
 function sendNotifyMsgByReceive($receiveid) {
         global $db;
@@ -24,7 +25,7 @@ function sendNotifyMsgByReceive($receiveid) {
                         //发送短息
                         $shop = $db->getRow('shop', array('id' => $encouter['shop_id']));
                         $sms = new Sms();
-                        $sms->sendMsg("您参与的爱心咖啡<" . $encouter['product1'] . ">验证码是:" . $receive['verifycode'] . ",请尽快到<" . $shop['title'] . ">领取!感谢是爱心的第一步~欢迎使用", $from['mobile']);
+                        $sms->sendMsg("您参与的爱心咖啡<" . $encouter['product1'] . ">验证码是:" . $receive['verifycode'] . ",请尽快到<" . $shop['title'] . ">领取!感谢是爱心的第一步~", $from['mobile']);
                         break;
                 case 2://缘分 等待回复
                 case 3://约会 等待回复
@@ -41,7 +42,7 @@ function sendNotifyMsgByReceive($receiveid) {
                         //发送短息
                         $shop = $db->getRow('shop', array('id' => $encouter['shop_id']));
                         $sms = new Sms();
-                        $sms->sendMsg("您参与的传递咖啡<" . $encouter['product1'] . ">验证码是:" . $receive['verifycode'] . ",请尽快到<" . $shop['title'] . ">领取!人生，就是去不断开启新的旅途~欢迎使用", $from['mobile']);
+                        $sms->sendMsg("您参与的传递咖啡<" . $encouter['product1'] . ">验证码是:" . $receive['verifycode'] . ",请尽快到<" . $shop['title'] . ">领取!人生，就是去不断开启新的旅途~", $from['mobile']);
                         break;
                 case 5://等候 必须寄存才可领
                         if ($receive['from_user'] != $receive['to_user']) {
@@ -54,11 +55,20 @@ function sendNotifyMsgByReceive($receiveid) {
                         //发送短息
                         $shop = $db->getRow('shop', array('id' => $encouter['shop_id']));
                         $sms = new Sms();
-                        $sms->sendMsg("您等候的咖啡来了,<" . $encouter['product1'] . ">验证码是:" . $receive['verifycode'] . ",请尽快到<" . $shop['title'] . ">领取!咖啡只是一个借口,我只愿遇见一个懂我的人~欢迎使用", $to['mobile']);
+                        $sms->sendMsg("您等候的咖啡来了,<" . $encouter['product1'] . ">验证码是:" . $receive['verifycode'] . ",请尽快到<" . $shop['title'] . ">领取!咖啡只是一个借口,我只愿遇见一个懂我的人~", $to['mobile']);
                         break;
 
                 default:
                         break;
+        }
+        if($type==2 || $type==3){
+            //发送通知给寄存者
+            sendNotifyToDepositer($receive['from_user'],$receive['to_user'],$receive['encouter_id'],$from['nick_name'].'想领取您的咖啡,等待你的回复');
+        }else{
+            //发送给领取者的通知
+            sendNotifyToReceiver($receive['to_user'],$receive['from_user'],$receiveid,null);
+            //发送通知给寄存者
+            sendNotifyToDepositer($receive['from_user'],$receive['to_user'],$receive['encouter_id'],null);
         }
         //互加好友
         makefriend($receiveid);
@@ -89,7 +99,7 @@ function sendNotifyMsgByPermiter($receiveid) {
                         //发送短息
                         $shop = $db->getRow('shop', array('id' => $encouter['shop_id']));
                         $sms = new Sms();
-                        $sms->sendMsg("您参与的缘分咖啡<" . $encouter['product1'] . ">验证码是:" . $receive['verifycode'] . ",请尽快到<" . $shop['title'] . ">领取!问答是一种形式，遇见是一次缘分~欢迎使用", $to['mobile']);
+                        $sms->sendMsg("您参与的缘分咖啡<" . $encouter['product1'] . ">验证码是:" . $receive['verifycode'] . ",请尽快到<" . $shop['title'] . ">领取!问答是一种形式，遇见是一次缘分~", $to['mobile']);
                         break;
                 case 3://约会
                         if ($receive['to_user'] != $receive['from_user']) {
@@ -102,17 +112,19 @@ function sendNotifyMsgByPermiter($receiveid) {
                         $product_receive=($receive['choice_menu']==2)?$encouter['product2']:$encouter['product1'];//获取的咖啡
                         $shop = $db->getRow('shop', array('id' => $encouter['shop_id']));
                         $sms = new Sms();
-                        $sms->sendMsg("您参与的约会咖啡<" . $product_receive . ">验证码是:" . $receive['verifycode'] . ",请尽快到<" . $shop['title'] . ">领取!邂逅一个人，可以温暖一生~欢迎使用", $to['mobile']);
+                        $sms->sendMsg("您参与的约会咖啡<" . $product_receive . ">验证码是:" . $receive['verifycode'] . ",请尽快到<" . $shop['title'] . ">领取!邂逅一个人，可以温暖一生~", $to['mobile']);
                         //发送短息给寄存者
                         $product_deposit=($receive['choice_menu']==2)?$encouter['product1']:$encouter['product2'];//获取的咖啡
                         //寄存者验证码
                         $verifycode=encouterVerify('encouter',$receive['to_user']);
                         $db->update('encouter',array('verifycode'=>$verifycode),array('id'=>$receive['encouter_id']));
-                        $sms->sendMsg("您参与的约会咖啡<" . $product_deposit . ">验证码是:" . $verifycode . ",请尽快到<" . $shop['title'] . ">领取!邂逅一个人，可以温暖一生~欢迎使用", $to['mobile']);
+                        $sms->sendMsg("您参与的约会咖啡<" . $product_deposit . ">验证码是:" . $verifycode . ",请尽快到<" . $shop['title'] . ">领取!邂逅一个人，可以温暖一生~", $to['mobile']);
                         break;
                 default:
                         break;
         }
+        //发送给领取者的通知
+        sendNotifyToReceiver($receive['to_user'],$receive['from_user'],$receiveid,'您可以领取'.$from['nick_name'].'的咖啡了,请查看详情');
         //互加好友
         makefriend($receiveid);
 }

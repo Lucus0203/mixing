@@ -1,5 +1,6 @@
 <?php
 require_once APP_DIR.DS.'apiLib'.DS.'ext'.DS.'Umeng.php';
+require_once 'sendNotify.php';
 $act=filter($_REQUEST['act']);
 switch ($act){
 	case 'sendInvitation':
@@ -59,15 +60,10 @@ function sendInvitation(){
 	
 	//isreaded 1已读 2未读
 	$invitation=array('title'=>$title,'datetime'=>$datetime,'shop_id'=>$shopid,'address'=>$address,'note'=>$note,'pay_type'=>$pay_type,'user_id'=>$userid,'to_user_id'=>$to_userid,'isreaded_user'=>1,'isreaded_to_user'=>2,'status'=>1,'created'=>date("Y-m-d H:i:s"));
-	$db->create('invitation', $invitation);
+	$invitationid=$db->create('invitation', $invitation);
 	
-	$fromuser=$db->getRow('user',array('id'=>$userid),array('nick_name'));
-	
-// 	$Aumeng=new Umeng('Android');
-// 	$Aumeng->sendAndroidCustomizedcast("invitation",$to_userid,"您有新的邀约","咖啡约我","新的邀请函","go_app","");//go_activity
-	
- 	$IOSumeng=new Umeng('IOS');
- 	$IOSumeng->sendIOSCustomizedcast("invitation", $to_userid, '您有一条来自"'.$fromuser['nick_name'].'"的邀请函',array('notify'=>'invitation'));
+        //发送邀请函 notify.php
+        sendInvitation($userid,$to_userid,$invitationid);
 
 	echo json_result(array('success'=>'TRUE'));
 
