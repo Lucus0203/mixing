@@ -60,6 +60,9 @@ if (!empty($c)) {
         case 'chatgroup':
             include 'apiAction/chatgroup.php';
             break;
+        case 'notify':
+            include 'apiAction/notify.php';
+            break;
         default:
             break;
     }

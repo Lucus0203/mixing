@@ -4,9 +4,9 @@ class Sms{
 	var $_pass;
 	var $_auth;
 	function __construct() {
-		$this->_uid="80265";
-		$this->_pass="zcsy123";
-		$this->_auth=md5("zcsyzcsy123");
+		$this->_uid="802651";
+		$this->_pass="kfyw666";
+		$this->_auth=md5("mixingkfyw666");
 	}
 	
 	private function __clone() {
