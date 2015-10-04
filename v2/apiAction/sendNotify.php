@@ -14,7 +14,7 @@ function publicEventTogether($fromid,$toid,$dataid){
         
 }
 //发送普通邀请函
-function sendInvitation($fromid,$toid,$dataid){
+function sendNotifyInvitation($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));

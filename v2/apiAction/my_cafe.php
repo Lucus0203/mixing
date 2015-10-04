@@ -43,7 +43,7 @@ function depositList() {
     $page_no = isset($_REQUEST ['page']) ? $_REQUEST ['page'] : 1;
     $page_size = PAGE_SIZE;
     $start = ($page_no - 1) * $page_size;
-    $sql = "select encouter.id as encouter_id,encouter.product1 as menu,encouter.product_img1 as menu_img,shop.title as shop_name,shop.lng,shop.lat,encouter.created,encouter.status,count(receive.id) as num from " . DB_PREFIX . "encouter encouter "
+    $sql = "select encouter.id as encouter_id,encouter.product1 as menu,encouter.product_img1 as menu_img,shop.title as shop_name,shop.lng,shop.lat,date_format(encouter.created,'%Y-%c-%d') as created,encouter.status,count(receive.id) as num from " . DB_PREFIX . "encouter encouter "
             . "left join " . DB_PREFIX . "shop shop on shop.id=encouter.shop_id "
             . "left join " . DB_PREFIX . "encouter_receive receive on receive.encouter_id = encouter.id and receive.status=1 "
             . "where encouter.user_id = {$loginid} and encouter.type <> 5 group by encouter.id order by encouter.id desc";
@@ -96,7 +96,7 @@ function receiveList() {
     $page_no = isset($_REQUEST ['page']) ? $_REQUEST ['page'] : 1;
     $page_size = PAGE_SIZE;
     $start = ($page_no - 1) * $page_size;
-    $sql = "select receive.id as receive_id,receive.encouter_id,if(choice_menu=2,encouter.product2,encouter.product1) as menu,if(choice_menu=2,encouter.product_img2,product_img1) as menu_img,shop.title as shop_name,shop.lng,shop.lat,receive.created,receive.status from " . DB_PREFIX . "encouter_receive receive "
+    $sql = "select receive.id as receive_id,receive.encouter_id,if(choice_menu=2,encouter.product2,encouter.product1) as menu,if(choice_menu=2,encouter.product_img2,product_img1) as menu_img,shop.title as shop_name,shop.lng,shop.lat,date_format(receive.created,'%Y-%c-%d') as created,receive.status from " . DB_PREFIX . "encouter_receive receive "
             . "left join " . DB_PREFIX . "encouter encouter on receive.encouter_id = encouter.id "
             . "left join " . DB_PREFIX . "shop shop on shop.id=encouter.shop_id "
             . "where receive.from_user = {$loginid} and receive.type <> 5 and receive.status <> 4 and receive.status <> 99 order by receive.id desc ";
@@ -140,7 +140,7 @@ function waitList(){
     $page_no = isset($_REQUEST ['page']) ? $_REQUEST ['page'] : 1;
     $page_size = PAGE_SIZE;
     $start = ($page_no - 1) * $page_size;
-    $sql = "select encouter.id as wait_id,encouter.product1 as menu,encouter.product_img1 as menu_img,shop.title as shop_name,shop.lng,shop.lat,encouter.created,if(TIMESTAMPDIFF(DAY,encouter.created,now())>encouter.days && encouter.status=5,8,encouter.status) as status from " . DB_PREFIX . "encouter encouter "
+    $sql = "select encouter.id as wait_id,encouter.product1 as menu,encouter.product_img1 as menu_img,shop.title as shop_name,shop.lng,shop.lat,date_format(encouter.created,'%Y-%c-%d') as created,if(TIMESTAMPDIFF(DAY,encouter.created,now())>encouter.days && encouter.status=5,8,encouter.status) as status from " . DB_PREFIX . "encouter encouter "
             . "left join " . DB_PREFIX . "shop shop on shop.id=encouter.shop_id "
             . "where encouter.user_id = {$loginid} and encouter.type = 5 order by encouter.id desc";
     $sql .= " limit $start,$page_size";

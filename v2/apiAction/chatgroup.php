@@ -3,8 +3,11 @@ require_once APP_DIR . DS . 'apiLib' . DS . 'ext' . DS . 'Upload.php';
 require_once APP_DIR . DS . 'apiLib' . DS . 'ext' . DS . 'Huanxin.php';
 $act=filter($_REQUEST['act']);
 switch ($act){
-        case 'getAllGroup':
-                getAllGroup();
+        case 'getAllGroupByHx':
+                getAllGroupByHx();
+                break;
+        case 'getGroupUsersByHx':
+                getGroupUsersByHx();
                 break;
         case 'createGroup':
                 createGroup();
@@ -31,14 +34,21 @@ switch ($act){
 		break;
 }
 
-//获取所有群组
-function getAllGroup(){
+//获取所有群组-环信
+function getAllGroupByHx(){
         $HuanxinObj=Huanxin::getInstance();
         $huserObj=$HuanxinObj->getAllGroup();
         $groups=$huserObj->data;
         echo json_result($groups);
 }
-
+//获取群详情-环信
+function getGroupUsersByHx(){
+        $hxgroupid=filter(!empty($_REQUEST['hxgroupid'])?$_REQUEST['hxgroupid']:'');
+        $HuanxinObj=Huanxin::getInstance();
+        $huserObj=$HuanxinObj->getGroupUsers($hxgroupid);
+        $groups=$huserObj->data;
+        echo json_result($groups);
+}
 //创建群组
 function createGroup(){
         global $db;

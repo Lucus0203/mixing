@@ -28,6 +28,9 @@ switch ($act){
         case 'share'://分享
                 share();
                 break;
+        case 'depositShops'://可寄存的咖啡馆
+                depositShops();
+                break;
 	default:
 		break;
 }
@@ -306,6 +309,42 @@ function share(){
         $share=array('url'=>$url,'title'=>$title,'img'=>$img);
         echo json_result(array('share'=>$share));
         
+}
+
+function depositShops(){
+        global $db;
+	$lng=filter($_REQUEST['lng']);
+	$lat=filter($_REQUEST['lat']);
+	$city_code=filter($_REQUEST['city_code']);
+	$area_id=filter($_REQUEST['area_id']);
+	$circle_id=filter($_REQUEST['circle_id']);
+	$keyword=filter($_REQUEST['keyword']);
+	$tag_ids=filter($_REQUEST['tag_ids']);
+	$page_no = isset ( $_REQUEST ['page'] ) ? $_REQUEST ['page'] : 1;
+	$page_size = PAGE_SIZE;
+	$start = ($page_no - 1) * $page_size;
+	$shopsql="select shop.id,title,img,lng,lat from ".DB_PREFIX."shop shop left join ".DB_PREFIX."shop_tag shop_tag on shop_tag.shop_id=shop.id where shop.status=2 and shop.ispassed=1 ";
+        if(!empty($city_code)){
+                $city=$db->getRow('shop_addcity',array('code'=>$city_code));
+                $sql.=(!empty($city['id']))?" and addcity_id={$city['id']} ":'';
+        }
+        $shopsql.=(!empty($area_id))?" and addarea_id={$area_id} ":'';
+        $shopsql.=(!empty($circle_id))?" and addcircle_id={$circle_id} ":'';
+        $shopsql.=(!empty($keyword))?" and ( INSTR(title,'".addslashes($keyword)."') or INSTR(subtitle,'".addslashes($keyword)."') or INSTR(address,'".addslashes($keyword)."') ) ":'';
+        $shopsql.=(!empty($tag_ids))?" and shop_tag.tag_id in ({$tag_ids}) ":'';
+        $shopsql .= " group by shop.id ";
+        
+        $menusql=" select menu.shop_id from ".DB_PREFIX."shop_menu menu left join ".DB_PREFIX."shop_menu_price menu_price on menu.id=menu_price.menu_id where menu.status=2 and menu_price.id is not null group by menu.shop_id ";
+        $sql="select * from ($shopsql) s left join ($menusql) m on s.id = m.shop_id where m.shop_id is not null ";
+        
+        $sql.=(!empty($lng)&&!empty($lat))?" order by sqrt(power(lng-{$lng},2)+power(lat-{$lat},2)),id ":' order by id ';
+	$sql .= " limit $start,$page_size";
+	$shops=$db->getAllBySql($sql);
+	foreach ($shops as $k=>$v){
+		$shops[$k]['distance']=(!empty($v['lat'])&&!empty($v['lng'])&&!empty($lng)&&!empty($lat))?getDistance($lat,$lng,$v['lat'],$v['lng']):lang_UNlOCATE;
+	}
+	//echo json_result(array('shops'=>$shops));
+	echo json_result($shops);
 }
 
 function getIsopensql(){

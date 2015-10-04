@@ -63,7 +63,7 @@ function sendInvitation(){
 	$invitationid=$db->create('invitation', $invitation);
 	
         //发送邀请函 notify.php
-        sendInvitation($userid,$to_userid,$invitationid);
+        sendNotifyInvitation($userid,$to_userid,$invitationid);
 
 	echo json_result(array('success'=>'TRUE'));
 
