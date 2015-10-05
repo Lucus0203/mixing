@@ -49,9 +49,9 @@ function countRead(){
 	global $db;
 	$loginid=filter($_REQUEST['loginid']);
         $count=$db->getCount('notify',array('user_id'=>$loginid,'isread'=>1));
-        $lastRow="select msg from ".DB_PREFIX."notify notify where user_id={$loginid} order by id desc limit 0,1 ";
+        $lastRow="select msg,created from ".DB_PREFIX."notify notify where user_id={$loginid} order by id desc limit 0,1 ";
         $data=$db->getRowBySql($lastRow);
-        echo json_result(array('count'=>$count,'msg'=>$data['msg']));
+        echo json_result(array('count'=>$count,'msg'=>$data['msg'],'created'=>$data['created']));
 }
 
 

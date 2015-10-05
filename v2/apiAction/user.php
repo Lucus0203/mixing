@@ -299,9 +299,6 @@ function info(){
 		//$info['lasttime']=time2Units(time()-strtotime($info['logintime']));
 		//$info['address']=($info['allow_find']==1)&&!empty($info['lat'])&&!empty($info['lng'])?getAddressFromBaidu($info['lng'],$info['lat']):"未获取到位置";
 	}
-//	if(empty($loginid)){
-//		$info['address']=!empty($info['lat'])&&!empty($info['lng'])?getAddressFromBaidu($info['lng'],$info['lat']):"未获取到位置";
-//	}
         
         $info['age']=floor((time()-strtotime($info['birthday'])) / 60 / 60 / 24 / 365);
         $info['constellation']=  get_zodiac_sign(date("n",strtotime($info['birthday'])), date("j",strtotime($info['birthday'])));

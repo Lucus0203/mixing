@@ -508,7 +508,13 @@ function permit() {
 }
 
 //获取群组id
-function getGroupID($encouter_id){
+function getGroupID(){
+        global $db;
+        $encouter_id = filter(!empty($_REQUEST['encouterid']) ? $_REQUEST['encouterid'] : '');
+        if(empty($encouter_id)){
+                echo json_result(null, '2', '邂逅id获取失败');
+                return;
+        }
         $chatgroup=$db->getRow('chatgroup',array('encouter_id'=>$encouter_id));
-        echo json_result(array('hx_groupid' => $chatgroup['hx_groupid']));
+        echo json_result(array('hx_groupid' => $chatgroup['hx_group_id']));
 }

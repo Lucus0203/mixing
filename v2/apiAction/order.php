@@ -406,7 +406,7 @@ function updateOrderEncouter($order){
                                 $huserObj=$HuanxinObj->createGroup($encouter['topic'],$encouter['topic'],$maxusers,$user['user_name']);
                                 $hxgroupid=$huserObj->data->groupid;
                                 if(!empty($hxgroupid)){
-                                        $db->create('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$user['id'],'encouter_id'=>$order['encouter_id'],'name'=>$encouter['topic']));
+                                        $db->create('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$user['id'],'encouter_id'=>$order['encouter_id'],'name'=>$encouter['topic'],'created'=>date("Y-m-d H:i:s")));
                                         $HuanxinObj->sendmsgToGroup($user['id'],$hxgroupid,$user['nick_name'].'加入了'.$encouter['topic'].'话题组');
                                 }
                         }

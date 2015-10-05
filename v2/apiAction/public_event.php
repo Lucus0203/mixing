@@ -273,7 +273,8 @@ function collectUsers(){
         foreach ($data as $k => $v) {
                 $data[$k]['age']='';
                 if(!empty($v['birthday'])){
-                        $data[$k]['age'] = floor((time()-strtotime($v['birthday'])) / 60 / 60 / 24 / 365);
+                        $data[$k]['age']=floor((time()-strtotime($v['birthday'])) / 60 / 60 / 24 / 365);
+                        $data[$k]['constellation']=  get_zodiac_sign(date("n",strtotime($v['birthday'])), date("j",strtotime($v['birthday'])));
                 }
         }
         echo json_result(array('users'=>$data));

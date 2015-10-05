@@ -148,6 +148,7 @@ function waitList(){
     foreach ($data as $k => $v) {
         //encouter.status 5等候待付款6等候待到店领取7等候已领走8已过期
         $data[$k]['distance'] = (!empty($v['lat']) && !empty($v['lng']) && !empty($lng) && !empty($lat)) ? getDistance($lat, $lng, $v['lat'], $v['lng']) : lang_UNlOCATE;
+        //$data[$k]['created']=time2Units(time()-strtotime($v['created']));
     }
     echo json_result($data);
     
