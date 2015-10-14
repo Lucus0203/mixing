@@ -1,13 +1,13 @@
 <?php
-define('CLIENTID', 'YXA6QsMZ4HnIEeSoQhVnJpbyzQ');//YXA6vnRlIFIYEeWj12kyHfmupA  搅拌
-define('CLIENTSECRET', 'YXA6_WPJ7tDIfsPSljWqdzHae7SAUV0');//YXA6g6LtoxBqg1RxydnugTJ4yk-B9XM  搅拌
+define('CLIENTID', 'YXA6vnRlIFIYEeWj12kyHfmupA');//  咖啡约我YXA6QsMZ4HnIEeSoQhVnJpbyzQ 
+define('CLIENTSECRET', 'YXA6g6LtoxBqg1RxydnugTJ4yk-B9XM');//  咖啡约我YXA6_WPJ7tDIfsPSljWqdzHae7SAUV0 
 Class Huanxin {
 	var $_access_token;
 	var $_token_file;
 	private $url;
 	private static $instance;
 	private function __construct() {
-		$this->url = 'https://a1.easemob.com/zcsy/coffee/';
+		$this->url = 'https://a1.easemob.com/zcsy/mixing/';
 			
 		$this->_token_file=dirname(__FILE__) . '/access_token.hx';
 		$ctime = filectime($this->_token_file);
@@ -178,7 +178,7 @@ Class Huanxin {
 		$url = $this->url . "chatgroups/{$groupid}/users/{$username}";
 		$access_token = $this->getToken ();
 		$header [] = 'Authorization: Bearer ' . $access_token;
-		return $this->postCurl ( $url, $data, $header, $type = "POST" );
+		return $this->postCurl ( $url, '', $header, $type = "POST" );
         }
         //减少群成员
         function delGroupUser($groupid,$username){

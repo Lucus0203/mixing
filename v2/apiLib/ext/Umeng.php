@@ -23,6 +23,7 @@ define('Android_umeng_master_secret', '');
 define('Android_umeng_message_secret', '');
 define('IOS_umeng_appkey','55e80ab167e58e0337006051');
 define('IOS_master_secret','gx4vv8lkewrsoytxke2us4mgwx0rj2xb');
+define('PRODUCTION_MODE',false);
 
 class Umeng {
 
@@ -314,7 +315,7 @@ class Umeng {
             $customizedcast->setPredefinedKeyValue("badge", 1);
             $customizedcast->setPredefinedKeyValue("sound", "default");
             // Set 'production_mode' to 'true' if your app is under production mode
-            $customizedcast->setPredefinedKeyValue("production_mode", "true");
+            $customizedcast->setPredefinedKeyValue("production_mode", PRODUCTION_MODE);
             foreach ($extras as $key=>$ext){
             	$customizedcast->setCustomizedField($key, $ext);
             }
@@ -337,7 +338,7 @@ class Umeng {
             $res=$customizedcast->send();
             //print("Sent SUCCESS\r\n");
         } catch (Exception $e) {
-            //print("Caught exception: " . $e->getMessage());
+            print("Caught exception: " . $e->getMessage());
         }
     }
 

@@ -6,7 +6,7 @@ class db {
 	private static $instance;
 	private function __construct() {
 		$this->conn = mysqli_connect ( SERVER_NAME, DB_USER_NAME, DB_PASSWORD,DATABASE )or die("Error " . mysqli_error($this->conn));
-		mysqli_query ($this->conn, "set names utf8;");
+		mysqli_query ($this->conn, "set names utf8mb4;");
 	}
 	private function __clone() {
 	}

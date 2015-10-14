@@ -139,6 +139,7 @@ function replaceNull($arr) {
                         }
                 }
         }
+        //$arr =  empty($arr)?'':$arr;
         return $arr;
 }
 
@@ -284,18 +285,18 @@ function get_zodiac_sign($month, $day) {
                 return (false);
 // 星座名称以及开始日期 
         $signs = array(
-            array("20" => "宝瓶座"),
-            array("19" => "双鱼座"),
-            array("21" => "白羊座"),
-            array("20" => "金牛座"),
-            array("21" => "双子座"),
-            array("22" => "巨蟹座"),
-            array("23" => "狮子座"),
-            array("23" => "处女座"),
-            array("23" => "天秤座"),
-            array("24" => "天蝎座"),
-            array("22" => "射手座"),
-            array("22" => "摩羯座")
+            array("20" => "宝瓶"),
+            array("19" => "双鱼"),
+            array("21" => "白羊"),
+            array("20" => "金牛"),
+            array("21" => "双子"),
+            array("22" => "巨蟹"),
+            array("23" => "狮子"),
+            array("23" => "处女"),
+            array("23" => "天秤"),
+            array("24" => "天蝎"),
+            array("22" => "射手"),
+            array("22" => "摩羯")
         );
         list($sign_start, $sign_name) = each($signs[(int) $month - 1]);
         if ($day < $sign_start)
