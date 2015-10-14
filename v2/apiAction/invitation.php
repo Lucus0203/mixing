@@ -134,8 +134,7 @@ function acceptInvitation(){
             $db->update('invitation', array('isreaded_user'=>2,'isreaded_to_user'=>1,'status'=>2),array('id'=>$invt_id));
             //通知
             $inv=$db->getRow('invitation',array('id'=>$invt_id),array('user_id'));
-            $IOSumeng=new Umeng('IOS');
-            $IOSumeng->sendIOSCustomizedcast("invitation", $inv['user_id'], '"'.$user['nick_name'].'"接受了您的邀请函',array('notify'=>'invitation'));
+            sendNotifyInvitationAccept($loginid,$inv['user_id'],$invt_id);//接受邀请函
         }else{//活动邀请函
             if ($db->getCount('public_event_together_others',array('id'=>$invt_id,'user_id'=>$loginid))<=0){
                     echo json_result(null,'2','数据不符,您不能接受不属于您的邀请函');
@@ -144,8 +143,7 @@ function acceptInvitation(){
             $db->update('public_event_together_others', array('isreaded_user'=>1,'isreaded_other'=>2,'status'=>2),array('id'=>$invt_id));
             //通知
             $inv=$db->getRow('public_event_together_others',array('id'=>$invt_id),array('other_id'));
-            $IOSumeng=new Umeng('IOS');
-            $IOSumeng->sendIOSCustomizedcast("invitation", $inv['other_id'], '"'.$user['nick_name'].'"接受了您的活动邀请',array('notify'=>'invitation'));
+            publicEventTogetherAccept($loginid,$inv['other_id'],$invt_id);//接受搭伴邀请
         }
  	echo json_result(array('success'=>'TRUE'));
 	
@@ -166,8 +164,7 @@ function refuseInvitation(){
             $db->update('invitation', array('isreaded_user'=>2,'isreaded_to_user'=>1,'status'=>3),array('id'=>$invt_id));
             //通知
             $inv=$db->getRow('invitation',array('id'=>$invt_id),array('user_id'));
-            $IOSumeng=new Umeng('IOS');
-            $IOSumeng->sendIOSCustomizedcast("invitation", $inv['user_id'], '"'.$user['nick_name'].'"拒绝了您的邀请函',array('notify'=>'invitation'));
+            sendNotifyInvitationRefuse($loginid,$inv['user_id'],$invt_id);//拒绝了您的邀请函
         }else{//活动邀请函
             if ($db->getCount('public_event_together_others',array('id'=>$invt_id,'user_id'=>$loginid))<=0){
                     echo json_result(null,'2','数据不符,您不能接受不属于您的邀请函');
@@ -176,8 +173,7 @@ function refuseInvitation(){
             $db->update('public_event_together_others', array('isreaded_user'=>1,'isreaded_other'=>2,'status'=>3),array('id'=>$invt_id));
             //通知
             $inv=$db->getRow('public_event_together_others',array('id'=>$invt_id),array('other_id'));
-            $IOSumeng=new Umeng('IOS');
-            $IOSumeng->sendIOSCustomizedcast("invitation", $inv['other_id'], '"'.$user['nick_name'].'"拒绝了您的活动邀请',array('notify'=>'invitation'));
+            publicEventTogetherRefuse($loginid,$inv['other_id'],$invt_id);//拒绝搭伴邀请
         }
 	
 	
@@ -249,9 +245,7 @@ function delInvitation(){
                     $data=array('del_to_user'=>'1');
                     if($inv['status']==1){
                             $data['status']=3;
-                            $IOSumeng=new Umeng('IOS');
-                            $IOSumeng->sendIOSCustomizedcast("invitation", $inv['user_id'], '"'.$touser['nick_name'].'"拒绝了您的邀请函',array('notify'=>'invitation'));
-
+                            sendNotifyInvitationRefuse($loginid,$inv['user_id'],$invt_id);//拒绝了您的邀请函
                     }
                     $condition=array('id'=>$invt_id,'to_user_id'=>$loginid);
                     $db->update('invitation', $data , $condition);
@@ -280,8 +274,7 @@ function delInvitation(){
                     $data=array('del_user'=>'1');
                     if($inv['status']==1){
                             $data['status']=3;
-                            $IOSumeng=new Umeng('IOS');
-                            $IOSumeng->sendIOSCustomizedcast("invitation", $inv['other_id'], '"'.$touser['nick_name'].'"拒绝了您的邀请函',array('notify'=>'invitation'));
+                            publicEventTogetherRefuse($loginid,$inv['other_id'],$invt_id);//拒绝搭伴邀请
 
                     }
                     $condition=array('id'=>$invt_id,'user_id'=>$loginid);

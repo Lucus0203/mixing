@@ -79,7 +79,7 @@ function getVerificationCode(){
 	if(!empty($mobile)&&$db->getCount("user",array('mobile'=>$mobile))>0){
 		$db->update('user',array('captcha_code'=>$code),array('mobile'=>$mobile));
 	}else{
-		$user=array('mobile'=>$mobile,'captcha_code'=>$code);
+		$user=array('user_name'=>$mobile,'mobile'=>$mobile,'captcha_code'=>$code);
 		$db->create('user', $user);
 	}
 	$sms=new Sms();
@@ -163,12 +163,11 @@ function register(){
 		echo json_result(null,'8','验证码不正确');
 		return;
 	}
-	
 	if($db->getCountBySql("select id from ".DB_PREFIX."user where mobile='$mobile' and uuid is not null and uuid <> '' ")>0){
 		echo json_result(null,'9','此手机号已经注册过');
 		return;
 	}
-	$user=array('user_name'=>$mobile,'user_password'=>md5($user_pass),'mobile'=>$mobile,'sex'=>'3','age'=>'','constellation'=>'保密','created'=>date("Y-m-d H:i:s"));
+	$user=array('user_name'=>$mobile,'user_password'=>md5($user_pass),'mobile'=>$mobile,'age'=>'0','birthday'=>date("Y-m-d H:i:s"),'constellation'=>'保密','created'=>date("Y-m-d H:i:s"));
 	$HuanxinObj=Huanxin::getInstance();
 	$huserObj=$HuanxinObj->addNewAppUser(strtolower($mobile), md5($user_pass));
 	$uuid=$huserObj->entities[0]->uuid;
@@ -234,6 +233,10 @@ function registerComplete(){
         $info['user_name']=$user['user_name'];
 	$info['pinyin']=!empty($info['nick_name'])?getFirstCharter($info['nick_name']):'';
         $info['mobile']=$user['mobile'];
+        if($db->getCount('diary',array('user_id'=>$user['id']))<=0){
+            $diary=array('user_id'=>$user['id'],'note'=>'加入了搅拌');
+            $db->create('diary',$diary);
+        }
 	
         echo json_result($info);
 }
@@ -534,7 +537,7 @@ function updateUserTag(){
 function infoTags(){
         global $db;
 	$userid=filter($_REQUEST['userid']);
-        $sql="select base_tag.name from ".DB_PREFIX."user_tag tag left join ".DB_PREFIX."base_user_tag base_tag on tag.tag_id=base_tag.id where tag.user_id=$userid ";
+        $sql="select base_tag.id as tag_id,base_tag.name from ".DB_PREFIX."user_tag tag left join ".DB_PREFIX."base_user_tag base_tag on tag.tag_id=base_tag.id where tag.user_id=$userid ";
         $tags=$db->getAllBySql($sql);
         echo json_result(array('tags'=>$tags));
 }

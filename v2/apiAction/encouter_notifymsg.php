@@ -29,8 +29,6 @@ function sendNotifyMsgByReceive($receiveid) {
                         break;
                 case 2://缘分 等待回复
                 case 3://约会 等待回复
-                       $IOSumeng=new Umeng('IOS');
-                       $IOSumeng->sendIOSCustomizedcast("encouter", $encouter['user_id'], '有人想领取您的咖啡,等待您的回复',array('notify'=>'encouter'));
                         break;
                 case 4://传递 必须寄存才可领
                         if ($receive['from_user'] != $receive['to_user']) {

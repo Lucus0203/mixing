@@ -151,7 +151,16 @@ function delDiary(){
             echo json_result(null,'3','操作失败,您不能删除此内容');
             return;
         }else{
-            $diary=$db->update('diary',array('isdel'=>1),array('id'=>$diaryid));
+            $imgs=$db->getAll('diary_img',array('diary_id'=>$diaryid),array('img'));
+            foreach ($imgs as $m){
+                $path=str_replace(APP_SITE, "", $m['img']);
+                if(file_exists($path)){
+                    unlink($path);//删除图片
+                }
+            }
+            $db->delete('diary_msg',array('diary_id'=>$diaryid));
+            $db->delete('diary_img',array('diary_id'=>$diaryid));
+            $db->delete('diary',array('id'=>$diaryid));
             echo json_result(array('success'=>'TRUE'));
         }
         
@@ -168,6 +177,10 @@ function delDiaryImg(){
             return ;
         }
         $img=$db->getRow('diary_img',array('id'=>$imgid));
+        $path=str_replace(APP_SITE, "", $img['img']);
+        if(file_exists($path)){
+            unlink($path);//删除图片
+        }
         $db->delete('diary_img',array('id'=>$imgid,'user_id'=>$loginid));
         //返回慢生活信息
         if(empty($img['diary_id'])){

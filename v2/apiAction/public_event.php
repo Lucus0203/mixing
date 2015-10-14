@@ -162,22 +162,29 @@ function eventInfo(){
 	$lng=filter($_REQUEST['lng']);
 	$lat=filter($_REQUEST['lat']);
 	$loginid=filter($_REQUEST['loginid']);
-	$pub_event=$db->getRow("public_event",array('id'=>$id),array('title','content','price','datetime','address','lng','lat'));//获取活动信息
+	$pub_event=$db->getRow("public_event",array('id'=>$id),array('title','img','content','price','datetime','address','lng','lat'));//获取活动信息
 	$pub_event['distance']=(!empty($pub_event['lat'])&&!empty($pub_event['lng'])&&!empty($lng)&&!empty($lat))?getDistance($lat,$lng,$pub_event['lat'],$pub_event['lng']):lang_UNlOCATE;
 	//活动海报
 	$pub_event['photos']=$db->getAll("public_photo",array('public_event_id'=>$id));//活动海报
+        if(!empty($pub_event['img'])){
+            array_unshift($pub_event['photos'],array('img'=>$pub_event['img']));
+        }
 	//获取搭伴用户
-	$groupusersql="select u.id as user_id,u.nick_name,u.user_name,u.head_photo from ".DB_PREFIX."public_event_together pet left join ".DB_PREFIX."user u on pet.user_id = u.id where pet.other_id is null order by pet.id asc ";
+	$groupusersql="select u.id as user_id,u.nick_name,u.user_name,u.head_photo from ".DB_PREFIX."public_event_together pet left join ".DB_PREFIX."user u on pet.user_id = u.id where pet.other_id is null and pet.public_event_id=".$id." order by pet.id asc ";
 	$pub_event['groupusers']=$db->getAllBySql($groupusersql);
 	//活动用户及头像地址
 	$sql="select u.id as user_id,u.nick_name,u.user_name,u.head_photo as path from ".DB_PREFIX."public_users pu left join ".DB_PREFIX."user u on pu.user_id = u.id where pu.public_event_id=".$id;
 	$pub_event['user_count']=$db->getCountBySql($sql);//关注人数
 	$pub_event['users_photo']=$db->getAllBySql($sql);
 	//是否收藏
-	$pub_event['iscollect']=2;
+	$pub_event['isjoined']=2;
+	$pub_event['is']=2;
 	if(!empty($id)&&!empty($loginid)){
 		if($db->getCount('public_users',array('user_id'=>$loginid,'public_event_id'=>$id))>0){
 			$pub_event['iscollect']=1;//已收藏
+		}
+		if($db->getCount('public_event_together',array('user_id'=>$loginid,'public_event_id'=>$id))>0){
+			$pub_event['isjoined']=1;//已收藏
 		}
 	}
 	echo json_result($pub_event);
@@ -188,6 +195,10 @@ function joinEvent(){
 	global $db;
 	$id=filter($_REQUEST['eventid']);
 	$loginid=filter($_REQUEST['loginid']);
+        if($db->getCount('public_event_together', array('public_event_id'=>$id,'user_id'=>$loginid))>0){
+		echo json_result(null,'2','你已经报名过这个活动了');
+		return;
+        }
 	$db->create('public_event_together', array('public_event_id'=>$id,'user_id'=>$loginid));
 	echo json_result('success');
 }
@@ -290,7 +301,7 @@ function share(){
             return ;
         }
         $event=$db->getRow('public_event',array('id'=>$eventid));
-        $url=WEB_SITE.'eventDetail.html?p='.  base64_encode($eventid);
+        $url=WEB_SITE.'event/info.html?p='.  base64_encode($eventid);
         $title=$event['title'];
         $img=$event['img'];
         $share=array('url'=>$url,'title'=>$title,'img'=>$img);

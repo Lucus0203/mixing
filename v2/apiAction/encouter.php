@@ -304,7 +304,7 @@ function nearCafe() {
                 . "left join " . DB_PREFIX . "shop shop on encouter.shop_id=shop.id "
                 . "left join " . DB_PREFIX . "user user on encouter.user_id=user.id "
                 . "left join " . DB_PREFIX . "user_tag user_tag on user.id=user_tag.user_id "
-                . "where (TIMESTAMPDIFF(DAY,encouter.created,now())<encouter.days or encouter.days=0) and (encouter.status=2 or encouter.status=5) "; //1待付款2待领取3待到店领取4已领走4等候待付款5等候待到店领取6等候已领走
+                . "where (TIMESTAMPDIFF(DAY,encouter.created,now())<encouter.days or encouter.days=0) and (encouter.status=2 or encouter.status=5) "; //1待付款2待领取3待到店领取4已领走5等候待付款6等候待到店领取7等候已领走8取消寄存
         if (!empty($city_code)) {
                 $city = $db->getRow('shop_addcity', array('code' => $city_code));
                 $sql.=(!empty($city['id'])) ? " and addcity_id={$city['id']} " : '';
@@ -506,7 +506,6 @@ function permit() {
         echo json_result(array('success' => 'TRUE'));
         
 }
-
 //获取群组id
 function getGroupID(){
         global $db;
@@ -515,6 +514,25 @@ function getGroupID(){
                 echo json_result(null, '2', '邂逅id获取失败');
                 return;
         }
+        $encouter_id=getFirstEncouterId($encouter_id);
         $chatgroup=$db->getRow('chatgroup',array('encouter_id'=>$encouter_id));
         echo json_result(array('hx_groupid' => $chatgroup['hx_group_id']));
+}
+
+//获取最初邂逅id
+function getFirstEncouterId($encouter_id){
+        global $db;
+        $enObj=$db->getRow('encouter',array('id'=>$encouter_id),array('id','prev_encouter_id'));
+        $flag=1;
+        while($flag){
+            if(empty($enObj['prev_encouter_id'])){
+                $flag=0;
+                $encouter_id = $enObj['id'];
+            }else{
+                $encouter_id = $enObj['prev_encouter_id'];
+                $enObj=$db->getRow('encouter',array('id'=>$encouter_id),array('id','prev_encouter_id'));
+                continue;
+            }
+        }
+        return $encouter_id;
 }

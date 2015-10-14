@@ -1,7 +1,7 @@
 <?php
 require_once APP_DIR.DS.'apiLib'.DS.'ext'.DS.'Umeng.php';
 	
-//搭伴通知
+//活动邀请通知
 function publicEventTogether($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
@@ -13,12 +13,58 @@ function publicEventTogether($fromid,$toid,$dataid){
     sendNotify($sendObj);
         
 }
+//活动邀请通知被接受
+function publicEventTogetherAccept($fromid,$toid,$dataid){
+    global $db;
+    $fromuser=$db->getRow('user',array('id'=>$fromid));
+    $touser=$db->getRow('user',array('id'=>$toid));
+    $msg=$fromuser['nick_name'].'"接受了您的搭伴邀请';
+    
+    $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
+    $sendObj['type']='eventInvitation';
+    sendNotify($sendObj);
+}
+//活动邀请通知被拒绝
+function publicEventTogetherRefuse($fromid,$toid,$dataid){
+    global $db;
+    $fromuser=$db->getRow('user',array('id'=>$fromid));
+    $touser=$db->getRow('user',array('id'=>$toid));
+    $msg=$fromuser['nick_name'].'"接受了您的搭伴邀请';
+    
+    $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
+    $sendObj['type']='eventInvitation';
+    sendNotify($sendObj);
+}
+
 //发送普通邀请函
 function sendNotifyInvitation($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));
-    $msg='您有一条来自"'.$fromuser['nick_name'].'"的邀请函';
+    $msg=$fromuser['nick_name'].'"拒绝了您的搭伴邀请';
+    
+    $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
+    $sendObj['type']='invitation';
+    sendNotify($sendObj);
+}
+
+//普通邀请函被接受
+function sendNotifyInvitationAccept($fromid,$toid,$dataid){
+    global $db;
+    $fromuser=$db->getRow('user',array('id'=>$fromid));
+    $touser=$db->getRow('user',array('id'=>$toid));
+    $msg=$fromuser['nick_name'].'"接受了您的邀请函';
+    
+    $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
+    $sendObj['type']='invitation';
+    sendNotify($sendObj);
+}
+//普通邀请函被拒绝
+function sendNotifyInvitationRefuse($fromid,$toid,$dataid){
+    global $db;
+    $fromuser=$db->getRow('user',array('id'=>$fromid));
+    $touser=$db->getRow('user',array('id'=>$toid));
+    $msg=$fromuser['nick_name'].'"拒绝了您的邀请函';
     
     $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
     $sendObj['type']='invitation';

@@ -91,14 +91,14 @@ function shopInfo(){
                 foreach ($menus as $k=>$m){
                         $menus[$k]['prices']=$db->getAll('shop_menu_price',array('menu_id'=>$m['menu_id']),array('id menuprice_id','type','price'));
                 }
-		$shop['menus']=$db->getAll('shop_menu',array('shop_id'=>$shopid,'status'=>2),array('title','img'));
+		$shop['menus']=$menus;
 		$shop['introduction']=empty($shop['introduction'])?'        信息正在更新中...':$shop['introduction'];
 		//特色
                 $shoptagsql="select tag.id,base_tag.name from ".DB_PREFIX."shop_tag tag left join ".DB_PREFIX."base_shop_tag base_tag  on tag.tag_id = base_tag.id where tag.shop_id={$shopid} ";
 		$features=$db->getAllBySql($shoptagsql);
                 foreach ($features as $f){
                         if(!empty($f['name'])){
-                                $shop['features'][]=$f['name'];
+                              $shop['features'][]=$f['name'];
                         }else{
                               $db->delete('shop_tag',array('id'=>$f['id']));
                         }
@@ -145,6 +145,7 @@ function shopInfo(){
                 }
                 $shop['hours']=$hours.$holiday;
 		//是否营业中 1营业中2休息
+                $shop['isopen']=1;
 		if($shop['holidayflag']!=1){
 			if(strpos($shop['holidays'] , date("w"))!==false){
 				if($shop['holidayflag']==3){
@@ -191,6 +192,12 @@ function shopInfo(){
 			$shop['iscollect']=2;//未收藏
 		}
 		
+                $menusql=" select menu.shop_id from ".DB_PREFIX."shop_menu menu left join ".DB_PREFIX."shop_menu_price menu_price on menu.id=menu_price.menu_id where menu.status=2 and menu_price.id is not null and menu.shop_id = $shopid ";
+                if($db->getCountBySql($menusql)>0){
+                    $shop['isDepositShop']=1;
+                }else{
+                    $shop['isDepositShop']=2;
+                }
 		//$bbs_sql="select up.path,u.nick_name,u.user_name,bbs.user_id,bbs.shop_id,CONCAT(bbs.num,'楼:',bbs.content) as content,bbs.created from ".DB_PREFIX."shop_bbs bbs left join ".DB_PREFIX."user u on u.id=bbs.user_id left join ".DB_PREFIX."user_photo up on up.id=u.head_photo_id where bbs.allow=1 and bbs.shop_id=$shopid";
 		//$shop['bbsCount']=$db->getCountBySql($bbs_sql);
 		//$bbs_sql.=" order by bbs.id desc limit $start,$page_size";
@@ -303,7 +310,7 @@ function share(){
             return ;
         }
         $shop=$db->getRow('shop',array('id'=>$shopid));
-        $url=WEB_SITE.'shopDetail.html?s='.  base64_encode($shopid);
+        $url=WEB_SITE.'shop/info.html?s='.  base64_encode($shopid);
         $title=$shop['title'];
         $img=$shop['img'];
         $share=array('url'=>$url,'title'=>$title,'img'=>$img);

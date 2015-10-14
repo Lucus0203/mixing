@@ -24,7 +24,7 @@ function getNotifys(){
 	$page_no = isset ( $_REQUEST ['page'] ) ? $_REQUEST ['page'] : 1;
 	$page_size = PAGE_SIZE;
 	$start = ($page_no - 1) * $page_size;
-        $data=$db->getAll('notify',array('user_id'=>$loginid),array('id','img','send_time','msg','type','dataid','isread')," limit $start,$page_size");
+        $data=$db->getAll('notify',array('user_id'=>$loginid),array('id','img','send_time','msg','type','dataid','isread'),"order by id desc limit $start,$page_size");
         echo json_result(array('notifys'=>$data));
 }
 
@@ -51,7 +51,8 @@ function countRead(){
         $count=$db->getCount('notify',array('user_id'=>$loginid,'isread'=>1));
         $lastRow="select msg,created from ".DB_PREFIX."notify notify where user_id={$loginid} order by id desc limit 0,1 ";
         $data=$db->getRowBySql($lastRow);
-        echo json_result(array('count'=>$count,'msg'=>$data['msg'],'created'=>$data['created']));
+        $isHasGroup=$db->getCount('chatgroup',array('user_id'=>$loginid)) > 0 ? 1 : 2 ;//1有2无
+        echo json_result(array('count'=>$count,'msg'=>$data['msg'],'created'=>$data['created'],'isHasGroup'=>$isHasGroup));
 }
 
 
