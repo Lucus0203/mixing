@@ -160,7 +160,7 @@ class Umeng {
     }
 
     //自定义单独设备通知
-    function sendAndroidCustomizedcast($alias_type, $login_id, $ticker, $title, $text, $after_open = "go_app", $activity = "", $extras=array() ) {
+    function sendAndroidCustomizedcast($alias_type, $username, $ticker, $title, $text, $after_open = "go_app", $activity = "", $extras=array() ) {
         try {
             $customizedcast = new AndroidCustomizedcast();
             $customizedcast->setAppMasterSecret($this->appMasterSecret);
@@ -169,7 +169,7 @@ class Umeng {
             // Set your alias here, and use comma to split them if there are multiple alias.
             // And if you have many alias, you can also upload a file containing these alias, then 
             // use file_id to send customized notification.
-            $customizedcast->setPredefinedKeyValue("alias", $login_id);
+            $customizedcast->setPredefinedKeyValue("alias", $username);
             // Set your alias_type here
             $customizedcast->setPredefinedKeyValue("alias_type", $alias_type);
             $customizedcast->setPredefinedKeyValue("ticker", $ticker);
@@ -338,7 +338,7 @@ class Umeng {
             $res=$customizedcast->send();
             //print("Sent SUCCESS\r\n");
         } catch (Exception $e) {
-            print("Caught exception: " . $e->getMessage());
+            //print("Caught exception: " . $e->getMessage());
         }
     }
 

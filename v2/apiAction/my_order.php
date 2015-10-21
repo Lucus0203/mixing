@@ -8,6 +8,9 @@ switch ($act) {
     case 'depositAgain':
         depositAgain();
         break;
+    case 'orderHasNew'://新的消费记录
+        orderHasNew();
+        break;
     default:
         break;
 }
@@ -65,7 +68,7 @@ function depositAgain(){
                 return;
         }
         if ($db->getCount('encouter',array('id'=>$encouterid,'user_id'=>$userid))<=0){
-                echo json_result(null, '3', '这不是您寄存的咖啡,不可续存');
+                echo json_result(null, '3', '这不是你寄存的咖啡,不可续存');
                 return;
         }
         $old_encouter=$db->getRow('encouter',array('id'=>$encouterid));
@@ -129,4 +132,24 @@ function depositAgain(){
                 $db->excuteSql($insertTag);
         }
         echo json_result(array('success' => 'TRUE'));
+}
+
+
+function orderHasNew(){
+        global $db;
+        $loginid = filter(!empty($_REQUEST['loginid']) ? $_REQUEST['loginid'] : '');
+	if(empty($loginid)){
+		echo json_result(null,'21','用户未登录');
+		return;
+	}
+        $sql="select od.id from ".DB_PREFIX."order od "
+                . "left join ".DB_PREFIX."encouter encouter on encouter.id=od.encouter_id "
+                . "where od.isread=1 and od.user_id=".$loginid;
+        $sql1=$sql." and paid=1 and od.status=1 ";
+        $sql2=$sql." and paid=2 and od.status=1 ";
+        $sql3=$sql." and TIMESTAMPDIFF(DAY,encouter.created,now())>encouter.days and encouter.days!=0 and encouter.status=2 ";
+        $num1=$db->getCountBySql($sql1);//已付款
+        $num2=$db->getCountBySql($sql2);//未付款
+        $num3=$db->getCountBySql($sql3);//已过期
+        echo json_result(array('newcounts'=>array('num1'=>$num1,'num2'=>$num2,'num3'=>$num3)));
 }

@@ -145,7 +145,6 @@ function shopInfo(){
                 }
                 $shop['hours']=$hours.$holiday;
 		//是否营业中 1营业中2休息
-                $shop['isopen']=1;
 		if($shop['holidayflag']!=1){
 			if(strpos($shop['holidays'] , date("w"))!==false){
 				if($shop['holidayflag']==3){
@@ -184,7 +183,24 @@ function shopInfo(){
 					}
 				}
 			}
-		}
+		}else{
+                        $hours1=$shop['hours1'];
+                        $hours2=$shop['hours2'];
+                        if($hours2<=$hours1){
+                                if($hours1<=date("H:i")||date("H:i")<=$hours2){
+                                        $shop['isopen']=1;
+                                }else{
+                                        $shop['isopen']=2;
+                                }
+                        }else{
+                                if($hours1<=date("H:i")&&date("H:i")<=$hours2){
+                                        $shop['isopen']=1;
+                                }else{
+                                        $shop['isopen']=2;
+                                }
+                        }
+                    
+                }
 		//是否收藏
 		if($db->getCount('shop_users',array('user_id'=>$loginid,'shop_id'=>$shopid))>0){
 			$shop['iscollect']=1;//已收藏

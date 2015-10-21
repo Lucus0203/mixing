@@ -6,7 +6,7 @@ function publicEventTogether($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));
-    $msg='您有一条来自"'.$fromuser['nick_name'].'"的搭伴邀请';
+    $msg='你有一条来自"'.$fromuser['nick_name'].'"的搭伴邀请';
     
     $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
     $sendObj['type']='eventInvitation';
@@ -18,7 +18,7 @@ function publicEventTogetherAccept($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));
-    $msg=$fromuser['nick_name'].'"接受了您的搭伴邀请';
+    $msg=$fromuser['nick_name'].'"接受了你的搭伴邀请';
     
     $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
     $sendObj['type']='eventInvitation';
@@ -29,7 +29,7 @@ function publicEventTogetherRefuse($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));
-    $msg=$fromuser['nick_name'].'"接受了您的搭伴邀请';
+    $msg=$fromuser['nick_name'].'"接受了你的搭伴邀请';
     
     $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
     $sendObj['type']='eventInvitation';
@@ -41,7 +41,7 @@ function sendNotifyInvitation($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));
-    $msg=$fromuser['nick_name'].'"拒绝了您的搭伴邀请';
+    $msg=$fromuser['nick_name'].'"拒绝了你的搭伴邀请';
     
     $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
     $sendObj['type']='invitation';
@@ -53,7 +53,7 @@ function sendNotifyInvitationAccept($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));
-    $msg=$fromuser['nick_name'].'"接受了您的邀请函';
+    $msg=$fromuser['nick_name'].'"接受了你的邀请函';
     
     $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
     $sendObj['type']='invitation';
@@ -64,7 +64,7 @@ function sendNotifyInvitationRefuse($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));
-    $msg=$fromuser['nick_name'].'"拒绝了您的邀请函';
+    $msg=$fromuser['nick_name'].'"拒绝了你的邀请函';
     
     $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
     $sendObj['type']='invitation';
@@ -95,7 +95,7 @@ function sendNotifyToDepositer($fromid,$toid,$dataid,$msg){
 }
 
 // 	$Aumeng=new Umeng('Android');
-// 	$Aumeng->sendAndroidCustomizedcast("invitation",$to_userid,"您有新的邀约","搅拌","新的邀请函","go_app","");//go_activity
+// 	$Aumeng->sendAndroidCustomizedcast("invitation",$to_userid,"你有新的邀约","搅拌","新的邀请函","go_app","");//go_activity
 //发送消息并建立通知数据
 function sendNotify($sendObj){
     global $db;

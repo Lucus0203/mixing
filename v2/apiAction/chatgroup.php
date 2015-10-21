@@ -85,7 +85,7 @@ function getGroups(){
 function getGroupInfo(){
         global $db;
 	$hxgroupid=filter(!empty($_REQUEST['hxgroupid'])?$_REQUEST['hxgroupid']:'');
-        $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid),array('id','hx_group_id','img','name','note'));
+        $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid),array('id','hx_group_id','user_id','img','name','note','maxusers'));
 	$usersql="select u.id as userid,user_name,nick_name,head_photo from ".DB_PREFIX."user u "
                 . "left join ".DB_PREFIX."chatgroup g on g.user_id=u.id "
                 . "left join ".DB_PREFIX."chatgroup_user gu on gu.user_id=u.id "

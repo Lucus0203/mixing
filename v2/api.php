@@ -1,5 +1,5 @@
 <?php
-//ini_set('display_errors', 0);
+ini_set('display_errors', 0);
 header('Content-Type: application/json');
 ini_set('date.timezone', 'Asia/Shanghai');
 define('APP_DIR', dirname(__FILE__));

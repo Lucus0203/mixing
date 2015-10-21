@@ -148,7 +148,7 @@ function delDiary(){
             return ;
         }
         if($db->getCount('diary',array('id'=>$diaryid,'user_id'=>$loginid))<=0){
-            echo json_result(null,'3','操作失败,您不能删除此内容');
+            echo json_result(null,'3','操作失败,你不能删除此内容');
             return;
         }else{
             $imgs=$db->getAll('diary_img',array('diary_id'=>$diaryid),array('img'));

@@ -248,7 +248,7 @@ function delFan(){
 		return;
 	}
 	if(empty($userid)){
-		echo json_result(null,3,'对方不是您的粉丝');
+		echo json_result(null,3,'对方不是你的粉丝');
 		return;
 	}
 	$db->delete('user_relation', array('user_id'=>$userid,'relation_id'=>$loginid));

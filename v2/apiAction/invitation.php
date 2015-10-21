@@ -47,7 +47,7 @@ function sendInvitation(){
 	//待接收邀约数
 	$count=$db->getCount('invitation',array('status'=>1,'user_id'=>$userid));
 	if($count>0){
-		echo json_result(null,'2','您还有一个待对方接收的邀请');//是的,要取消,不,再耐心等等
+		echo json_result(null,'2','你还有一个待对方接收的邀请');//是的,要取消,不,再耐心等等
 		return;
 	}
 	
@@ -128,7 +128,7 @@ function acceptInvitation(){
         $user=$db->getRow('user',array('id'=>$loginid),array('nick_name'));
         if($invt_type==1){//普通邀请函
             if ($db->getCount('invitation',array('id'=>$invt_id,'to_user_id'=>$loginid))<=0){
-                    echo json_result(null,'2','数据不符,您不能接受不属于您的邀请函');
+                    echo json_result(null,'2','数据不符,你不能接受不属于你的邀请函');
                     return;
             }
             $db->update('invitation', array('isreaded_user'=>2,'isreaded_to_user'=>1,'status'=>2),array('id'=>$invt_id));
@@ -137,7 +137,7 @@ function acceptInvitation(){
             sendNotifyInvitationAccept($loginid,$inv['user_id'],$invt_id);//接受邀请函
         }else{//活动邀请函
             if ($db->getCount('public_event_together_others',array('id'=>$invt_id,'user_id'=>$loginid))<=0){
-                    echo json_result(null,'2','数据不符,您不能接受不属于您的邀请函');
+                    echo json_result(null,'2','数据不符,你不能接受不属于你的邀请函');
                     return;
             }
             $db->update('public_event_together_others', array('isreaded_user'=>1,'isreaded_other'=>2,'status'=>2),array('id'=>$invt_id));
@@ -158,16 +158,16 @@ function refuseInvitation(){
         $user=$db->getRow('user',array('id'=>$loginid),array('nick_name'));
         if($invt_type==1){//普通邀请函
             if ($db->getCount('invitation',array('id'=>$invt_id,'to_user_id'=>$loginid))<=0){
-                    echo json_result(null,'2','数据不符,您不能拒绝不属于您的邀请函');
+                    echo json_result(null,'2','数据不符,你不能拒绝不属于你的邀请函');
                     return;
             }
             $db->update('invitation', array('isreaded_user'=>2,'isreaded_to_user'=>1,'status'=>3),array('id'=>$invt_id));
             //通知
             $inv=$db->getRow('invitation',array('id'=>$invt_id),array('user_id'));
-            sendNotifyInvitationRefuse($loginid,$inv['user_id'],$invt_id);//拒绝了您的邀请函
+            sendNotifyInvitationRefuse($loginid,$inv['user_id'],$invt_id);//拒绝了你的邀请函
         }else{//活动邀请函
             if ($db->getCount('public_event_together_others',array('id'=>$invt_id,'user_id'=>$loginid))<=0){
-                    echo json_result(null,'2','数据不符,您不能接受不属于您的邀请函');
+                    echo json_result(null,'2','数据不符,你不能接受不属于你的邀请函');
                     return;
             }
             $db->update('public_event_together_others', array('isreaded_user'=>1,'isreaded_other'=>2,'status'=>3),array('id'=>$invt_id));
@@ -193,13 +193,13 @@ function cancelInvitation(){
         }
         if($invt_type==1){//普通邀请函
             if($db->getCount('invitation',array('id'=>$invt_id,'user_id'=>$loginid))<=0){
-                    echo json_result(null,'3','请选择您发出的邀请函');
+                    echo json_result(null,'3','请选择你发出的邀请函');
                     return;
             }
             $db->update('invitation', array('status'=>4),array('id'=>$invt_id,'user_id'=>$loginid));
         }else{//活动邀请函
             if ($db->getCount('public_event_together_others',array('id'=>$invt_id,'other_id'=>$loginid))<=0){
-                    echo json_result(null,'3','请选择您发出的邀请函');
+                    echo json_result(null,'3','请选择你发出的邀请函');
                     return;
             }
             $db->update('public_event_together_others', array('status'=>4),array('id'=>$invt_id,'other_id'=>$loginid));
@@ -245,7 +245,7 @@ function delInvitation(){
                     $data=array('del_to_user'=>'1');
                     if($inv['status']==1){
                             $data['status']=3;
-                            sendNotifyInvitationRefuse($loginid,$inv['user_id'],$invt_id);//拒绝了您的邀请函
+                            sendNotifyInvitationRefuse($loginid,$inv['user_id'],$invt_id);//拒绝了你的邀请函
                     }
                     $condition=array('id'=>$invt_id,'to_user_id'=>$loginid);
                     $db->update('invitation', $data , $condition);

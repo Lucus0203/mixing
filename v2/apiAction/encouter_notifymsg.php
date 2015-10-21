@@ -61,7 +61,7 @@ function sendNotifyMsgByReceive($receiveid) {
         }
         if($type==2 || $type==3){
             //发送通知给寄存者
-            sendNotifyToDepositer($receive['from_user'],$receive['to_user'],$receive['encouter_id'],$from['nick_name'].'想领取您的咖啡,等待你的回复');
+            sendNotifyToDepositer($receive['from_user'],$receive['to_user'],$receive['encouter_id'],$from['nick_name'].'想领取你的咖啡,正在等待回复');
         }else{
             //发送给领取者的通知
             sendNotifyToReceiver($receive['to_user'],$receive['from_user'],$receiveid,null);
@@ -122,7 +122,7 @@ function sendNotifyMsgByPermiter($receiveid) {
                         break;
         }
         //发送给领取者的通知
-        sendNotifyToReceiver($receive['to_user'],$receive['from_user'],$receiveid,'您可以领取'.$from['nick_name'].'的咖啡了,请查看详情');
+        sendNotifyToReceiver($receive['to_user'],$receive['from_user'],$receiveid,'你可以领取'.$from['nick_name'].'的咖啡了,请查看详情');
         //互加好友
         makefriend($receiveid);
 }

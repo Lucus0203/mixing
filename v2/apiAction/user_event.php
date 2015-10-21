@@ -236,7 +236,7 @@ function eventPublic(){
 	$now=date("Y-m-d H:i");
 	$count=$db->getCountBySql("select * from ".DB_PREFIX."user_event ue where ue.datetime > '$now' and user_id=$userid ");
 	if($count>=3){
-		echo json_result(null,'21','您正在进行的活动已达到上限');
+		echo json_result(null,'21','你正在进行的活动已达到上限');
 		return;
 	}
 	if(empty($userid)){
