@@ -53,7 +53,7 @@ class db {
 		return $resuleRow;
 	}
 	//查询一条记录
-	public function getRow($table, $condition = array(), $field = array()) {
+	public function getRow($table, $condition = array(), $field = array(), $orderby="" ) {
 		$table=DB_PREFIX.$table;
 		$where = '';
 		if (! empty ( $condition )) {
@@ -73,7 +73,8 @@ class db {
 		} else {
 			$fieldstr = '*';
 		}
-		self::$sql = "select {$fieldstr} from {$table} {$where}";
+                $orderby =  empty($orderby)? '' : ' order by '.$orderby;
+		self::$sql = "select {$fieldstr} from {$table} {$where} {$orderby} ";
 		$result = mysqli_query ($this->conn, self::$sql );
 		$resuleRow = array ();
 		while ( $row = mysqli_fetch_assoc ( $result ) ) {
@@ -85,7 +86,6 @@ class db {
 		$table=DB_PREFIX.$table;
 		$where = '';
 		if (! empty ( $condition )) {
-				
 			foreach ( $condition as $k => $v ) {
 				$where .= $k . "='" . $v . "' and ";
 			}
@@ -196,5 +196,5 @@ class db {
 	public static function getLastSql() {
 		echo self::$sql;
 	}
-	
+        
 }

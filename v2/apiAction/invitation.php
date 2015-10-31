@@ -134,15 +134,19 @@ function acceptInvitation(){
             $db->update('invitation', array('isreaded_user'=>2,'isreaded_to_user'=>1,'status'=>2),array('id'=>$invt_id));
             //通知
             $inv=$db->getRow('invitation',array('id'=>$invt_id),array('user_id'));
+            makefriend($loginid, $inv['user_id']);//互加好友
             sendNotifyInvitationAccept($loginid,$inv['user_id'],$invt_id);//接受邀请函
         }else{//活动邀请函
             if ($db->getCount('public_event_together_others',array('id'=>$invt_id,'user_id'=>$loginid))<=0){
                     echo json_result(null,'2','数据不符,你不能接受不属于你的邀请函');
                     return;
             }
+            $inv=$db->getRow('public_event_together_others',array('id'=>$invt_id),array('user_id','public_event_id','other_id'));
+            //更新状态
             $db->update('public_event_together_others', array('isreaded_user'=>1,'isreaded_other'=>2,'status'=>2),array('id'=>$invt_id));
+            $db->update('public_event_together', array('other_id'=>$inv['other_id']),array('public_event_id'=>$inv['public_event_id'],'user_id'=>$inv['user_id']));
             //通知
-            $inv=$db->getRow('public_event_together_others',array('id'=>$invt_id),array('other_id'));
+            makefriend($loginid, $inv['other_id']);//互加好友
             publicEventTogetherAccept($loginid,$inv['other_id'],$invt_id);//接受搭伴邀请
         }
  	echo json_result(array('success'=>'TRUE'));
@@ -340,3 +344,19 @@ function invitationByAccept(){
 	
 }
 
+//互加好友
+function makefriend($from_user,$to_user){
+        global $db;
+	if($db->getCount('user_relation',array('user_id'=>$from_user,'relation_id'=>$to_user))==0){//没关注
+		$nickname=$db->getRow('user',array('id'=>$to_user),array('nick_name','pinyin'));
+                $rinfo=array('user_id'=>$from_user,'relation_id'=>$to_user,'status'=>1,'relation_name'=>$nickname['nick_name'],'relation_pinyin'=>$nickname['pinyin']);
+		$db->create('user_relation', $rinfo);//关注
+	}
+	if($db->getCount('user_relation',array('user_id'=>$to_user,'relation_id'=>$from_user))==0){//没关注
+		$nickname=$db->getRow('user',array('id'=>$from_user),array('nick_name','pinyin'));
+                $rinfo=array('user_id'=>$to_user,'relation_id'=>$from_user,'status'=>1,'relation_name'=>$nickname['nick_name'],'relation_pinyin'=>$nickname['pinyin']);
+		$db->create('user_relation', $rinfo);//关注
+	}
+        
+        
+}

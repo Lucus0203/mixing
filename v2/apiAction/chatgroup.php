@@ -85,7 +85,7 @@ function getGroups(){
 function getGroupInfo(){
         global $db;
 	$hxgroupid=filter(!empty($_REQUEST['hxgroupid'])?$_REQUEST['hxgroupid']:'');
-        $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid),array('id','hx_group_id','user_id','img','name','note','maxusers'));
+        $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid),array('id','hx_group_id','user_id','img','name','note','maxusers','isend'));
 	$usersql="select u.id as userid,user_name,nick_name,head_photo from ".DB_PREFIX."user u "
                 . "left join ".DB_PREFIX."chatgroup g on g.user_id=u.id "
                 . "left join ".DB_PREFIX."chatgroup_user gu on gu.user_id=u.id "
@@ -171,8 +171,11 @@ function joinGroup(){
             return;
         }
         $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid));
-        if($db->getCount('chatgroup_user',array('user_id'=>$loginid,'chatgroup_id'=>$group['id']))<=0){
+        if($db->getCount('chatgroup_user',array('user_id'=>$loginid,'chatgroup_id'=>$group['id']))<=0 && $db->getCount('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$loginid))<=0){
             $db->create('chatgroup_user',array('user_id'=>$loginid,'chatgroup_id'=>$group['id'],'encouter_id'=>$group['encouter_id']));
+            if($group['maxusers']==0||$group['maxusers']==$db->getCount('chatgroup_user',array('chatgroup_id'=>$group['id']))){
+                $db->update('chatgroup',array('isend'=>2),array('id'=>$group['id']));
+            }
         }
         echo json_result(array('success'=>'TRUE'));
     

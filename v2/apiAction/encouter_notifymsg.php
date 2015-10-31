@@ -17,10 +17,13 @@ function sendNotifyMsgByReceive($receiveid) {
         switch ($type) {
                 case 1://爱心
                         if ($receive['from_user'] != $receive['to_user']) {
-                                //发送环信消息
-                                $HuanxinObj = Huanxin::getInstance();
-                                $huserObj = $HuanxinObj->sendmsgToUser($from['mobile'], $to['mobile'], '我领到了你的咖啡,很高兴认识你~');
-                                $huserObj = $HuanxinObj->sendmsgToUser($to['mobile'], $from['mobile'], '很高兴认识你~');
+                                $relation =  getRelationStatus($receive['from_user'], $receive['to_user']);
+                                if($relation['relation_status']!=4){
+                                    //发送环信消息
+                                    $HuanxinObj = Huanxin::getInstance();
+                                    $huserObj = $HuanxinObj->sendmsgToUser($from['mobile'], $to['mobile'], '我领到了你的咖啡,很高兴认识你~');
+                                    $huserObj = $HuanxinObj->sendmsgToUser($to['mobile'], $from['mobile'], '我的咖啡送达给你了,很高兴认识你~');
+                                }
                         }
                         //发送短息
                         $shop = $db->getRow('shop', array('id' => $encouter['shop_id']));
@@ -32,10 +35,13 @@ function sendNotifyMsgByReceive($receiveid) {
                         break;
                 case 4://传递 必须寄存才可领
                         if ($receive['from_user'] != $receive['to_user']) {
-                                //发送环信消息
-                                $HuanxinObj = Huanxin::getInstance();
-                                $huserObj = $HuanxinObj->sendmsgToUser($from['mobile'], $to['mobile'], '我领到了你的咖啡,很高兴认识你~');
-                                $huserObj = $HuanxinObj->sendmsgToUser($to['mobile'], $from['mobile'], '很高兴认识你~');
+                                $relation =  getRelationStatus($receive['from_user'], $receive['to_user']);
+                                if($relation['relation_status']!=4){
+                                    //发送环信消息
+                                    $HuanxinObj = Huanxin::getInstance();
+                                    $huserObj = $HuanxinObj->sendmsgToUser($from['mobile'], $to['mobile'], '我领到了你的咖啡,很高兴认识你~');
+                                    $huserObj = $HuanxinObj->sendmsgToUser($to['mobile'], $from['mobile'], '我的咖啡送达给你了,很高兴认识你~');
+                                }
                         }
                         //发送短息
                         $shop = $db->getRow('shop', array('id' => $encouter['shop_id']));
@@ -44,10 +50,13 @@ function sendNotifyMsgByReceive($receiveid) {
                         break;
                 case 5://等候 必须寄存才可领
                         if ($receive['from_user'] != $receive['to_user']) {
-                                //发送环信消息
-                                $HuanxinObj = Huanxin::getInstance();
-                                $huserObj = $HuanxinObj->sendmsgToUser($from['mobile'], $to['mobile'], '你等的咖啡我买了,很高兴认识你~');
-                                $huserObj = $HuanxinObj->sendmsgToUser($to['mobile'], $from['mobile'], '我领到了你的咖啡,很高兴认识你~');
+                                $relation =  getRelationStatus($receive['from_user'], $receive['to_user']);
+                                if($relation['relation_status']!=4){
+                                    //发送环信消息
+                                    $HuanxinObj = Huanxin::getInstance();
+                                    $huserObj = $HuanxinObj->sendmsgToUser($from['mobile'], $to['mobile'], '你等的咖啡我买了,很高兴认识你~');
+                                    $huserObj = $HuanxinObj->sendmsgToUser($to['mobile'], $from['mobile'], '我领到了你的咖啡,很高兴认识你~');
+                                }
                         }
                         $db->update('encouter',array('verifycode'=>$verifycode),array('id'=>$receive['encouter_id']));
                         //发送短息
@@ -63,13 +72,13 @@ function sendNotifyMsgByReceive($receiveid) {
             //发送通知给寄存者
             sendNotifyToDepositer($receive['from_user'],$receive['to_user'],$receive['encouter_id'],$from['nick_name'].'想领取你的咖啡,正在等待回复');
         }else{
+            //互加好友
+            makefriend($receiveid);
             //发送给领取者的通知
             sendNotifyToReceiver($receive['to_user'],$receive['from_user'],$receiveid,null);
             //发送通知给寄存者
             sendNotifyToDepositer($receive['from_user'],$receive['to_user'],$receive['encouter_id'],null);
         }
-        //互加好友
-        makefriend($receiveid);
 }
 
 //寄存者授权成功发送消息
@@ -89,10 +98,13 @@ function sendNotifyMsgByPermiter($receiveid) {
         switch ($type) {
                 case 2://缘分
                         if ($receive['to_user'] != $receive['from_user']) {
-                                //发送环信消息
-                                $HuanxinObj = Huanxin::getInstance();
-                                $huserObj = $HuanxinObj->sendmsgToUser($from['mobile'], $to['mobile'], '咖啡已经送达给你喽,很高兴认识你~');
-                                $huserObj = $HuanxinObj->sendmsgToUser($to['mobile'], $from['mobile'], '谢谢你的咖啡,很高兴认识你~');
+                                $relation =  getRelationStatus($receive['from_user'], $receive['to_user']);
+                                if($relation['relation_status']!=4){
+                                    //发送环信消息
+                                    $HuanxinObj = Huanxin::getInstance();
+                                    $huserObj = $HuanxinObj->sendmsgToUser($from['mobile'], $to['mobile'], '咖啡已经送达给你喽,很高兴认识你~');
+                                    $huserObj = $HuanxinObj->sendmsgToUser($to['mobile'], $from['mobile'], '谢谢你的咖啡,很高兴认识你~');
+                                }
                         }
                         //发送短息
                         $shop = $db->getRow('shop', array('id' => $encouter['shop_id']));
@@ -101,10 +113,13 @@ function sendNotifyMsgByPermiter($receiveid) {
                         break;
                 case 3://约会
                         if ($receive['to_user'] != $receive['from_user']) {
-                                //发送环信消息
-                                $HuanxinObj = Huanxin::getInstance();
-                                $huserObj = $HuanxinObj->sendmsgToUser($from['mobile'], $to['mobile'], '咖啡已经送达给你喽,很期待认识你,不见不散~');
-                                $huserObj = $HuanxinObj->sendmsgToUser($to['mobile'], $from['mobile'], '谢谢你的咖啡,很期待认识你,不见不散~');
+                                $relation =  getRelationStatus($receive['from_user'], $receive['to_user']);
+                                if($relation['relation_status']!=4){
+                                    //发送环信消息
+                                    $HuanxinObj = Huanxin::getInstance();
+                                    $huserObj = $HuanxinObj->sendmsgToUser($from['mobile'], $to['mobile'], '咖啡已经送达给你喽,很期待认识你,不见不散~');
+                                    $huserObj = $HuanxinObj->sendmsgToUser($to['mobile'], $from['mobile'], '谢谢你的咖啡,很期待认识你,不见不散~');
+                                }
                         }
                         //发送短息给领取者
                         $product_receive=($receive['choice_menu']==2)?$encouter['product2']:$encouter['product1'];//获取的咖啡
@@ -125,6 +140,43 @@ function sendNotifyMsgByPermiter($receiveid) {
         sendNotifyToReceiver($receive['to_user'],$receive['from_user'],$receiveid,'你可以领取'.$from['nick_name'].'的咖啡了,请查看详情');
         //互加好友
         makefriend($receiveid);
+}
+
+
+//传递最后一杯咖啡
+function sendNotifyMsgLastTransfer($lastReceiveid){
+        global $db;
+        $receiveid=$lastReceiveid;
+        $receive=$db->getRow('encouter_receive',array('id'=>$receiveid));
+        //更新验证凭证
+        $verifycode=encouterVerify('encouter_receive',$receive['from_user']);
+        $receive['verifycode']=$verifycode;
+        $db->update('encouter_receive',array('verifycode'=>$verifycode),array('id'=>$receiveid));
+        //领取者
+        $from = $db->getRow('user', array('id' => $receive['from_user']));
+        //寄存者
+        $to = $db->getRow('user', array('id' => $receive['to_user']));
+        $encouter=$db->getRow('encouter', array('id' => $receive['encouter_id']));
+        if ($receive['from_user'] != $receive['to_user']) {
+                $relation =  getRelationStatus($receive['from_user'], $receive['to_user']);
+                if($relation['relation_status']!=4){
+                    //发送环信消息
+                    $HuanxinObj = Huanxin::getInstance();
+                    $huserObj = $HuanxinObj->sendmsgToUser($from['mobile'], $to['mobile'], '我是第一个传递者,我收到了你的咖啡');
+                    $huserObj = $HuanxinObj->sendmsgToUser($to['mobile'], $from['mobile'], '我是传递最后一人,为你寄存了一杯咖啡');
+                }
+        }
+        //发送短息
+        $shop = $db->getRow('shop', array('id' => $encouter['shop_id']));
+        $sms = new Sms();
+        $sms->sendMsg("您参与的传递咖啡<" . $encouter['product1'] . ">验证码是:" . $receive['verifycode'] . ",请尽快到<" . $shop['title'] . ">领取!人生，就是去不断开启新的旅途~", $from['mobile']);
+        //互加好友
+        makefriend($receiveid);
+        //发送给领取者的通知
+        sendNotifyToReceiver($receive['to_user'],$receive['from_user'],$receiveid,'你发起的"'.$encouter['topic'].'"传递咖啡完成了,'.$to['nick_name'].'为你寄存了咖啡');
+        //发送通知给寄存者
+        //sendNotifyToDepositer($receive['from_user'],$receive['to_user'],$receive['encouter_id'],null);
+    
 }
 
 //领取凭证码
@@ -156,4 +208,42 @@ function makefriend($receiveid){
 	}
         
         
+}
+
+function getRelationStatus($myself_id,$user_id){
+	global $db;
+	$info=array();
+	//我关注的
+	$myfav_count=$db->getCount('user_relation',array('user_id'=>$myself_id,'relation_id'=>$user_id));
+	//关注我的
+	$myfun_count=$db->getCount('user_relation',array('user_id'=>$user_id,'relation_id'=>$myself_id));
+	if($myfav_count>0&&$myfun_count>0){
+		$info['relation']='好友';
+		$info['relation_status']=4;
+	}elseif ($myfav_count>0){
+		$info['relation']='关注中';//我关注的人
+		$info['relation_status']=2;
+	}elseif ($myfun_count>0){
+		$info['relation']='被关注';//关注我的人
+		$info['relation_status']=3;
+	}
+	if ($myfun_count>0){
+		$re=$db->getRow('user_relation',array('user_id'=>$user_id,'relation_id'=>$myself_id));
+		if($re['status']==2){
+			$info['relation']='陌生人';//对方黑名单中
+			$info['relation_status']=6;
+		}
+	}
+	if ($myfav_count>0){
+		$re=$db->getRow('user_relation',array('user_id'=>$myself_id,'relation_id'=>$user_id));
+		if($re['status']==2){
+			$info['relation']='拉黑';//黑名单
+			$info['relation_status']=5;
+		}
+	}
+	if($myfav_count<=0&&$myfun_count<=0){
+		$info['relation']='陌生人';//陌生人
+		$info['relation_status']=1;
+	}
+	return $info;
 }

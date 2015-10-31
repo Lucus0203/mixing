@@ -23,6 +23,9 @@ switch ($act){
 	case 'joinEvent'://求伴
 		joinEvent();
 		break;
+	case 'removeJoinEvent'://取消报名
+		removeJoinEvent();//取消报名
+		break;
 	case 'togetherEvent'://对求伴者发起搭伴邀请
 		togetherEvent();
 		break;
@@ -54,7 +57,7 @@ function getEvents(){
 		$sql="select pe.id,pe.title,pe.img,pe.address,pe.datetime,if(pu.user_id is not null,1,2) as iscollect from ".DB_PREFIX."public_event pe 
 				left join ".DB_PREFIX."public_users pu on pe.id=pu.public_event_id and pu.user_id=$loginid 
 				where pe.isdelete = 0 and pe.ispublic=1 and (pe.end_date > '".date('Y-m-d H:i:s')."' or pe.end_date = '' or pe.end_date is null ) 
-			 	order by pu.user_id,pe.num asc";
+			 	order by pe.num asc ";
 	}else{//未登录
 		$sql="select pe.id,pe.title,pe.img,pe.address,pe.datetime from ".DB_PREFIX."public_event pe 
 				where pe.isdelete = 0 and pe.ispublic=1 and (pe.end_date > '".date('Y-m-d H:i:s')."' or pe.end_date = '' or pe.end_date is null ) 
@@ -165,12 +168,21 @@ function eventInfo(){
 	$pub_event=$db->getRow("public_event",array('id'=>$id),array('title','img','content','price','datetime','address','lng','lat'));//获取活动信息
 	$pub_event['distance']=(!empty($pub_event['lat'])&&!empty($pub_event['lng'])&&!empty($lng)&&!empty($lat))?getDistance($lat,$lng,$pub_event['lat'],$pub_event['lng']):lang_UNlOCATE;
 	//活动海报
-	$pub_event['photos']=$db->getAll("public_photo",array('public_event_id'=>$id));//活动海报
+        $imgsql="select id,img,width,height from ".DB_PREFIX."public_photo where public_event_id = $id and img <> '{$pub_event['img']}' ";
+	$pub_event['photos']=$db->getAllBySql($imgsql);//活动海报
+        $first_img_sql="select id,img,width,height from ".DB_PREFIX."public_photo where public_event_id = $id and img = '{$pub_event['img']}' ";
+        $first_img=$db->getRowBySql($first_img_sql);
         if(!empty($pub_event['img'])){
-            array_unshift($pub_event['photos'],array('img'=>$pub_event['img']));
+            array_unshift($pub_event['photos'],$first_img);
         }
 	//获取搭伴用户
-	$groupusersql="select u.id as user_id,u.nick_name,u.user_name,u.head_photo from ".DB_PREFIX."public_event_together pet left join ".DB_PREFIX."user u on pet.user_id = u.id where pet.other_id is null and pet.public_event_id=".$id." order by pet.id asc ";
+        $userfiltersql=!empty($loginid)?" or pet.user_id = $loginid ":'';
+	$groupusersql="select u.id as user_id,u.nick_name,u.user_name,u.head_photo from ".DB_PREFIX."public_event_together pet left join ".DB_PREFIX."user u on pet.user_id = u.id where (pet.other_id is null $userfiltersql ) and pet.public_event_id=".$id;
+        if(!empty($loginid)){
+            //我已经找他搭过伴的并且状态不是4取消的
+            $groupusersql.=" and not exists ( select u.id from ".DB_PREFIX."user u left join ".DB_PREFIX."public_event_together_others peto on peto.user_id = u.id where public_event_id=$id and peto.other_id = $loginid and peto.status <> 4 and pet.user_id = peto.user_id ) ";
+        }
+        $groupusersql.= " order by pet.id asc ";
 	$pub_event['groupusers']=$db->getAllBySql($groupusersql);
 	//活动用户及头像地址
 	$sql="select u.id as user_id,u.nick_name,u.user_name,u.head_photo as path from ".DB_PREFIX."public_users pu left join ".DB_PREFIX."user u on pu.user_id = u.id where pu.public_event_id=".$id;
@@ -200,6 +212,15 @@ function joinEvent(){
 		return;
         }
 	$db->create('public_event_together', array('public_event_id'=>$id,'user_id'=>$loginid));
+	echo json_result('success');
+}
+
+//取消报名
+function removeJoinEvent(){
+	global $db;
+	$id=filter($_REQUEST['eventid']);
+	$loginid=filter($_REQUEST['loginid']);
+        $db->delete('public_event_together', array('public_event_id'=>$id,'user_id'=>$loginid));
 	echo json_result('success');
 }
 
@@ -241,7 +262,19 @@ function togetherEvent(){
             $lng=$reslg['lng'];
             $lat=$reslg['lat'];
         }
+        //取消搭伴的人不可再被搭伴
+        if($db->getCount('public_event_together',array('public_event_id'=>$eventid,'user_id'=>$userid))==0){
+		echo json_result(null,'7','对方已取消报名');return;
+        }
+        //已搭伴过的人不可再被搭伴
+        if($db->getCount('public_event_together_others',array('public_event_id'=>$eventid,'user_id'=>$userid,'other_id'=>$loginid."' and status <> '4"))>0){
+		echo json_result(null,'8','你已经搭伴过Ta');return;
+        }
 	$eventInvitationid=$db->create('public_event_together_others', array('public_event_id'=>$eventid,'title'=>$event['title'],'user_id'=>$userid,'other_id'=>$loginid,'datetime'=>$datetime,'address'=>$address,'lng'=>$lng,'lat'=>$lat,'note'=>$note,'pay_type'=>$pay_type,'status'=>1,'isreaded_other'=>1));
+        if($db->getCount('public_users',array('user_id'=>$loginid,'public_event_id'=>$eventid))==0){
+                $up=array('user_id'=>$loginid,'public_event_id'=>$eventid,'created'=>date("Y-m-d H:i:s"));
+                $db->create('public_users', $up);
+        }
         //发送通知 notify.php
         publicEventTogether($loginid, $userid,$eventInvitationid);
 	echo json_result('success');

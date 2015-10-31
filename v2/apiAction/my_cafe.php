@@ -46,18 +46,18 @@ function depositList() {
     $page_no = isset($_REQUEST ['page']) ? $_REQUEST ['page'] : 1;
     $page_size = PAGE_SIZE;
     $start = ($page_no - 1) * $page_size;
-    $sql = "select od.id as order_id,encouter.id as encouter_id,encouter.type as encouter_type,encouter.product_img1,encouter.product1,encouter.price1,encouter.product_img2,encouter.product2,encouter.price2,od.amount,encouter.product1 as menu,encouter.product_img1 as menu_img,shop.title as shop_name,shop.lng,shop.lat,date_format(encouter.created,'%Y-%c-%d') as created,encouter.status,count(receive.id) as num,od.id as order_id from " . DB_PREFIX . "encouter encouter "
+    $sql = "select od.id as order_id,encouter.id as encouter_id,encouter.type as encouter_type,encouter.product_img1,encouter.product1,encouter.price1,encouter.product_img2,encouter.product2,encouter.price2,od.amount,encouter.product1 as menu,encouter.product_img1 as menu_img,shop.title as shop_name,shop.lng,shop.lat,date_format(encouter.created,'%Y-%c-%d') as created,encouter.status,encouter.isread,count(receive.id) as num,od.id as order_id from " . DB_PREFIX . "encouter encouter "
             . "left join " . DB_PREFIX . "order od on od.encouter_id=encouter.id "
             . "left join " . DB_PREFIX . "shop shop on shop.id=encouter.shop_id "
             . "left join " . DB_PREFIX . "encouter_receive receive on receive.encouter_id = encouter.id and receive.status=1 "
-            . "where (TIMESTAMPDIFF(DAY,encouter.created,now())<encouter.days or encouter.days=0) and od.id is not null and od.id <>'' and encouter.user_id = {$loginid} and encouter.type <> 5 group by encouter.id order by encouter.id desc";
+            . "where encouter.status <> 99 and (TIMESTAMPDIFF(DAY,encouter.created,now())<encouter.days or encouter.days=0) and od.id is not null and od.id <>'' and encouter.user_id = {$loginid} and encouter.type <> 5 group by encouter.id order by encouter.id desc";
     $sql .= " limit $start,$page_size";
     $data = $db->getAllBySql($sql);
     foreach ($data as $k => $v) {
         //encouter.status 1待付款2待领取3待到店领取4已领走
         $data[$k]['distance'] = (!empty($v['lat']) && !empty($v['lng']) && !empty($lng) && !empty($lat)) ? getDistance($lat, $lng, $v['lat'], $v['lng']) : lang_UNlOCATE;
     }
-    $db->update('encouter',array('isread'=>'2'),array('user_id'=>$loginid.'\' and type <> \'5'));
+    //$db->update('encouter',array('isread'=>'2'),array('user_id'=>$loginid.'\' and type <> \'5'));
     echo json_result($data);
 }
 
@@ -69,7 +69,7 @@ function depositInfo(){
     $page_no = isset($_REQUEST ['page']) ? $_REQUEST ['page'] : 1;
     $page_size = PAGE_SIZE;
     $start = ($page_no - 1) * $page_size;
-    $sql = "select encouter.id as encouter_id,encouter.type,encouter.product1 as menu1,encouter.product_img1 as menu_img1,encouter.price1,encouter.product2 as menu2,encouter.product_img2 as menu_img2,encouter.price2,encouter.shop_id,shop.title as shop_name,shop.img as shop_img,encouter.status,encouter.verifycode,encouter.created from " . DB_PREFIX . "encouter encouter "
+    $sql = "select encouter.id as encouter_id,encouter.type,encouter.product1 as menu1,encouter.product_img1 as menu_img1,encouter.price1,encouter.product2 as menu2,encouter.product_img2 as menu_img2,encouter.price2,encouter.shop_id,shop.title as shop_name,shop.img as shop_img,encouter.status,encouter.verifycode,encouter.topic,encouter.isend,encouter.created from " . DB_PREFIX . "encouter encouter "
             . "left join " . DB_PREFIX . "shop shop on shop.id=encouter.shop_id "
             . "left join " . DB_PREFIX . "order od on od.encouter_id = encouter.id "
             . "where encouter.id = {$encouterid} and od.user_id = {$loginid} ";
@@ -84,7 +84,16 @@ function depositInfo(){
             $red=$db->getRow('encouter_receive',array('encouter_id'=>$encouterid,'status'=>7));
         }
         $data['waitingtime']=strtotime($red['created'])-strtotime($data['created']);
+        //如果最后传递者
+        if($data['isend']==2){
+            $encouter = $db->getRow('encouter', array('id' => $encouterid),array('transfer_encouterids'));
+            $transfer_encouterids=explode(',',$encouter['transfer_encouterids']);
+            $firstEncouterId = $transfer_encouterids[0];
+            $chatgroup=$db->getRow('chatgroup',array('encouter_id'=>$firstEncouterId));
+            $data['isend']=$chatgroup['hx_group_id'];//给讨论组id
+        }
     }
+    $db->update('encouter',array('isread'=>'2'),array('id'=>$encouterid));
     //领取的人
     $receiveSql = "select receive.id as receive_id,user.id as user_id,user.user_name,user.nick_name,user.head_photo,receive.msg,receive.status,receive.created from ".DB_PREFIX."encouter_receive receive "
             . "left join ".DB_PREFIX."user user on user.id = receive.from_user "
@@ -106,17 +115,17 @@ function receiveList() {
     $page_no = isset($_REQUEST ['page']) ? $_REQUEST ['page'] : 1;
     $page_size = PAGE_SIZE;
     $start = ($page_no - 1) * $page_size;
-    $sql = "select receive.id as receive_id,receive.encouter_id,encouter.type as encouter_type,if(choice_menu=2,encouter.product2,encouter.product1) as menu,if(choice_menu=2,encouter.product_img2,product_img1) as menu_img,shop.title as shop_name,shop.lng,shop.lat,date_format(receive.created,'%Y-%c-%d') as created,receive.status from " . DB_PREFIX . "encouter_receive receive "
+    $sql = "select receive.id as receive_id,receive.encouter_id,encouter.type as encouter_type,if(choice_menu=2,encouter.product2,encouter.product1) as menu,if(choice_menu=2,encouter.product_img2,product_img1) as menu_img,shop.title as shop_name,shop.lng,shop.lat,date_format(receive.created,'%Y-%c-%d') as created,receive.status,receive.isread from " . DB_PREFIX . "encouter_receive receive "
             . "left join " . DB_PREFIX . "encouter encouter on receive.encouter_id = encouter.id "
             . "left join " . DB_PREFIX . "shop shop on shop.id=encouter.shop_id "
-            . "where receive.from_user = {$loginid} and receive.type <> 5 and receive.status <> 4 and receive.status <> 99 order by receive.id desc ";
+            . "where receive.status <> 99 and receive.from_user = {$loginid} and receive.type <> 5 and receive.status <> 4 and receive.status <> 99 order by receive.id desc ";
     $sql .= " limit $start,$page_size";
     $data = $db->getAllBySql($sql);
     foreach ($data as $k => $v) {
         //receive.status 1等待回复2可领取3被拒绝4待支付到账
         $data[$k]['distance'] = (!empty($v['lat']) && !empty($v['lng']) && !empty($lng) && !empty($lat)) ? getDistance($lat, $lng, $v['lat'], $v['lng']) : lang_UNlOCATE;
     }
-    $db->update('encouter_receive',array('isread'=>'2'),array('user_id'=>$loginid));
+    //$db->update('encouter_receive',array('isread'=>'2'),array('user_id'=>$loginid));
     echo json_result($data);
 }
 
@@ -126,7 +135,7 @@ function receiveInfo(){
     global $db;
     $loginid = filter($_REQUEST['loginid']);
     $receiveid=filter($_REQUEST['receiveid']);
-    $sql = "select encouter.shop_id,user.user_name,user.nick_name,user.head_photo,receive.encouter_id,receive.type,choice_menu,encouter.product1 as menu,encouter.product_img1 as menu_img,encouter.price1 as price,encouter.product2 as menu2,encouter.product_img2 as menu_img2,encouter.price2,encouter.shop_id,shop.title as shop_name,shop.img as shop_img,receive.verifycode,encouter.created,receive.status from " . DB_PREFIX . "encouter_receive receive "
+    $sql = "select encouter.shop_id,user.user_name,user.nick_name,user.head_photo,receive.encouter_id,receive.type,choice_menu,encouter.product1 as menu,encouter.product_img1 as menu_img,encouter.price1 as price,encouter.product2 as menu2,encouter.product_img2 as menu_img2,encouter.price2,encouter.shop_id,shop.title as shop_name,shop.img as shop_img,receive.verifycode,encouter.created,encouter.topic,receive.status,receive.isend from " . DB_PREFIX . "encouter_receive receive "
             . "left join " .DB_PREFIX . "encouter encouter on encouter.id = receive.encouter_id "
             . "left join " . DB_PREFIX . "shop shop on shop.id = encouter.shop_id "
             . "left join " . DB_PREFIX . "user user on user.id = encouter.user_id "
@@ -137,7 +146,16 @@ function receiveInfo(){
     }else{
         $red=$db->getRow('encouter_receive',array('encouter_id'=>$data['encouter_id'],'status'=>2));
         $data['waitingtime']=strtotime($red['created'])-strtotime($data['created']);
+        //如果最后传递者
+        if($data['isend']==2){
+            $encouter = $db->getRow('encouter', array('id' => $data['encouter_id']),array('transfer_encouterids'));
+            $transfer_encouterids=explode(',',$encouter['transfer_encouterids']);
+            $firstEncouterId = $transfer_encouterids[0];
+            $chatgroup=$db->getRow('chatgroup',array('encouter_id'=>$firstEncouterId));
+            $data['isend']=$chatgroup['hx_group_id'];//给讨论组id
+        }
     }
+    $db->update('encouter_receive',array('isread'=>'2'),array('id'=>$receiveid));
     echo json_result($data);
 }
 
@@ -151,7 +169,7 @@ function waitList(){
     $page_no = isset($_REQUEST ['page']) ? $_REQUEST ['page'] : 1;
     $page_size = PAGE_SIZE;
     $start = ($page_no - 1) * $page_size;
-    $sql = "select encouter.id as wait_id,encouter.product1 as menu,encouter.product_img1 as menu_img,shop.title as shop_name,shop.lng,shop.lat,date_format(encouter.created,'%Y-%c-%d') as created,if(TIMESTAMPDIFF(DAY,encouter.created,now())>encouter.days && encouter.status=5,8,encouter.status) as status from " . DB_PREFIX . "encouter encouter "
+    $sql = "select encouter.id as wait_id,encouter.product1 as menu,encouter.product_img1 as menu_img,shop.title as shop_name,shop.lng,shop.lat,date_format(encouter.created,'%Y-%c-%d') as created,if(TIMESTAMPDIFF(DAY,encouter.created,now())>encouter.days && encouter.status=5,8,encouter.status) as status,encouter.isread from " . DB_PREFIX . "encouter encouter "
             . "left join " . DB_PREFIX . "shop shop on shop.id=encouter.shop_id "
             . "where encouter.user_id = {$loginid} and encouter.type = 5 order by encouter.id desc";
     $sql .= " limit $start,$page_size";
@@ -161,7 +179,7 @@ function waitList(){
         $data[$k]['distance'] = (!empty($v['lat']) && !empty($v['lng']) && !empty($lng) && !empty($lat)) ? getDistance($lat, $lng, $v['lat'], $v['lng']) : lang_UNlOCATE;
         //$data[$k]['created']=time2Units(time()-strtotime($v['created']));
     }
-    $db->update('encouter',array('isread'=>'2'),array('user_id'=>$loginid,'type'=>'5'));
+    //$db->update('encouter',array('isread'=>'2'),array('user_id'=>$loginid,'type'=>'5'));
     echo json_result($data);
     
 }
@@ -186,6 +204,7 @@ function waitInfo(){
         $red=$db->getRow('encouter_receive',array('encouter_id'=>$data['encouter_id'],'status'=>7));
         $data['waitingtime']=strtotime($red['created'])-strtotime($data['created']);
     }
+    $db->update('encouter',array('isread'=>'2'),array('id'=>$encouterid));
     echo json_result($data);
 }
 

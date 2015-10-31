@@ -43,6 +43,7 @@ function shopList(){
 	$lat=filter($_REQUEST['lat']);
 	$city_code=filter($_REQUEST['city_code']);
 	$page_no = isset ( $_REQUEST ['page'] ) ? $_REQUEST ['page'] : 1;
+        $encouterid = isset ( $_REQUEST ['encouterid'] ) ? $_REQUEST ['encouterid'] : '';//过滤咖啡馆用
 	$page_size = PAGE_SIZE;
 	$start = ($page_no - 1) * $page_size;
 	//是否营业中,1营业中,2休息
@@ -50,6 +51,17 @@ function shopList(){
         if(!empty($city_code)){
                 $city=$db->getRow('shop_addcity',array('code'=>$city_code));
                 $sql.=(!empty($city['id']))?" and addcity_id={$city['id']} ":'';
+        }
+        if(!empty($encouterid)){
+            $encouter = $db->getRow('encouter', array('id' => $encouterid),array('transfer_encouterids'));
+            if(!empty($encouter['transfer_encouterids'])){
+                $transfer_encouterids=explode(',',$encouter['transfer_encouterids']);
+                $firstEncouterId = $transfer_encouterids[0];
+            }else{
+                $firstEncouterId = $encouterid;
+            }
+            $encouter = $db->getRow('encouter', array('id' => $firstEncouterId),array('shop_id'));
+            $sql.=" and id={$encouter['shop_id']} ";
         }
         $sql.=(!empty($lng)&&!empty($lat))?" order by sqrt(power(lng-{$lng},2)+power(lat-{$lat},2)),id ":' order by id ';
 	$sql .= " limit $start,$page_size";
@@ -209,7 +221,9 @@ function deposit() {
                                 $data['transfer_num'] = $prev_encouter['transfer_num'] + 1;
                                 $data['prev_encouter_id'] = $prev_encouter_id;
                                 $data['prev_encouter_receive_id'] = $prev_encouter_receive_id;
+                                $data['transfer_encouterids'] = empty($prev_encouter['transfer_encouterids'])?$prev_encouter_id:$prev_encouter['transfer_encouterids'].','.$prev_encouter_id;//记录传递的id
                                 $data['people_num'] = $prev_encouter['people_num'];
+                                $data['isend'] = $data['people_num']==$data['transfer_num']?2:1;//1非最终2最终
                                 $data['topic'] = $prev_encouter['topic'];
                         }else{
                                 if (empty($people_num)) {
@@ -354,6 +368,11 @@ function cafeInfo() {
                 . "where usertag.encouter_id={$id}";
         $data['tags'] = $db->getAllBySql($tagsql);
         $data['user_imgs'] = $db->getAll('encouter_img', array('encouter_id' => $id), array('id','img'));
+        $data['isend']=1;
+        //传递倒数第一人
+        if($data['people_num']!=0 && $data['people_num']-$data['transfer_num']==1){
+            $data['isend']=2;
+        }
         echo json_result($data);
 }
 
@@ -429,14 +448,14 @@ function receive() {
                         if ($encouter['status'] != 2) {
                                 echo json_result(null, '203', '很抱歉你晚了一步');return;
                         }
-                        if($encouter['paylock']!=1){
+                        if($encouter['paylock']!=1&&$encouter['paylock_user']!=$userid){
                                 $remenus=floor((time()-strtotime($encouter['updated'])) / 60);
                                 if($remenus<3){//3分钟锁定
-                                        json_result(null, '206', '这杯咖啡正在等待他人操作,请稍后再来尝试');return;
+                                        echo json_result(null, '206', '这杯咖啡正在等待他人操作');return;
                                 }
                         }
                         if($encouter['status']!=2){
-                                json_result(null, '207', '很抱歉,这杯咖啡已由他人接力');return;
+                                echo json_result(null, '207', '很抱歉,这杯咖啡已由他人接力');return;
                         }
                         if($db->getCount('encouter_receive',array('encouter_id'=>$encouterid,'from_user'=>$userid))==0){
                                 $receive = array('from_user' => $userid, 'encouter_id' => $encouterid, 'type' => $encouter['type'], 'to_user' => $encouter['user_id'], 'status' => 4,'isread'=>1, 'created' => date("Y-m-d H:i:s"));
@@ -451,14 +470,14 @@ function receive() {
                         if ($encouter['status'] != 5) {
                                 echo json_result(null, '203', '很抱歉你晚了一步');return;
                         }
-                        if($encouter['paylock']!=1){
+                        if($encouter['paylock']!=1&&$encouter['paylock_user']!=$userid){
                                 $remenus=floor((time()-strtotime($encouter['updated'])) / 60);
                                 if($remenus<3){//3分钟锁定
-                                        json_result(null, '208', '这杯咖啡正在等待他人操作,请稍后再来尝试');return;
+                                        echo json_result(null, '208', '这杯咖啡正在等待他人操作,请稍后再来尝试');return;
                                 }
                         }
                         if($encouter['status']!=5){
-                                json_result(null, '209', '很抱歉,你晚了一步');return;
+                                echo json_result(null, '209', '很抱歉,你晚了一步');return;
                         }
                         if($db->getCount('encouter_receive',array('encouter_id'=>$encouterid,'from_user'=>$userid))==0){
                                 $receive = array('from_user' => $userid, 'encouter_id' => $encouterid, 'type' => $encouter['type'], 'to_user' => $encouter['user_id'], 'status' => 6,'isread'=>1, 'created' => date("Y-m-d H:i:s"));
@@ -497,9 +516,9 @@ function permit() {
                 return;
         }
         $db->excuteSql('begin');
-        $db->update('encouter_receive',array('status'=>2),array('id'=>$receiveid));//可领取
+        $db->update('encouter_receive',array('status'=>2,'isread' => 1),array('id'=>$receiveid));//可领取
         //拒绝其他
-        $updateOrderSql="update ".DB_PREFIX."encouter_receive set status = 3 where id <> ".$receiveid." and encouter_id = ".$receive['encouter_id'];
+        $updateOrderSql="update ".DB_PREFIX."encouter_receive set status = 3,isread = 1 where id <> ".$receiveid." and encouter_id = ".$receive['encouter_id'];
         $db->excuteSql($updateOrderSql);
         $db->update('encouter',array('status'=>3),array('id'=>$receive['encouter_id']));//待到店领取
         $db->excuteSql('commit');
@@ -516,25 +535,32 @@ function getGroupID(){
                 echo json_result(null, '2', '邂逅id获取失败');
                 return;
         }
-        $encouter_id=getFirstEncouterId($encouter_id);
-        $chatgroup=$db->getRow('chatgroup',array('encouter_id'=>$encouter_id));
+        
+        $encouter = $db->getRow('encouter', array('id' => $encouter_id),array('transfer_encouterids'));
+        if(!empty($encouter['transfer_encouterids'])){
+            $transfer_encouterids=explode(',',$encouter['transfer_encouterids']);
+            $firstEncouterId = $transfer_encouterids[0];
+        }else{
+            $firstEncouterId = $encouter_id;
+        }
+        $chatgroup=$db->getRow('chatgroup',array('encouter_id'=>$firstEncouterId));
         echo json_result(array('hx_groupid' => $chatgroup['hx_group_id']));
 }
 
 //获取最初邂逅id
-function getFirstEncouterId($encouter_id){
-        global $db;
-        $enObj=$db->getRow('encouter',array('id'=>$encouter_id),array('id','prev_encouter_id'));
-        $flag=1;
-        while($flag){
-            if(empty($enObj['prev_encouter_id'])){
-                $flag=0;
-                $encouter_id = $enObj['id'];
-            }else{
-                $encouter_id = $enObj['prev_encouter_id'];
-                $enObj=$db->getRow('encouter',array('id'=>$encouter_id),array('id','prev_encouter_id'));
-                continue;
-            }
-        }
-        return $encouter_id;
-}
+//function getFirstEncouterId($encouter_id){
+//        global $db;
+//        $enObj=$db->getRow('encouter',array('id'=>$encouter_id),array('id','prev_encouter_id'));
+//        $flag=1;
+//        while($flag){
+//            if(empty($enObj['prev_encouter_id'])){
+//                $flag=0;
+//                $encouter_id = $enObj['id'];
+//            }else{
+//                $encouter_id = $enObj['prev_encouter_id'];
+//                $enObj=$db->getRow('encouter',array('id'=>$encouter_id),array('id','prev_encouter_id'));
+//                continue;
+//            }
+//        }
+//        return $encouter_id;
+//}

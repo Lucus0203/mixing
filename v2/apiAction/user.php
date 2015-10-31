@@ -226,13 +226,15 @@ function registerComplete(){
 	}
 	if($file['status']==1){
 		$info['head_photo']=APP_SITE.$file['s_path'];
-	}
-		
+	}else{
+            $info['head_photo']="http://www.xn--8su10a.com/img/default_head.png";
+        }
+        
+	$info['pinyin']=!empty($nickname)?getFirstCharter($nickname):'';
+        $info['mobile']=$user['mobile'];
 	$db->update('user', $info , array('id'=>$user['id']));
         $info['userid']=$user['id'];
         $info['user_name']=$user['user_name'];
-	$info['pinyin']=!empty($info['nick_name'])?getFirstCharter($info['nick_name']):'';
-        $info['mobile']=$user['mobile'];
         if($db->getCount('diary',array('user_id'=>$user['id']))<=0){
             $diary=array('user_id'=>$user['id'],'note'=>'加入了搅拌');
             $db->create('diary',$diary);
@@ -294,7 +296,7 @@ function info(){
 		//备注
 		$relation=$db->getRow('user_relation',array('user_id'=>$loginid,'relation_id'=>$user_id),array('relation_name'));
 		if(!empty($relation['relation_name'])){
-			$info['nick_name']=$relation['relation_name'];
+			$info['nick_name']=$info['nick_name'].'('.$relation['relation_name'].')';
 		}
 		$me=$db->getRow('user',array('id'=>$loginid),array('lat','lng'));
                 
@@ -563,8 +565,12 @@ function qrcode(){
 		echo json_result(null,'2','请先登录');
 		return;
         }
+        $folder="upload/qrcode/user/";
+	if (! file_exists ( $folder )) {
+		mkdir ( $folder, 0777 );
+	}
         $qrfile="upload/qrcode/user/user{$loginid}.png";
-        $str=WEB_SITE.'userqrcode.html?u='. base64_encode($loginid);//带用户id的下载页面
+        $str=WEB_SITE.'qrcode?u='. base64_encode($loginid);//带用户id的下载页面
         if(!file_exists($qrfile)){
             QRcode::png($str,$qrfile,0,10,1);//生成二维码
         }

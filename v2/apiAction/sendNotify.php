@@ -18,7 +18,7 @@ function publicEventTogetherAccept($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));
-    $msg=$fromuser['nick_name'].'"接受了你的搭伴邀请';
+    $msg='"'.$fromuser['nick_name'].'"已接受了你的搭伴邀请';
     
     $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
     $sendObj['type']='eventInvitation';
@@ -29,7 +29,7 @@ function publicEventTogetherRefuse($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));
-    $msg=$fromuser['nick_name'].'"接受了你的搭伴邀请';
+    $msg='"'.$fromuser['nick_name'].'"已拒绝了你的搭伴邀请';
     
     $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
     $sendObj['type']='eventInvitation';
@@ -41,7 +41,7 @@ function sendNotifyInvitation($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));
-    $msg=$fromuser['nick_name'].'"拒绝了你的搭伴邀请';
+    $msg='你有一条来自"'.$fromuser['nick_name'].'"的邀请函';
     
     $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
     $sendObj['type']='invitation';
@@ -53,8 +53,7 @@ function sendNotifyInvitationAccept($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));
-    $msg=$fromuser['nick_name'].'"接受了你的邀请函';
-    
+    $msg='"'.$fromuser['nick_name'].'"已接受了你的邀请函';
     $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
     $sendObj['type']='invitation';
     sendNotify($sendObj);
@@ -64,7 +63,7 @@ function sendNotifyInvitationRefuse($fromid,$toid,$dataid){
     global $db;
     $fromuser=$db->getRow('user',array('id'=>$fromid));
     $touser=$db->getRow('user',array('id'=>$toid));
-    $msg=$fromuser['nick_name'].'"拒绝了你的邀请函';
+    $msg='"'.$fromuser['nick_name'].'"已拒绝了你的邀请函';
     
     $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
     $sendObj['type']='invitation';

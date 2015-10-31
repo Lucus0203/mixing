@@ -20,6 +20,9 @@ switch ($act){
         case 'delMsg':
                 delMsg();//删除留言
                 break;
+        case 'newReplyCount':
+                newReplyCount();//有新的回复
+                break;
 	default:
 		break;
 }
@@ -27,7 +30,7 @@ switch ($act){
 function addDiary(){
         global $db;
 	$loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
-	$note=filter(!empty($_REQUEST['note'])?$_REQUEST['note']:'');
+	$note=filterIlegalWord(!empty($_REQUEST['note'])?$_REQUEST['note']:'');
 	$voice=filter(!empty($_REQUEST['voice'])?$_REQUEST['voice']:'');
 	$voice_time=filter(!empty($_REQUEST['voice_time'])?$_REQUEST['voice_time']:'');
 	$address=filter(!empty($_REQUEST['address'])?$_REQUEST['address']:'');
@@ -133,7 +136,7 @@ function getDiarys(){
                 $diarys[$k]['msgs']=$msgs;
             }
         }
-        
+        $db->update('diary_msg',array('isread'=>2),array('to_user_id'=>$loginid));
         echo json_result(array('diarys'=>$diarys));
     
 }
@@ -214,7 +217,7 @@ function leaveMsg(){
 	$diaryid=filter(!empty($_REQUEST['diaryid'])?$_REQUEST['diaryid']:'');
 	$loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
 	$to_userid=filter(!empty($_REQUEST['to_userid'])?$_REQUEST['to_userid']:'');
-	$msg=filter(!empty($_REQUEST['msg'])?$_REQUEST['msg']:'');
+	$msg=filterIlegalWord(!empty($_REQUEST['msg'])?$_REQUEST['msg']:'');
         if(empty($loginid)){
             echo json_result(null,'2','请重新登录');
             return ;
@@ -226,6 +229,7 @@ function leaveMsg(){
         $data=array('diary_id'=>$diaryid,'user_id'=>$loginid,'msg'=>$msg);
         if(!empty($to_userid)){
             $data['to_user_id']=$to_userid;
+            $data['isread']=1;
         }
         $db->create('diary_msg',$data);
         $msgsql="select msg.id as msg_id,msg.user_id as from_user_id,from_user.nick_name as from_nick_name,from_user.head_photo as from_head_photo,msg.to_user_id,to_user.nick_name as to_nick_name,to_user.head_photo as to_head_photo,msg.msg from ".DB_PREFIX."diary_msg msg left join " .DB_PREFIX. "user from_user on from_user.id=msg.user_id left join ".DB_PREFIX."user to_user on to_user.id=msg.to_user_id "
@@ -253,6 +257,14 @@ function delMsg(){
         echo json_result(array('msges'=>$msges));
         
         
+}
+
+//有新的回复
+function newReplyCount(){
+        global $db;
+	$loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
+        $count=$db->getCount('diary_msg',array('to_user_id'=>$loginid,'isread'=>1));
+        echo json_result(array('count'=>$count));
 }
 
 function getRelationStatus($myself_id,$user_id){

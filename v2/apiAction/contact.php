@@ -105,7 +105,7 @@ function searchUsersByKeyword(){
         //as isfollowed 1未关注2已关注
 	$sql="select u.id as user_id,u.head_photo,if((trim(ur1.relation_name)<>'' and ur1.relation_name is not null),ur1.relation_name,u.nick_name) as nick_name,u.user_name,u.birthday,u.sex,u.constellation,if(ur1.id is null,1,2) as isfollowed from ".DB_PREFIX."user u 
 	left join ".DB_PREFIX."user_relation ur1 on u.id=ur1.relation_id and ur1.user_id=$loginid
-        where user_name ='$keyword' or nick_name = '$keyword' or ur1.relation_name='$keyword' ";
+        where (u.allow_find_mobile=1 and user_name ='$keyword') or (u.allow_find_nick=1 and nick_name = '$keyword' ) or ur1.relation_name='$keyword' ";
 	$sql .= " limit $start,$page_size";
 	$data = $db->getAllBySql($sql);
         foreach ($data as $k => $v) {

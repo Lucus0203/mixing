@@ -31,7 +31,7 @@ function orderlist(){
         $sql="select od.id as order_id,od.encouter_id,encouter.type as encouter_type,encouter.product_img1,encouter.product1,encouter.price1,encouter.product_img2,encouter.product2,encouter.price2,shop.title as shop,od.amount,od.created from ".DB_PREFIX."order od "
                 . "left join ".DB_PREFIX."shop shop on shop.id=od.shop_id "
                 . "left join ".DB_PREFIX."encouter encouter on encouter.id=od.encouter_id "
-                . "where od.user_id=".$loginid;
+                . "where encouter.status <> 99 and od.user_id=".$loginid;
         if($type==1){
                 $sql.=" and paid=1 and od.status=1 ";
         }elseif ($type==2) {

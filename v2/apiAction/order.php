@@ -18,6 +18,9 @@ switch ($act) {
         case 'webhooks':
                 webhooks(); //ping++通知更新订单状态
                 break;
+        case 'checkPaid':
+                checkPaid();//检查支付成功
+                break;
         default:
                 break;
 }
@@ -52,55 +55,55 @@ function pay() {
                 case 2://缘分
                 case 3://约会
                         if($encouter['status']!=1){
-                                //echo json_result(null, '203', '你的订单无需再支付');return;
-                                header('Status: ' . 400);echo('你的订单无需再支付');return;
+                                echo json_result(null, '203', '你的订单无需再支付');return;
+                                //header('Status: ' . 400);echo('你的订单无需再支付');return;
                         }
                         break;
                 case 4://传递
                         if(empty($encouter['prev_encouter_id'])){
                                 if($encouter['status']!=1){
-                                        //echo json_result(null, '203', '你的订单无需再支付');return;
-                                        header('Status: ' . 400);echo('你的订单无需再支付');return;
+                                        echo json_result(null, '203', '你的订单无需再支付');return;
+                                        //header('Status: ' . 400);echo('你的订单无需再支付');return;
                                 }  
                         }else{
                                 $prev_encouter=$db->getRow('encouter',array('id'=>$encouter['prev_encouter_id']));
-                                if($prev_encouter['paylock']!=1){
+                                if($prev_encouter['paylock']!=1&&$prev_encouter['paylock_user']!=$loginid){
                                         $remenus=floor((time()-strtotime($prev_encouter['updated'])) / 60);
                                         if($remenus<3){//3分钟锁定
-                                                //echo json_result(null, '204', '这杯咖啡正在等待他人操作,请稍后再来尝试');return;
-                                                header('Status: ' . 400);echo('这杯咖啡正在等待他人操作,请稍后再来尝试');return;
+                                                echo json_result(null, '204', '这杯咖啡正在等待他人操作');return;
+                                                //header('Status: ' . 400);echo('这杯咖啡正在等待他人操作,请稍后再来尝试');return;
                                         }
                                 }
                                 if($prev_encouter['status']!=2){
-                                        //echo json_result(null, '205', '很抱歉你晚了一步,这杯咖啡已由他人接力');return;
-                                        header('Status: ' . 400);echo('很抱歉你晚了一步,这杯咖啡已由他人接力');return;
+                                        echo json_result(null, '205', '晚了一步,这杯咖啡已由他人接力');return;
+                                        //header('Status: ' . 400);echo('很抱歉你晚了一步,这杯咖啡已由他人接力');return;
                                 }
-                                $db->update('encouter',array('paylock'=>2,'updated'=>date("Y-m-d H:i:s")),array('id'=>$encouter['prev_encouter_id']));//锁定支付
+                                $db->update('encouter',array('paylock'=>2,'paylock_user'=>$loginid,'updated'=>date("Y-m-d H:i:s")),array('id'=>$encouter['prev_encouter_id']));//锁定支付
                         }
                         break;
                 case 5://等候
                         if($db->getCount('encouter_receive',array('id'=>$receiveid,'from_user'=>$loginid))==0){
-                                //echo json_result(null, '208', '很抱歉你还未领取这杯咖啡,请重新领取');return;
-                                header('Status: ' . 400);echo('很抱歉你还未领取这杯咖啡,请重新领取');return;
+                                echo json_result(null, '208', '很抱歉你还未领取这杯咖啡,请重新领取');return;
+                                //header('Status: ' . 400);echo('很抱歉你还未领取这杯咖啡,请重新领取');return;
                         }
-                        if($encouter['paylock']!=1){
+                        if($encouter['paylock']!=1&&$encouter['paylock_user']!=$loginid){
                                 $remenus=floor((time()-strtotime($encouter['updated'])) / 60);
                                 if($remenus<3){//3分钟锁定
-                                        //echo json_result(null, '206', '这杯咖啡正在等待他人操作,请稍后再来尝试');return;
-                                        header('Status: ' . 400);echo('这杯咖啡正在等待他人操作,请稍后再来尝试');return;
+                                        echo json_result(null, '206', '这杯咖啡正在等待他人操作');return;
+                                        //header('Status: ' . 400);echo('这杯咖啡正在等待他人操作,请稍后再来尝试');return;
                                 }
                         }
                         if($encouter['status']!=5){
                                 $paid_order=$db->getRow('order',array('encouter_id'=>$encouterid,'paid'=>1));
                                 if($paid_order['user_id']!=$loginid){
-                                        //echo json_result(null, '207', '很抱歉你晚了一步,这杯咖啡已由他人买单');return;
-                                        header('Status: ' . 400);echo('很抱歉你晚了一步,这杯咖啡已由他人买单');return;
+                                        echo json_result(null, '207', '晚了一步,这杯咖啡已由他人买单');return;
+                                        //header('Status: ' . 400);echo('很抱歉你晚了一步,这杯咖啡已由他人买单');return;
                                 }else{
-                                        //echo json_result(null, '203', '你的订单无需再次支付');return;
-                                        header('Status: ' . 400);echo('你的订单无需再次支付');return;
+                                        echo json_result(null, '203', '你的订单无需再次支付');return;
+                                        //header('Status: ' . 400);echo('你的订单无需再次支付');return;
                                 }
                         }
-                        $db->update('encouter',array('paylock'=>2,'updated'=>date("Y-m-d H:i:s")),array('id'=>$encouterid));//锁定支付
+                        $db->update('encouter',array('paylock'=>2,'paylock_user'=>$loginid,'updated'=>date("Y-m-d H:i:s")),array('id'=>$encouterid));//锁定支付
                         break;
                 default:
                         break;
@@ -140,8 +143,8 @@ function pay() {
                 }
                 $orderid = $db->create('order', $order);
                 if(!$orderid){
-                        //echo json_result(null, '209', '支付失败,请联系客服');return;
-                        header('Status: ' . 400);echo('支付失败,请联系客服');return;
+                        echo json_result(null, '209', '支付失败,请联系客服');return;
+                        //header('Status: ' . 400);echo('支付失败,请联系客服');return;
                 }
                 for ($i = 1; $i <= 2; $i++) {
                         if (!empty($encouter['product' . $i])) {
@@ -216,20 +219,20 @@ function secondPay(){
         $encouter = $db->getRow('encouter', array('id' => $old_order['encouter_id']));
         $shop = $db->getRow('shop', array('id' => $encouter['shop_id']));
         if($old_order['user_id']!=$loginid){
-                //echo json_result(null, '201', '你无此订单,请核对');return;
-                header('Status: ' . 400);echo('你无此订单,请核对');return;
+                echo json_result(null, '201', '你无此订单,请核对');return;
+                //header('Status: ' . 400);echo('你无此订单,请核对');return;
         }
         if ($old_order['paid'] == 1) {
-                //echo json_result(null, '202', '你的订单已支付');return;
-                header('Status: ' . 400);echo('你的订单已支付');return;
+                echo json_result(null, '202', '你的订单已支付');return;
+                //header('Status: ' . 400);echo('你的订单已支付');return;
         }
         if ($old_order['status'] == 2) {
-                //echo json_result(null, '203', '你的订单已失效');return;
-                header('Status: ' . 400);echo('你的订单已失效');return;
+                echo json_result(null, '203', '你的订单已失效');return;
+                //header('Status: ' . 400);echo('你的订单已失效');return;
         }
         if ($old_order['status'] == 3) {
-                //echo json_result(null, '204', '你的订单已过期');return;
-                header('Status: ' . 400);echo('你的订单已过期');return;
+                echo json_result(null, '204', '你的订单已过期');return;
+                //header('Status: ' . 400);echo('你的订单已过期');return;
         }
         $orderNo = $old_order['order_no'];
         switch ($encouter['type']) {
@@ -237,55 +240,55 @@ function secondPay(){
                 case 2://缘分
                 case 3://约会
                         if($encouter['status']!=1){
-                                //echo json_result(null, '205', '你的订单无需再支付');return;
-                                header('Status: ' . 400);echo('你的订单无需再支付');return;
+                                echo json_result(null, '205', '你的订单无需再支付');return;
+                                //header('Status: ' . 400);echo('你的订单无需再支付');return;
                         }
                         break;
                 case 4://传递
                         if(empty($encouter['prev_encouter_id'])){
                                 if($encouter['status']!=1){
-                                        //echo json_result(null, '206', '你的订单无需再支付');return;
-                                        header('Status: ' . 400);echo('你的订单无需再支付');return;
+                                        echo json_result(null, '206', '你的订单无需再支付');return;
+                                        //header('Status: ' . 400);echo('你的订单无需再支付');return;
                                 }  
                         }else{
                                 $prev_encouter=$db->getRow('encouter',array('id'=>$encouter['prev_encouter_id']));
-                                if($prev_encouter['paylock']!=1){
+                                if($prev_encouter['paylock']!=1&&$prev_encouter['paylock_user']!=$loginid){
                                         $remenus=floor((time()-strtotime($prev_encouter['updated'])) / 60);
                                         if($remenus<3){//3分钟锁定
-                                                //echo json_result(null, '207', '这杯咖啡正在等待他人操作,请稍后再来尝试');return;
-                                                header('Status: ' . 400);echo('这杯咖啡正在等待他人操作,请稍后再来尝试');return;
+                                                echo json_result(null, '207', '这杯咖啡正在等待他人操作');return;
+                                                //header('Status: ' . 400);echo('这杯咖啡正在等待他人操作,请稍后再来尝试');return;
                                         }
                                 }
                                 if($prev_encouter['status']!=2){
-                                        //echo json_result(null, '208', '很抱歉你晚了一步,这杯咖啡已由他人接力');return;
-                                        header('Status: ' . 400);echo('很抱歉你晚了一步,这杯咖啡已由他人接力');return;
+                                        echo json_result(null, '208', '晚了一步,这杯咖啡已由他人接力');return;
+                                        //header('Status: ' . 400);echo('很抱歉你晚了一步,这杯咖啡已由他人接力');return;
                                 }
-                                $db->update('encouter',array('paylock'=>2,'updated'=>date("Y-m-d H:i:s")),array('id'=>$encouter['prev_encouter_id']));//锁定支付
+                                $db->update('encouter',array('paylock'=>2,'paylock_user'=>$loginid,'updated'=>date("Y-m-d H:i:s")),array('id'=>$encouter['prev_encouter_id']));//锁定支付
                         }
                         break;
                 case 5://等候
                         if($db->getCount('encouter_receive',array('id'=>$receiveid,'from_user'=>$loginid))==0){
-                                //echo json_result(null, '209', '很抱歉你还未领取这杯咖啡,请重新领取');return;
-                                header('Status: ' . 400);echo('很抱歉你还未领取这杯咖啡,请重新领取');return;
+                                echo json_result(null, '209', '很抱歉你还未领取这杯咖啡,请重新领取');return;
+                                //header('Status: ' . 400);echo('很抱歉你还未领取这杯咖啡,请重新领取');return;
                         }
-                        if($encouter['paylock']!=1){
+                        if($encouter['paylock']!=1&&$encouter['paylock_user']!=$loginid){
                                 $remenus=floor((time()-strtotime($encouter['updated'])) / 60);
                                 if($remenus<3){//3分钟锁定
-                                        //echo json_result(null, '210', '这杯咖啡正在等待他人操作,请稍后再来尝试');return;
-                                        header('Status: ' . 400);echo('这杯咖啡正在等待他人操作,请稍后再来尝试');return;
+                                        echo json_result(null, '210', '这杯咖啡正在等待他人操作');return;
+                                        //header('Status: ' . 400);echo('这杯咖啡正在等待他人操作,请稍后再来尝试');return;
                                 }
                         }
                         if($encouter['status']!=5){
                                 $paid_order=$db->getRow('order',array('encouter_id'=>$encouterid,'paid'=>1));
                                 if($paid_order['user_id']!=$loginid){
-                                        //echo json_result(null, '211', '很抱歉你晚了一步,这杯咖啡已由他人买单');return;
-                                        header('Status: ' . 400);echo('很抱歉你晚了一步,这杯咖啡已由他人买单');return;
+                                        echo json_result(null, '211', '晚了一步,这杯咖啡已由他人买单');return;
+                                        //header('Status: ' . 400);echo('很抱歉你晚了一步,这杯咖啡已由他人买单');return;
                                 }else{
-                                        //echo json_result(null, '212', '你的订单无需再次支付');return;
-                                        header('Status: ' . 400);echo('你的订单无需再次支付');return;
+                                        echo json_result(null, '212', '你的订单无需再次支付');return;
+                                        //header('Status: ' . 400);echo('你的订单无需再次支付');return;
                                 }
                         }
-                        $db->update('encouter',array('paylock'=>2,'updated'=>date("Y-m-d H:i:s")),array('id'=>$encouterid));//锁定支付
+                        $db->update('encouter',array('paylock'=>2,'paylock_user'=>$loginid,'updated'=>date("Y-m-d H:i:s")),array('id'=>$encouterid));//锁定支付
                         break;
                 default:
                         break;
@@ -419,6 +422,7 @@ function updateOrderEncouter($order){
                                $db->excuteSql($updateOrderSql);
                                //可领取
                                $db->update('encouter_receive',array('status'=>2),array('id'=>$receiveid));
+                               
                         }else{
                                 $maxusers=empty($encouter['people_num'])?200:$encouter['people_num'];
                                 $user=$db->getRow('user',array('id'=>$encouter['user_id']));
@@ -427,8 +431,10 @@ function updateOrderEncouter($order){
                                 $huserObj=$HuanxinObj->createGroup($encouter['topic'],$encouter['topic'],$maxusers,$user['user_name']);
                                 $hxgroupid=$huserObj->data->groupid;
                                 if(!empty($hxgroupid)){
-                                        $db->create('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$user['id'],'encouter_id'=>$order['encouter_id'],'name'=>$encouter['topic'],'note'=>$encouter['msg'],'maxusers'=>$maxusers,'created'=>date("Y-m-d H:i:s")));
-                                        $HuanxinObj->sendmsgToGroup($user['id'],$hxgroupid,$user['nick_name'].'加入了'.$encouter['topic'].'话题组');
+                                    $db->create('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$user['id'],'encouter_id'=>$order['encouter_id'],'name'=>$encouter['topic'],'note'=>$encouter['msg'],'maxusers'=>$maxusers,'created'=>date("Y-m-d H:i:s")));
+                                    $HuanxinObj->sendmsgToGroup($user['id'],$hxgroupid,$user['nick_name'].'加入了'.$encouter['topic'].'话题组');
+                                            
+                                        
                                 }
                         }
                         //自己寄存的咖啡改变为可领取状态
@@ -455,4 +461,34 @@ function updateOrderEncouter($order){
         if(!empty($receiveid)){
                 sendNotifyMsgByReceive($receiveid);//领取成功发送消息
         }
+        //处理最后一杯传递咖啡
+        if($encouter['isend']==2){//最终传递咖啡
+            $db->update('encouter', array('isread' => 1,'status'=>3), array('id' => $order['encouter_id']));
+            $lastReceiveid=lastTransefer($order['encouter_id']);
+            sendNotifyMsgLastTransfer($lastReceiveid);//最后一杯传递咖啡发送消息
+        }
+}
+
+
+//传递最后咖啡
+function lastTransefer($encouterid){
+        global $db;
+        $encouter = $db->getRow('encouter', array('id' => $encouterid),array('type','transfer_encouterids','user_id'));
+        $transfer_encouterids=explode(',',$encouter['transfer_encouterids']);
+        $firstEncouterId =  $transfer_encouterids[0];
+        $firstEncouter = $db->getRow('encouter', array('id' => $firstEncouterId),array('user_id'));
+        $receive = array('from_user' => $firstEncouter['user_id'], 'encouter_id' => $encouterid, 'type' => $encouter['type'], 'to_user' => $encouter['user_id'], 'status' => 2,'isread'=>1,'isend'=>2, 'created' => date("Y-m-d H:i:s"));
+        $receiveid=$db->create('encouter_receive', $receive);
+        return $receiveid;
+}
+
+//检查支付状态
+function checkPaid(){
+        global $db;
+        $chargeid = !empty($_REQUEST['chargeid']) ? filter($_REQUEST['chargeid']) : '';
+        if(!empty($chargeid)){
+            echo json_result(null, '2', '查询失败,参数不正确');return;
+        }
+        $order=$db->getRow('order', array('charge_id' => $chargeid),array('paid'));
+        echo json_result(array('paid'=>$order['paid']));//1已付2未付
 }
