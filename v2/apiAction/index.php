@@ -19,7 +19,7 @@ function maindata(){
             $data=$db->getRow('app_main',array('status'=>1),$filed,'id desc');
         }
         //寄存人数
-        $sql="select id from ".DB_PREFIX."encouter where status>=1 and status <=8 ";
+        $sql="select id from ".DB_PREFIX."encouter where status=2 or status=3 or status=4 or status=6 or status=7 ";
         $data['encounterCount']=$db->getCountBySql($sql);
         //领取人数
         $sql="select id from ".DB_PREFIX."encouter_receive where status=2 or status = 7 ";

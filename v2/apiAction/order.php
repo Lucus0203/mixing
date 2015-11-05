@@ -431,7 +431,8 @@ function updateOrderEncouter($order){
                                 $huserObj=$HuanxinObj->createGroup($encouter['topic'],$encouter['topic'],$maxusers,$user['user_name']);
                                 $hxgroupid=$huserObj->data->groupid;
                                 if(!empty($hxgroupid)){
-                                    $db->create('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$user['id'],'encouter_id'=>$order['encouter_id'],'name'=>$encouter['topic'],'note'=>$encouter['msg'],'maxusers'=>$maxusers,'created'=>date("Y-m-d H:i:s")));
+                                    $groupid=$db->create('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$user['id'],'encouter_id'=>$order['encouter_id'],'name'=>$encouter['topic'],'note'=>$encouter['msg'],'maxusers'=>$maxusers,'created'=>date("Y-m-d H:i:s")));
+                                    $db->create('chatgroup_user',array('user_id'=>$user['id'],'chatgroup_id'=>$groupid,'encouter_id'=>$order['encouter_id']));
                                     $HuanxinObj->sendmsgToGroup($user['id'],$hxgroupid,$user['nick_name'].'加入了'.$encouter['topic'].'话题组');
                                             
                                         
@@ -479,6 +480,8 @@ function lastTransefer($encouterid){
         $firstEncouter = $db->getRow('encouter', array('id' => $firstEncouterId),array('user_id'));
         $receive = array('from_user' => $firstEncouter['user_id'], 'encouter_id' => $encouterid, 'type' => $encouter['type'], 'to_user' => $encouter['user_id'], 'status' => 2,'isread'=>1,'isend'=>2, 'created' => date("Y-m-d H:i:s"));
         $receiveid=$db->create('encouter_receive', $receive);
+        //更新群组结束状态
+        $db->update('chatgroup',array('isend'=>2),array('encouter_id'=>$firstEncouterId));
         return $receiveid;
 }
 

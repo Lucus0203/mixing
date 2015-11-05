@@ -1,5 +1,5 @@
 <?php
-require_once 'apiLib/config.php';
+require_once 'config.php';
 class db {
 	private $conn;
 	private static $sql;

@@ -45,7 +45,7 @@ function sendInvitation(){
 	$pay_type=filter($_REQUEST['pay_type']);//1我买单2请我吧3AA制
 
 	//待接收邀约数
-	$count=$db->getCount('invitation',array('status'=>1,'user_id'=>$userid));
+	$count=$db->getCount('invitation',array('status'=>1,'user_id'=>$userid,'to_user_id'=>$to_userid));
 	if($count>0){
 		echo json_result(null,'2','你还有一个待对方接收的邀请');//是的,要取消,不,再耐心等等
 		return;
@@ -131,9 +131,13 @@ function acceptInvitation(){
                     echo json_result(null,'2','数据不符,你不能接受不属于你的邀请函');
                     return;
             }
+            $inv=$db->getRow('invitation',array('id'=>$invt_id),array('user_id','status'));
+            if($inv['status']==4){//取消
+                    echo json_result(null,'3','对方已经取消了邀请函');
+                    return;
+            }
             $db->update('invitation', array('isreaded_user'=>2,'isreaded_to_user'=>1,'status'=>2),array('id'=>$invt_id));
             //通知
-            $inv=$db->getRow('invitation',array('id'=>$invt_id),array('user_id'));
             makefriend($loginid, $inv['user_id']);//互加好友
             sendNotifyInvitationAccept($loginid,$inv['user_id'],$invt_id);//接受邀请函
         }else{//活动邀请函
@@ -141,7 +145,11 @@ function acceptInvitation(){
                     echo json_result(null,'2','数据不符,你不能接受不属于你的邀请函');
                     return;
             }
-            $inv=$db->getRow('public_event_together_others',array('id'=>$invt_id),array('user_id','public_event_id','other_id'));
+            $inv=$db->getRow('public_event_together_others',array('id'=>$invt_id),array('user_id','public_event_id','other_id','status'));
+            if($inv['status']==4){//取消
+                    echo json_result(null,'3','对方已经取消了邀请函');
+                    return;
+            }
             //更新状态
             $db->update('public_event_together_others', array('isreaded_user'=>1,'isreaded_other'=>2,'status'=>2),array('id'=>$invt_id));
             $db->update('public_event_together', array('other_id'=>$inv['other_id']),array('public_event_id'=>$inv['public_event_id'],'user_id'=>$inv['user_id']));
@@ -200,10 +208,20 @@ function cancelInvitation(){
                     echo json_result(null,'3','请选择你发出的邀请函');
                     return;
             }
+            $inv=$db->getRow('invitation',array('id'=>$invt_id),array('status'));
+            if($inv['status']==2){//接受
+                    echo json_result(null,'4','对方已经接受了邀请函');
+                    return;
+            }
             $db->update('invitation', array('status'=>4),array('id'=>$invt_id,'user_id'=>$loginid));
         }else{//活动邀请函
             if ($db->getCount('public_event_together_others',array('id'=>$invt_id,'other_id'=>$loginid))<=0){
                     echo json_result(null,'3','请选择你发出的邀请函');
+                    return;
+            }
+            $inv=$db->getRow('public_event_together_others',array('id'=>$invt_id),array('status'));
+            if($inv['status']==2){//接受
+                    echo json_result(null,'4','对方已经接受了邀请函');
                     return;
             }
             $db->update('public_event_together_others', array('status'=>4),array('id'=>$invt_id,'other_id'=>$loginid));

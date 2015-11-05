@@ -74,10 +74,18 @@ function sendNotifyMsgByReceive($receiveid) {
         }else{
             //互加好友
             makefriend($receiveid);
-            //发送给领取者的通知
-            sendNotifyToReceiver($receive['to_user'],$receive['from_user'],$receiveid,null);
-            //发送通知给寄存者
-            sendNotifyToDepositer($receive['from_user'],$receive['to_user'],$receive['encouter_id'],null);
+            if($type==5){
+                //发送给买单者
+                sendNotifyToPayer($receive['to_user'],$receive['from_user'],$receiveid,null);
+                //发送给等候者
+                sendNotifyToWaiter($receive['from_user'],$receive['to_user'],$receive['encouter_id'],null);
+            }else{
+                //发送给领取者的通知
+                sendNotifyToReceiver($receive['to_user'],$receive['from_user'],$receiveid,null);
+                //发送通知给寄存者
+                sendNotifyToDepositer($receive['from_user'],$receive['to_user'],$receive['encouter_id'],null);
+            }
+            
         }
 }
 

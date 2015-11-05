@@ -343,6 +343,7 @@ function depositShops(){
 	$circle_id=filter($_REQUEST['circle_id']);
 	$keyword=filter($_REQUEST['keyword']);
 	$tag_ids=filter($_REQUEST['tag_ids']);
+        $encouterid = isset ( $_REQUEST ['encouterid'] ) ? $_REQUEST ['encouterid'] : '';//过滤咖啡馆用
 	$page_no = isset ( $_REQUEST ['page'] ) ? $_REQUEST ['page'] : 1;
 	$page_size = PAGE_SIZE;
 	$start = ($page_no - 1) * $page_size;
@@ -355,6 +356,17 @@ function depositShops(){
         $shopsql.=(!empty($circle_id))?" and addcircle_id={$circle_id} ":'';
         $shopsql.=(!empty($keyword))?" and ( INSTR(title,'".addslashes($keyword)."') or INSTR(subtitle,'".addslashes($keyword)."') or INSTR(address,'".addslashes($keyword)."') ) ":'';
         $shopsql.=(!empty($tag_ids))?" and shop_tag.tag_id in ({$tag_ids}) ":'';
+        if(!empty($encouterid)){
+            $encouter = $db->getRow('encouter', array('id' => $encouterid),array('transfer_encouterids'));
+            if(!empty($encouter['transfer_encouterids'])){
+                $transfer_encouterids=explode(',',$encouter['transfer_encouterids']);
+                $firstEncouterId = $transfer_encouterids[0];
+            }else{
+                $firstEncouterId = $encouterid;
+            }
+            $encouter = $db->getRow('encouter', array('id' => $firstEncouterId),array('shop_id'));
+            $shopsql.=" and shop.id={$encouter['shop_id']} ";
+        }
         $shopsql .= " group by shop.id ";
         
         $menusql=" select menu.shop_id from ".DB_PREFIX."shop_menu menu left join ".DB_PREFIX."shop_menu_price menu_price on menu.id=menu_price.menu_id where menu.status=2 and menu_price.id is not null group by menu.shop_id ";

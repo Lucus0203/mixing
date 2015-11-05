@@ -87,9 +87,8 @@ function getGroupInfo(){
 	$hxgroupid=filter(!empty($_REQUEST['hxgroupid'])?$_REQUEST['hxgroupid']:'');
         $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid),array('id','hx_group_id','user_id','img','name','note','maxusers','isend'));
 	$usersql="select u.id as userid,user_name,nick_name,head_photo from ".DB_PREFIX."user u "
-                . "left join ".DB_PREFIX."chatgroup g on g.user_id=u.id "
                 . "left join ".DB_PREFIX."chatgroup_user gu on gu.user_id=u.id "
-                . "where g.id={$group['id']} or gu.chatgroup_id={$group['id']} ";
+                . "where gu.chatgroup_id={$group['id']} ";
         $group['users']=$db->getAllBySql($usersql);
         echo json_result(array('group'=>$group));
 }
@@ -102,7 +101,7 @@ function updateGroupInfo(){
         $note=filter(!empty($_REQUEST['note'])?$_REQUEST['note']:'');
         $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$loginid));
         if(empty($group)){
-            echo json_result(null,'2','讨论组更新资料错误');
+            echo json_result(null,'2','话题组更新资料错误');
             return;
         }
         $data=array();
@@ -144,20 +143,23 @@ function dissolveGroup(){
         $loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
         $hxgroupid=filter(!empty($_REQUEST['hxgroupid'])?$_REQUEST['hxgroupid']:'');
         if($db->getCount('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$loginid))<=0){
-            echo json_result(null,'2','讨论组解散失败');
+            echo json_result(null,'2','找不到你要解散的话题组');
             return;
         }
+        $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$loginid));
+        $db->delete('chatgroup_user',array('chatgroup_id'=>$group['id']));
+        $db->delete('chatgroup',array('hx_group_id'=>$hxgroupid));
         $HuanxinObj=Huanxin::getInstance();
         $huserObj=$HuanxinObj->delGroup($hxgroupid);
         $success=$huserObj->data->success;
-        if($success===true){
-            $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$loginid));
-            $db->delete('chatgroup_user',array('chatgroup_id'=>$group['id']));
-            $db->delete('chatgroup',array('hx_group_id'=>$hxgroupid));
-            echo json_result(array('success'=>'TRUE'));
-            return;
-        }
-        echo json_result(array('success'=>'FAIL'));
+        echo json_result(array('success'=>'TRUE'));
+//        if($success===true){
+//            $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$loginid));
+//            $db->delete('chatgroup_user',array('chatgroup_id'=>$group['id']));
+//            $db->delete('chatgroup',array('hx_group_id'=>$hxgroupid));
+//            return;
+//        }
+//        echo json_result(null,'3','话题组解散失败');
         
 }
 
@@ -167,7 +169,7 @@ function joinGroup(){
         $loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
         $hxgroupid=filter(!empty($_REQUEST['hxgroupid'])?$_REQUEST['hxgroupid']:'');
         if($db->getCount('chatgroup',array('hx_group_id'=>$hxgroupid))<=0){
-            echo json_result(null,'2','找不到此讨论组');
+            echo json_result(null,'2','找不到此话题组');
             return;
         }
         $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid));
@@ -187,7 +189,7 @@ function quitGroup(){
         $loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
         $hxgroupid=filter(!empty($_REQUEST['hxgroupid'])?$_REQUEST['hxgroupid']:'');
         if($db->getCount('chatgroup',array('hx_group_id'=>$hxgroupid))<=0){
-            echo json_result(null,'2','找不到此讨论组');
+            echo json_result(null,'2','找不到此话题组');
             return;
         }
         $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid));

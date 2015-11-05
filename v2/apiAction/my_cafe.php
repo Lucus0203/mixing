@@ -50,7 +50,7 @@ function depositList() {
             . "left join " . DB_PREFIX . "order od on od.encouter_id=encouter.id "
             . "left join " . DB_PREFIX . "shop shop on shop.id=encouter.shop_id "
             . "left join " . DB_PREFIX . "encouter_receive receive on receive.encouter_id = encouter.id and receive.status=1 "
-            . "where encouter.status <> 99 and (TIMESTAMPDIFF(DAY,encouter.created,now())<encouter.days or encouter.days=0) and od.id is not null and od.id <>'' and encouter.user_id = {$loginid} and encouter.type <> 5 group by encouter.id order by encouter.id desc";
+            . "where encouter.status <> 99 and (TIMESTAMPDIFF(DAY,encouter.created,now())<=encouter.days or encouter.days=0) and od.id is not null and od.id <>'' and encouter.user_id = {$loginid} and encouter.type <> 5 group by encouter.id order by encouter.id desc";
     $sql .= " limit $start,$page_size";
     $data = $db->getAllBySql($sql);
     foreach ($data as $k => $v) {
@@ -69,9 +69,10 @@ function depositInfo(){
     $page_no = isset($_REQUEST ['page']) ? $_REQUEST ['page'] : 1;
     $page_size = PAGE_SIZE;
     $start = ($page_no - 1) * $page_size;
-    $sql = "select encouter.id as encouter_id,encouter.type,encouter.product1 as menu1,encouter.product_img1 as menu_img1,encouter.price1,encouter.product2 as menu2,encouter.product_img2 as menu_img2,encouter.price2,encouter.shop_id,shop.title as shop_name,shop.img as shop_img,encouter.status,encouter.verifycode,encouter.topic,encouter.isend,encouter.created from " . DB_PREFIX . "encouter encouter "
+    $sql = "select encouter.user_id,user.user_name,user.nick_name,user.head_photo,encouter.id as encouter_id,encouter.type,encouter.product1 as menu1,encouter.product_img1 as menu_img1,encouter.price1,encouter.product2 as menu2,encouter.product_img2 as menu_img2,encouter.price2,encouter.shop_id,shop.title as shop_name,shop.img as shop_img,encouter.status,encouter.verifycode,encouter.topic,encouter.isend,encouter.created from " . DB_PREFIX . "encouter encouter "
             . "left join " . DB_PREFIX . "shop shop on shop.id=encouter.shop_id "
             . "left join " . DB_PREFIX . "order od on od.encouter_id = encouter.id "
+            . "left join " . DB_PREFIX . "user user on user.id = encouter.user_id "
             . "where encouter.id = {$encouterid} and od.user_id = {$loginid} ";
     $data = $db->getRowBySql($sql);
     //等待了多少秒
@@ -90,7 +91,7 @@ function depositInfo(){
             $transfer_encouterids=explode(',',$encouter['transfer_encouterids']);
             $firstEncouterId = $transfer_encouterids[0];
             $chatgroup=$db->getRow('chatgroup',array('encouter_id'=>$firstEncouterId));
-            $data['isend']=$chatgroup['hx_group_id'];//给讨论组id
+            $data['hx_group_id']=$chatgroup['hx_group_id'];//给讨论组id
         }
     }
     $db->update('encouter',array('isread'=>'2'),array('id'=>$encouterid));
@@ -135,7 +136,7 @@ function receiveInfo(){
     global $db;
     $loginid = filter($_REQUEST['loginid']);
     $receiveid=filter($_REQUEST['receiveid']);
-    $sql = "select encouter.shop_id,user.user_name,user.nick_name,user.head_photo,receive.encouter_id,receive.type,choice_menu,encouter.product1 as menu,encouter.product_img1 as menu_img,encouter.price1 as price,encouter.product2 as menu2,encouter.product_img2 as menu_img2,encouter.price2,encouter.shop_id,shop.title as shop_name,shop.img as shop_img,receive.verifycode,encouter.created,encouter.topic,receive.status,receive.isend from " . DB_PREFIX . "encouter_receive receive "
+    $sql = "select encouter.user_id,encouter.shop_id,user.user_name,user.nick_name,user.head_photo,receive.encouter_id,receive.type,choice_menu,encouter.product1 as menu,encouter.product_img1 as menu_img,encouter.price1 as price,encouter.product2 as menu2,encouter.product_img2 as menu_img2,encouter.price2,encouter.shop_id,shop.title as shop_name,shop.img as shop_img,receive.verifycode,encouter.created,encouter.topic,receive.status,receive.isend from " . DB_PREFIX . "encouter_receive receive "
             . "left join " .DB_PREFIX . "encouter encouter on encouter.id = receive.encouter_id "
             . "left join " . DB_PREFIX . "shop shop on shop.id = encouter.shop_id "
             . "left join " . DB_PREFIX . "user user on user.id = encouter.user_id "
@@ -152,7 +153,7 @@ function receiveInfo(){
             $transfer_encouterids=explode(',',$encouter['transfer_encouterids']);
             $firstEncouterId = $transfer_encouterids[0];
             $chatgroup=$db->getRow('chatgroup',array('encouter_id'=>$firstEncouterId));
-            $data['isend']=$chatgroup['hx_group_id'];//给讨论组id
+            $data['hx_group_id']=$chatgroup['hx_group_id'];//给讨论组id
         }
     }
     $db->update('encouter_receive',array('isread'=>'2'),array('id'=>$receiveid));

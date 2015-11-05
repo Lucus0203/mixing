@@ -93,6 +93,29 @@ function sendNotifyToDepositer($fromid,$toid,$dataid,$msg){
     sendNotify($sendObj);
 }
 
+//发送给买单者
+function sendNotifyToPayer($fromid,$toid,$dataid,$msg){
+    global $db;
+    $fromuser=$db->getRow('user',array('id'=>$fromid));
+    $touser=$db->getRow('user',array('id'=>$toid));
+    $msg=empty($msg)?'你为"'.$fromuser['nick_name'].'"的咖啡买单':$msg;
+    
+    $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
+    $sendObj['type']='payer';
+    sendNotify($sendObj);
+}
+//发送给等候者
+function sendNotifyToWaiter($fromid,$toid,$dataid,$msg){
+    global $db;
+    $fromuser=$db->getRow('user',array('id'=>$fromid));
+    $touser=$db->getRow('user',array('id'=>$toid));
+    $msg=empty($msg)?'"'.$fromuser['nick_name'].'"已为你买单':$msg;
+    
+    $sendObj=array('fromuser'=>$fromuser,'touser'=>$touser,'msg'=>$msg,'dataid'=>$dataid);
+    $sendObj['type']='waiter';
+    sendNotify($sendObj);
+}
+
 // 	$Aumeng=new Umeng('Android');
 // 	$Aumeng->sendAndroidCustomizedcast("invitation",$to_userid,"你有新的邀约","搅拌","新的邀请函","go_app","");//go_activity
 //发送消息并建立通知数据

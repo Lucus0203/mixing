@@ -31,6 +31,9 @@ switch ($act) {
         case 'getgroupid':
                 getGroupID();
                 break;
+        case 'expired'://过期咖啡
+                expired();
+                break;
         default:
                 break;
 }
@@ -217,7 +220,7 @@ function deposit() {
                                 if($db->getCount('encouter_receive',array('id'=>$prev_encouter_receive_id,'from_user'=>$userid))==0){
                                         echo json_result(null, '12', '你未点击开始传递按钮,请返回上一步');return;
                                 }
-                                $prev_encouter = $db->getRow('encouter', array('id' => $prev_encouter_id), array('transfer_num','people_num','topic'));
+                                $prev_encouter = $db->getRow('encouter', array('id' => $prev_encouter_id), array('transfer_encouterids','transfer_num','people_num','topic'));
                                 $data['transfer_num'] = $prev_encouter['transfer_num'] + 1;
                                 $data['prev_encouter_id'] = $prev_encouter_id;
                                 $data['prev_encouter_receive_id'] = $prev_encouter_receive_id;
@@ -319,7 +322,7 @@ function nearCafe() {
                 . "left join " . DB_PREFIX . "shop shop on encouter.shop_id=shop.id "
                 . "left join " . DB_PREFIX . "user user on encouter.user_id=user.id "
                 . "left join " . DB_PREFIX . "user_tag user_tag on user.id=user_tag.user_id "
-                . "where (TIMESTAMPDIFF(DAY,encouter.created,now())<encouter.days or encouter.days=0) and (encouter.status=2 or encouter.status=5) "; //1待付款2待领取3待到店领取4已领走5等候待付款6等候待到店领取7等候已领走8取消寄存
+                . "where (TIMESTAMPDIFF(DAY,encouter.created,now())<=encouter.days or encouter.days=0) and (encouter.status=2 or encouter.status=5) "; //1待付款2待领取3待到店领取4已领走5等候待付款6等候待到店领取7等候已领走8取消寄存
         if (!empty($city_code)) {
                 $city = $db->getRow('shop_addcity', array('code' => $city_code));
                 $sql.=(!empty($city['id'])) ? " and addcity_id={$city['id']} " : '';
@@ -372,6 +375,13 @@ function cafeInfo() {
         //传递倒数第一人
         if($data['people_num']!=0 && $data['people_num']-$data['transfer_num']==1){
             $data['isend']=2;
+            $encouter = $db->getRow('encouter', array('id' => $id),array('transfer_encouterids'));
+            if(!empty($encouter['transfer_encouterids'])){
+                $transfer_encouterids=explode(',',$encouter['transfer_encouterids']);
+                $data['first_encounter_id'] = $transfer_encouterids[0];
+            }else{
+                $data['first_encounter_id'] = $id;
+            }
         }
         echo json_result($data);
 }
@@ -545,6 +555,13 @@ function getGroupID(){
         }
         $chatgroup=$db->getRow('chatgroup',array('encouter_id'=>$firstEncouterId));
         echo json_result(array('hx_groupid' => $chatgroup['hx_group_id']));
+}
+
+//处理过期咖啡
+function expired(){
+        global $db;
+        $notifysql="insert into ".DB_PREFIX."notify (user_id,img,send_time,msg,type,dataid,isread) select encouter.user_id,'http://www.xn--8su10a.com/img/default_head.png',date_format(NOW(),'%Y-%c-%d %H:%i:%s'),'有过期的咖啡需要处理','expired',encouter.id,1 from ".DB_PREFIX."encouter encouter where TIMESTAMPDIFF(DAY,encouter.created,now())>encouter.days and encouter.days!=0 and encouter.status=2 ";
+        $db->excuteSql($notifysql);
 }
 
 //获取最初邂逅id

@@ -109,11 +109,11 @@ function getDiarys(){
             }
         }
         if($type==3&&$userallow['allow_news']==2){//陌生人且不许查看
-            echo json_result(null,'3','用户限制陌生人查看,请先成为TA的好友吧');
+            echo json_result(null,'3','成为TA的好友可以看到内容哦');
             return ;
         }
         if($type==3&&$page_no>1){//陌生人且只能查看8条信息
-            echo json_result(null,'4','想看更多内容的话,请先成为TA的好友吧');
+            echo json_result(null,'4','成为TA的好友可以看到更多内容哦');
             return ;
         }
         $sql="select id as diary_id,note,voice,voice_time,address,lng,lat,created from ".DB_PREFIX."diary diary where isdel=2 and user_id = $userid order by created desc ";//isdel 1删除2正常
