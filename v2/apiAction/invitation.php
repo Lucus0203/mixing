@@ -173,18 +173,26 @@ function refuseInvitation(){
                     echo json_result(null,'2','数据不符,你不能拒绝不属于你的邀请函');
                     return;
             }
+            $inv=$db->getRow('invitation',array('id'=>$invt_id),array('user_id'));
+            if($inv['status']==4){//取消
+                    echo json_result(null,'3','对方已经取消了,请下拉刷新列表');
+                    return;
+            }
             $db->update('invitation', array('isreaded_user'=>2,'isreaded_to_user'=>1,'status'=>3),array('id'=>$invt_id));
             //通知
-            $inv=$db->getRow('invitation',array('id'=>$invt_id),array('user_id'));
             sendNotifyInvitationRefuse($loginid,$inv['user_id'],$invt_id);//拒绝了你的邀请函
         }else{//活动邀请函
             if ($db->getCount('public_event_together_others',array('id'=>$invt_id,'user_id'=>$loginid))<=0){
                     echo json_result(null,'2','数据不符,你不能接受不属于你的邀请函');
                     return;
             }
+            $inv=$db->getRow('public_event_together_others',array('id'=>$invt_id),array('other_id'));
+            if($inv['status']==4){//取消
+                    echo json_result(null,'3','对方已经取消了,请下拉刷新列表');
+                    return;
+            }
             $db->update('public_event_together_others', array('isreaded_user'=>1,'isreaded_other'=>2,'status'=>3),array('id'=>$invt_id));
             //通知
-            $inv=$db->getRow('public_event_together_others',array('id'=>$invt_id),array('other_id'));
             publicEventTogetherRefuse($loginid,$inv['other_id'],$invt_id);//拒绝搭伴邀请
         }
 	

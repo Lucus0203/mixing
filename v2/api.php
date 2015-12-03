@@ -63,6 +63,9 @@ if (!empty($c)) {
         case 'notify':
             include 'apiAction/notify.php';
             break;
+        case 'beans':
+            include 'apiAction/beans.php';
+            break;
         default:
             break;
     }

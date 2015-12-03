@@ -433,7 +433,7 @@ function updateOrderEncouter($order){
                                 if(!empty($hxgroupid)){
                                     $groupid=$db->create('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$user['id'],'encouter_id'=>$order['encouter_id'],'name'=>$encouter['topic'],'note'=>$encouter['msg'],'maxusers'=>$maxusers,'created'=>date("Y-m-d H:i:s")));
                                     $db->create('chatgroup_user',array('user_id'=>$user['id'],'chatgroup_id'=>$groupid,'encouter_id'=>$order['encouter_id']));
-                                    $HuanxinObj->sendmsgToGroup($user['id'],$hxgroupid,$user['nick_name'].'加入了'.$encouter['topic'].'话题组');
+                                    $HuanxinObj->sendmsgToGroup($user['id'],$hxgroupid,'你创建了#'.$encouter['topic'].'#话题组');
                                             
                                         
                                 }

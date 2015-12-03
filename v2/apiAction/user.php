@@ -286,7 +286,7 @@ function info(){
 	$data=filter($_REQUEST);
 	$user_id=$data['userid'];
 	$loginid=$data['loginid'];//登陆者id
-	$info=$db->getRow('user',array('id'=>$user_id),array('id','head_photo','sex','birthday','user_name','nick_name','height','emotion','frequented','weight','blood','hometown','home_province_id','home_city_id','home_town_id','profession','salary','career','hobby','personality'));
+	$info=$db->getRow('user',array('id'=>$user_id),array('id','head_photo','beans','sex','birthday','user_name','nick_name','height','emotion','frequented','weight','blood','hometown','home_province_id','home_city_id','home_town_id','profession','salary','career','hobby','personality'));
 	//查询人物关系 当loginid不为空的时候
 	if(!empty($loginid)){
 		//好友关系
@@ -335,7 +335,8 @@ function infoEdit(){
         
 	if(!empty($data['birthday'])){
                 $info['birthday']=$data['birthday'];
-                $info['age']=floor((time()-strtotime($data['birthday'])) / 60 / 60 / 24 / 365);
+                $age=floor((time()-strtotime($data['birthday'])) / 60 / 60 / 24 / 365);
+                $info['age']=$age<0?0:$age;
 		$info['constellation']=  get_zodiac_sign(date("n",strtotime($data['birthday'])), date("j",strtotime($data['birthday'])));
 	}
 	if(!empty($data['nick_name'])){
@@ -576,7 +577,6 @@ function qrcode(){
         }
         echo json_result(array('qrcode'=>APP_SITE.$qrfile));
 }
-
 
 function getRelationStatus($myself_id,$user_id){
 	global $db;

@@ -43,14 +43,18 @@ function nearbyShops(){
 	$city_code=filter($_REQUEST['city_code']);
 	$area_id=filter($_REQUEST['area_id']);
 	$circle_id=filter($_REQUEST['circle_id']);
-	$keyword=filter($_REQUEST['keyword']);
+	$keyword=filterSql(filter($_REQUEST['keyword']));
 	$tag_ids=filter($_REQUEST['tag_ids']);
 	$page_no = isset ( $_REQUEST ['page'] ) ? $_REQUEST ['page'] : 1;
 	$page_size = PAGE_SIZE;
 	$start = ($page_no - 1) * $page_size;
 	//是否营业中,1营业中,2休息
 	$isopensql=getIsopensql();
-	$sql="select shop.id,title,img,lng,lat,".$isopensql." from ".DB_PREFIX."shop shop left join ".DB_PREFIX."shop_tag shop_tag on shop_tag.shop_id=shop.id where status=2 ";
+	$sql="select shop.id,title,img,address,lng,lat,n.msg_num,e.cup_num,".$isopensql." from ".DB_PREFIX."shop shop "
+                . "left join ".DB_PREFIX."shop_tag shop_tag on shop_tag.shop_id=shop.id "
+                . "left join (select shop_id,count(id) as msg_num from ".DB_PREFIX."diary diary group by shop_id ) n on n.shop_id=shop.id "
+                . "left join (select shop_id,count(id) as cup_num from ".DB_PREFIX."encouter encouter where status=2 group by shop_id ) e on e.shop_id=shop.id "
+                . "where status=2 ";
         if(!empty($city_code)){
                 $city=$db->getRow('shop_addcity',array('code'=>$city_code));
                 $sql.=(!empty($city['id']))?" and addcity_id={$city['id']} ":'';
@@ -85,7 +89,11 @@ function shopInfo(){
 		$shop=$db->getRow('shop',array('id'=>$shopid),array('id','title','img','tel','address','feature','introduction','hours','hours1','hours2','holidayflag','holidays','holidayhours1','holidayhours2','lng','lat'));
 		$shop['tel']=trim($shop['tel']);
 		$shop['distance']=(!empty($shop['lat'])&&!empty($shop['lng'])&&!empty($lng)&&!empty($lat))?getDistance($lat,$lng,$shop['lat'],$shop['lng']):lang_UNlOCATE;
-                //店内咖啡
+                //店内消息数
+                $shop['msg_num']=$db->getCount('diary',array('shop_id'=>$shopid));
+                //店内咖啡数
+                $shop['cup_num']=$db->getCount('encouter',array('shop_id'=>$shopid,'status'=>2));
+                //店内菜品
                 $menusql="select menu_id,title,img from ".DB_PREFIX."shop_menu_price menu_price left join ".DB_PREFIX."shop_menu menu on menu.id=menu_price.menu_id where menu.shop_id={$shopid} and menu.status = 2 group by menu_price.menu_id ";
                 $menus=$db->getAllBySql($menusql);
                 foreach ($menus as $k=>$m){
@@ -341,7 +349,7 @@ function depositShops(){
 	$city_code=filter($_REQUEST['city_code']);
 	$area_id=filter($_REQUEST['area_id']);
 	$circle_id=filter($_REQUEST['circle_id']);
-	$keyword=filter($_REQUEST['keyword']);
+	$keyword=filterSql(filterSql(filter($_REQUEST['keyword'])));
 	$tag_ids=filter($_REQUEST['tag_ids']);
         $encouterid = isset ( $_REQUEST ['encouterid'] ) ? $_REQUEST ['encouterid'] : '';//过滤咖啡馆用
 	$page_no = isset ( $_REQUEST ['page'] ) ? $_REQUEST ['page'] : 1;

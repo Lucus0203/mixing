@@ -89,7 +89,7 @@ function getFriends(){//好友/所有联系人(互相关注)
 //根据咖啡号手机号名称查找
 function searchUsersByKeyword(){
 	global $db;
-	$keyword=filter(!empty($_REQUEST['keyword'])?$_REQUEST['keyword']:'');
+	$keyword=filterSql(filter(!empty($_REQUEST['keyword'])?$_REQUEST['keyword']:''));
 	$loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
 	$page_no = isset ( $_REQUEST ['page'] ) ? $_REQUEST ['page'] : 1;
 	$page_size = PAGE_SIZE;
