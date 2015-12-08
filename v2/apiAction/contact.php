@@ -58,7 +58,7 @@ function getFriends(){//好友/所有联系人(互相关注)
 	global $db;
 	$userid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
 	if(empty($userid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
 	$data=array();
@@ -95,7 +95,7 @@ function searchUsersByKeyword(){
 	$page_size = PAGE_SIZE;
 	$start = ($page_no - 1) * $page_size;
 	if(empty($loginid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
 	if(empty($keyword)){
@@ -127,7 +127,7 @@ function follows(){//我关注的
 	$start = ($page_no - 1) * $page_size;
 	
 	if(empty($userid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
 //	//好友
@@ -161,7 +161,7 @@ function fans(){//关注我的
 	$start = ($page_no - 1) * $page_size;
 	
 	if(empty($userid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
 	
@@ -191,7 +191,7 @@ function myNewFansCount(){//新关注我的人数
 	global $db;
 	$userid=filter($_REQUEST['loginid']);
 	if(empty($userid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
 	$count=$db->getCount('user_relation',array('relation_id'=>$userid,'ischeck'=>'0'));
@@ -203,7 +203,7 @@ function addFollow(){//关注
 	$loginid=filter($_REQUEST['loginid']);
 	$userid=filter($_REQUEST['userid']);
 	if(empty($loginid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
 	//好友关系
@@ -230,7 +230,7 @@ function delFollow(){
 	$loginid=filter($_REQUEST['loginid']);
 	$userid=filter($_REQUEST['userid']);
 	if(empty($loginid)){
-		echo json_result(null,2,'请重新登录');
+		echo json_result(null,2,'请先登录');
 		return;
 	}
 	$db->delete('user_relation', array('user_id'=>$loginid,'relation_id'=>$userid));
@@ -244,7 +244,7 @@ function delFan(){
 	$loginid=filter($_REQUEST['loginid']);
 	$userid=filter($_REQUEST['userid']);
 	if(empty($loginid)){
-		echo json_result(null,2,'请重新登录');
+		echo json_result(null,2,'请先登录');
 		return;
 	}
 	if(empty($userid)){
@@ -261,7 +261,7 @@ function black(){//拉黑
 	$loginid=filter($_REQUEST['loginid']);
 	$userid=filter($_REQUEST['userid']);
 	if(empty($loginid)){
-		echo json_result(null,2,'请重新登录');
+		echo json_result(null,2,'请先登录');
 		return;
 	}
 	//好友关系
@@ -298,7 +298,7 @@ function blackList(){//黑名单
 	$page_size = PAGE_SIZE;
 	$start = ($page_no - 1) * $page_size;
 	if(empty($loginid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
         $sql="select u.id as user_id,u.nick_name,u.user_name,u.head_photo from ".DB_PREFIX."user u "
@@ -317,7 +317,7 @@ function delBlack(){//移除黑名单
 	$loginid=filter($_REQUEST['loginid']);
 	$userid=filter($_REQUEST['userid']);
 	if(empty($loginid)){
-		echo json_result(null,2,'请重新登录');
+		echo json_result(null,2,'请先登录');
 		return;
 	}
 	//好友关系
@@ -420,7 +420,7 @@ function searchUsersByMobiles(){
 	$page_size = PAGE_SIZE;
 	$start = ($page_no - 1) * $page_size;
 	if(empty($loginid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
 	$data=array();

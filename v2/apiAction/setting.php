@@ -22,7 +22,7 @@ function security(){
     global $db;
     $loginid = filter($_REQUEST['loginid']);
     if(empty($loginid)){
-            echo json_result(null,'2','请重新登录');
+            echo json_result(null,'2','请先登录');
             return;
     }
     $security=$db->getRow('user',array('id'=>$loginid),array('allow_find_nick','allow_find_mobile','allow_news'));
@@ -35,7 +35,7 @@ function allowFindByNick(){
     $loginid = filter($_REQUEST['loginid']);
     $allow = filter($_REQUEST['allow']);//1允许2不允许
     if(empty($loginid)){
-            echo json_result(null,'2','请重新登录');
+            echo json_result(null,'2','请先登录');
             return;
     }
     $db->update('user',array('allow_find_nick'=>$allow),array('id'=>$loginid));
@@ -50,7 +50,7 @@ function allowFindByMobile(){
     $loginid = filter($_REQUEST['loginid']);
     $allow = filter($_REQUEST['allow']);//1允许2不允许
     if(empty($loginid)){
-            echo json_result(null,'2','请重新登录');
+            echo json_result(null,'2','请先登录');
             return;
     }
     $db->update('user',array('allow_find_mobile'=>$allow),array('id'=>$loginid));
@@ -64,7 +64,7 @@ function allowSeeNews(){
     $loginid = filter($_REQUEST['loginid']);
     $allow = filter($_REQUEST['allow']);//1允许2不允许
     if(empty($loginid)){
-            echo json_result(null,'2','请重新登录');
+            echo json_result(null,'2','请先登录');
             return;
     }
     $db->update('user',array('allow_news'=>$allow),array('id'=>$loginid));

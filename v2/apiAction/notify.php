@@ -17,14 +17,14 @@ switch ($act){
 		break;
 }
 
-//查看消息通知
+//查看消息通知 type //invitation //payer //waiter //depositer //payer //receiver //mixing 官方活动(链接)
 function getNotifys(){
 	global $db;
 	$loginid=filter($_REQUEST['loginid']);
 	$page_no = isset ( $_REQUEST ['page'] ) ? $_REQUEST ['page'] : 1;
 	$page_size = PAGE_SIZE;
 	$start = ($page_no - 1) * $page_size;
-        $data=$db->getAll('notify',array('user_id'=>$loginid),array('id','img','send_time','msg','type','dataid','isread'),"order by id desc limit $start,$page_size");
+        $data=$db->getAll('notify',array('user_id'=>$loginid."' or type='mixing"),array('id','img','send_time','msg','url','type','dataid','isread'),"order by id desc limit $start,$page_size");
         echo json_result(array('notifys'=>$data));
 }
 
@@ -49,7 +49,7 @@ function countRead(){
 	global $db;
 	$loginid=filter($_REQUEST['loginid']);
         $count=$db->getCount('notify',array('user_id'=>$loginid,'isread'=>1));
-        $lastRow="select msg,created from ".DB_PREFIX."notify notify where user_id={$loginid} order by id desc limit 0,1 ";
+        $lastRow="select msg,DATE_FORMAT(created,'%Y-%m-%d %H:%i') as created from ".DB_PREFIX."notify notify where user_id={$loginid} order by id desc limit 0,1 ";
         $data=$db->getRowBySql($lastRow);
         $isHasGroup=$db->getCount('chatgroup',array('user_id'=>$loginid)) > 0 ? 1 : 2 ;//1有2无
         echo json_result(array('count'=>$count,'msg'=>$data['msg'],'created'=>$data['created'],'isHasGroup'=>$isHasGroup));

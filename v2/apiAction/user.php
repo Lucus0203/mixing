@@ -328,7 +328,7 @@ function infoEdit(){
 		return;
 	}
 	if($db->getCount('user',array('id'=>$loginid))<=0){
-		echo json_result(null,'14','找不到当前用户id,请重新登录');
+		echo json_result(null,'14','找不到当前用户id,请先登录');
 		return;
 	}
 	$info=array();
@@ -340,6 +340,10 @@ function infoEdit(){
 		$info['constellation']=  get_zodiac_sign(date("n",strtotime($data['birthday'])), date("j",strtotime($data['birthday'])));
 	}
 	if(!empty($data['nick_name'])){
+                if($db->getCount('user',array('nick_name'=>$data['nick_name']."' and id <> '".$loginid))>0){
+                        echo json_result(null,'15','此昵称已被人使用');
+                        return;
+                }
 		$info['nick_name']=$data['nick_name'];
 		$info['pinyin']=!empty($info['nick_name'])?getFirstCharter($info['nick_name']):'';
 	}

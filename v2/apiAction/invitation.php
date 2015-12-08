@@ -76,7 +76,7 @@ function getInvitation(){
         $invt_type=filter(!empty($_REQUEST['invt_type'])?$_REQUEST['invt_type']:'');//邀请函类型1普通2活动
 	$loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');//登录者id
         if(empty($loginid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
 	if(empty($invt_id)||empty($invt_type)){
@@ -208,7 +208,7 @@ function cancelInvitation(){
         $invt_type=filter(!empty($_REQUEST['invt_type'])?$_REQUEST['invt_type']:'');//邀请函类型1普通2活动
 	$loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');//登录者id
         if(empty($loginid)){
-                echo json_result(null,'2','请重新登录');
+                echo json_result(null,'2','请先登录');
                 return;
         }
         if($invt_type==1){//普通邀请函
@@ -244,7 +244,7 @@ function delInvitation(){
 	$invt_id=filter(!empty($_REQUEST['invtid'])?$_REQUEST['invtid']:'');//邀请函id
         $invt_type=filter(!empty($_REQUEST['invt_type'])?$_REQUEST['invt_type']:'');//邀请函类型1普通2活动
 	if(empty($loginid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
         if(empty($invt_id)||empty($invt_type)){
@@ -324,7 +324,7 @@ function invitationBySend(){
 	$start = ($page_no - 1) * $page_size;
 	
 	if(empty($loginid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
         //1等待2接受3拒绝4取消
@@ -351,7 +351,7 @@ function invitationByAccept(){
 	$start = ($page_no - 1) * $page_size;
 	
 	if(empty($loginid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
         //1等待2接受3拒绝4取消

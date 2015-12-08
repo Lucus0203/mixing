@@ -93,7 +93,7 @@ function checkMobile($value) {
  * @param float $lng
  *        	经度值
  */
-function getDistance($lat1, $lng1, $lat2, $lng2) {
+function getDistance($lat1, $lng1, $lat2, $lng2) {//返回公里数
         $earthRadius = 6367000; // approximate radius of earth in meters
 
         /*
@@ -124,6 +124,30 @@ function getDistance($lat1, $lng1, $lat2, $lng2) {
         $res = round($calculatedDistance / 1000, 2) . '';
         return $res;
 }
+
+/**
+ * 计算某个经纬度的周围某段距离的正方形的四个点
+ * 地球半径，平均半径为6371km
+ * @param lng float 经度
+ * @param lat float 纬度
+ * @param distance float 该点所在圆的半径，该圆与此正方形内切，默认值为0.5千米
+ * @return array 正方形的四个点的经纬度坐标
+ */
+ function returnSquarePoint($lng, $lat,$distance = 0.5){
+  
+    $dlng =  2 * asin(sin($distance / (2 * 6371)) / cos(deg2rad($lat)));
+    $dlng = rad2deg($dlng);
+      
+    $dlat = $distance/6371;
+    $dlat = rad2deg($dlat);
+      
+    return array(
+                'leftTop'=>array('lat'=>$lat + $dlat,'lng'=>$lng-$dlng),
+                'rightTop'=>array('lat'=>$lat + $dlat, 'lng'=>$lng + $dlng),
+                'leftBottom'=>array('lat'=>$lat - $dlat, 'lng'=>$lng - $dlng),
+                'rightBottom'=>array('lat'=>$lat - $dlat, 'lng'=>$lng + $dlng)
+                );
+ }
 
 function noNull($a) {
         return is_null($a) ? '' : $a;

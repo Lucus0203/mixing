@@ -238,7 +238,7 @@ function togetherEvent(){
         $lng=$event['lng'];
         $lat=$event['lat'];
 	if(empty($loginid)){
-		echo json_result(null,'2','请重新登录');
+		echo json_result(null,'2','请先登录');
 		return;
 	}
 	if(empty($userid)){
