@@ -14,24 +14,23 @@
          <input type="hidden" id="checkShopRepeat" value="{url controller=Shop action=CheckShopRepeat}" />
          <table class="hd_del_ta" border="0" cellpadding="0" cellspacing="1" width="97%" align="center">
              <colgroup>
-				<col width="10%">
+				<col width="20%">
+				<col width="30%">
+				<col width="20%">
+				<col width="30%">
 			 </colgroup>
              <tr>
-                 <td class="hd_ta_t" colspan="2">添加店铺</td>
+                 <td class="hd_ta_t" colspan="4">添加店铺</td>
              </tr>
              <tr>
                  <td style="text-align:center;">店铺名称</td>
                  <td><input name="title" type="text" value="" style="width:240px;"></td>
+                 <td rowspan="5" style="text-align:center;">简介</td>
+                 <td rowspan="5"><textarea name="introduction" style="width:540px;height:280px;"></textarea></td>
              </tr>
              <tr>
                  <td style="text-align:center;">别名</td>
                  <td><input name="subtitle" type="text" value="" style="width:240px;"></td>
-             </tr>
-             <tr>
-                 <td style="text-align:center;">营业时间(旧版需要)</td>
-                 <td>
-                 	<input name="hours" type="text" value="" style="width:240px;">
-                 </td>
              </tr>
              <tr>
                  <td style="text-align:center;">营业时间</td>
@@ -119,34 +118,11 @@
              </tr>
              <tr>
                  <td style="text-align:center;">电话</td>
-                 <td><input name="tel" type="text" value="" style="width:240px;"></td>
-             </tr>
-             <tr>
-                 <td style="text-align:center;">城市区域<br/>(旧版或店家输入信息)</td>
-                 <td>
-                        <select class="province_id">
-                            <option value="">选择</option>
-                            {section name=sec loop=$provinces}
-                                    <option value="{$provinces[sec].id}" {if $data.province_id eq $provinces[sec].id}selected{/if}>{$provinces[sec].name}</option>
-                            {/section}
-                        </select>
-                        <select name="city_id" class="city_id">
-                            <option value="">选择</option>
-                            {section name=sec loop=$city}
-                                    <option value="{$city[sec].id}" {if $data.city_id eq $city[sec].id}selected{/if}>{$city[sec].name}</option>
-                            {/section}
-                        </select>
-                        <select name="town_id" class="town_id">
-                            <option value="">选择</option>
-                            {section name=sec loop=$towns}
-                                    <option value="{$towns[sec].id}" {if $data.town_id eq $towns[sec].id}selected{/if}>{$towns[sec].name}</option>
-                            {/section}
-                        </select>
-                 </td>
+                 <td colspan="3"><input name="tel" type="text" value="" style="width:240px;"></td>
              </tr>
              <tr>
                  <td style="text-align:center;">城市商圈<br/>(管理员设定)</td>
-                 <td>
+                 <td colspan="3">
 	                <select name="province_id" class="addprovince_id">
                             <option value="">选择</option>
                             {section name=sec loop=$provinces}
@@ -175,21 +151,21 @@
              </tr>
              <tr>
                  <td style="text-align:center;">地址</td>
-                 <td><input id="address" name="address" type="text" value="" style="width:600px;">
+                 <td colspan="3"><input id="address" name="address" type="text" value="" style="width:600px;">
                  	<div id="allmap"></div>
                  </td>
              </tr>
              <tr>
                  <td style="text-align:center;">经度</td>
-                 <td><input id="lng" name="lng" type="text" value="" style="width:240px;"></td>
+                 <td colspan="3"><input id="lng" name="lng" type="text" value="" style="width:240px;"></td>
              </tr>
              <tr>
                  <td style="text-align:center;">纬度</td>
-                 <td><input id="lat" name="lat" type="text" value="" style="width:240px;"></td>
+                 <td colspan="3"><input id="lat" name="lat" type="text" value="" style="width:240px;"></td>
              </tr>
              <tr>
                  <td style="text-align:center;">特色</td>
-                 <td>
+                 <td colspan="3">
                     {section name=sec loop=$tagteam}
                         <div class="tabox border{$smarty.section.sec.index}"><p>{$tagteam[sec].name}:</p>
                         <ul class="ultag">
@@ -202,14 +178,10 @@
                  </td>
              </tr>
              <tr>
-                 <td style="text-align:center;">简介</td>
-                 <td><textarea name="introduction" style="width:540px;height:80px;"></textarea></td>
-             </tr>
-             <tr>
                  <td style="text-align:center;">是否发布</td>
-                 <td>
-                 	<label><input name="status" type="radio" value="1">准备中</label>
-                 	<label><input name="status" type="radio" value="2" checked="checked">发布中</label>
+                 <td colspan="3">
+                 	<label><input name="status" type="radio" value="1" checked="checked">准备中</label>
+                 	<!--<label><input name="status" type="radio" value="2" checked="checked">发布中</label>-->
                  </td>
              </tr>
          </table>

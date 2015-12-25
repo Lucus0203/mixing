@@ -61,11 +61,6 @@ class Controller_PublicEvent extends FLEA_Controller_Action {
 		$act=isset ( $_POST ['act'] ) ? $_POST ['act'] : '';
 		if($act=='add'){
 			$data=$_POST;
-			$Upload=$this->getUploadObj('publicEvent');
-			$img=$Upload->upload('img');
-			if($img['status']==1){
-				$data['img']=$img['file_path'];
-			}
 			//判断经纬度
 			if(empty($data['lng'])||empty($data['lat'])){
 				$lng=$this->_common->getLngFromBaidu($data['address']);
@@ -73,14 +68,6 @@ class Controller_PublicEvent extends FLEA_Controller_Action {
 				$data['lat']=$lng['lat'];
 			}
 			$id=$this->_public_event->create($data);
-			$Upload=$this->getUploadObj('publicPhoto');
-			$files=$Upload->uploadFiles('photos');
-			if($files['status']==1){
-				foreach ($files['filepaths'] as $p){
-					$pp=array('public_event_id'=>$id,'img'=>$p,'created'=>date("Y-m-d H:i:s"));
-					$this->_public_photo->create($pp);
-				}
-			}
 			$url=url('PublicEvent','Index');
 			redirect($url);
 		}
@@ -93,12 +80,6 @@ class Controller_PublicEvent extends FLEA_Controller_Action {
 		$msg='';
 		if($act=='edit'){
 			$data=$_POST;
-			$Upload=$this->getUploadObj('publicEvent');
-			$img=$Upload->upload('imgIndex');
-			if($img['status']==1){
-				$this->delAppImg($data['img']);
-				$data['img']=$img['file_path'];
-			}
 			//判断经纬度
 			if(empty($data['lng'])||empty($data['lat'])){
 				$lng=$this->_common->getLngFromBaidu($data['address']);
@@ -106,28 +87,60 @@ class Controller_PublicEvent extends FLEA_Controller_Action {
 				$data['lat']=$lng['lat'];
 			}
 			$this->_public_event->update($data);
-			$this->_public_photo->removeByConditions(array('public_event_id'=>$id));
-			//创建新的活动海报
-			if(isset($data['public_photos'] )){
-				foreach ($data['public_photos'] as $pub){
-					$pp=array('public_event_id'=>$id,'img'=>$pub,'created'=>date("Y-m-d H:i:s"));
-					$this->_public_photo->create($pp);
-				}
-			}
-			$Upload=$this->getUploadObj('publicPhoto');
-			$files=$Upload->uploadFiles('photos');
-			if($files['status']==1){
-				foreach ($files['filepaths'] as $p){
-					$pp=array('public_event_id'=>$id,'img'=>$p,'created'=>date("Y-m-d H:i:s"));
-					$this->_public_photo->create($pp);
-				}
-			}
 			$msg="更新成功!";
 		}
 		$data=$this->_public_event->findByField('id',$id);
 		$photo=$this->_public_photo->findAll(array('public_event_id'=>$id));
 		
 		$this->_common->show ( array ('main' => 'publicEvent/public_edit.tpl','data'=>$data,'photo'=>$photo,'msg'=>$msg) );
+	}
+        
+        //上传活动图片
+	function actionAjaxUploadPublicImg(){
+		$eventid=$_POST['eventid'];
+		$file=$_POST['image-data'];
+
+		$folder='../v2/upload/publicEvent/';
+		if (! file_exists ( $folder )) {
+			mkdir ( $folder, 0777 );
+		}
+		$dir = $folder . date ( "Ymd" ) . '/';
+		if (! file_exists ( $dir )) {
+			mkdir ( $dir, 0777 );
+		}
+		list($imgtype, $data) = explode(',', $file);
+		// 判断类型
+		if(strstr($imgtype,'image/jpeg')!==''){
+			$ext = '.jpg';
+		}elseif(strstr($imgtype,'image/gif')!==''){
+			$ext = '.gif';
+		}elseif(strstr($imgtype,'image/png')!==''){
+			$ext = '.png';
+		}
+		// 生成的文件名
+		$filepath = $dir.time().$ext;
+		// 生成文件
+		if (file_put_contents($filepath, base64_decode($data), true)) {
+			//压缩图片
+			$imgpress = & get_singleton ( "Service_ImgSizePress" );
+			$imgpress->image_png_size_press($filepath,$filepath);
+			list($width,$height,$type)=getimagesize($filepath);
+
+			$path=str_replace('../v2/',APP_SITE, $filepath);
+			$pp = array (
+					'public_event_id' => $eventid,
+					'img' => $path,
+					'width' => $width,
+					'height' => $height,
+					'created' => date ( "Y-m-d H:i:s" ) 
+			);
+			$id=$this->_public_photo->create ( $pp );
+			$img=$path;
+		}else{
+			$img=$id='';
+		}
+		$data=array('src'=>$img,'id'=>$id);
+		echo json_encode($data);
 	}
 	
 	function actionDelPhoto(){//删除海报
@@ -141,8 +154,12 @@ class Controller_PublicEvent extends FLEA_Controller_Action {
 
 	function actionDel(){//删除
 		$id=$this->_common->filter($_GET['id']);
-		$eve=array('id'=>$id,'isdelete'=>1);
-		$this->_public_event->update($eve);
+		$imgs=$this->_public_photo->findAll(array('public_event_id'=>$id));
+		foreach ($imgs as $m){
+			$this->delAppImg($m['img']);
+		}
+		$this->_public_photo->removeByConditions(array('public_event_id'=>$id));
+		$this->_public_event->removeByPkv($id);
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 	function actionPublic(){ //发布
@@ -172,18 +189,17 @@ class Controller_PublicEvent extends FLEA_Controller_Action {
 		echo $_SERVER['HTTP_REFERER'];
 	}
 
-	//图片处理
+	//图片文件处理
 	function delAppImg($path){
 		if(!empty($path)){
-			$file=str_replace(APP_SITE, '../', $path);
-			if(file_exists($file)){
-				unlink($file);
-			}
+			$file=str_replace(APP_SITE, '../v2/', $path);
+			if(file_exists($file))
+			unlink($file);
 		}
 	}
 	function getUploadObj($f){
 		$Upload= & get_singleton ( "Service_UpLoad" );
-		$folder='../upload/'.$f.'/';
+		$folder='../v2/upload/'.$f.'/';
 		if (! file_exists ( $folder )) {
 			mkdir ( $folder, 0777 );
 		}
@@ -192,8 +208,9 @@ class Controller_PublicEvent extends FLEA_Controller_Action {
 		return $Upload;
 	}
         
+        //CKEDITOR图片上传
         function actionUploadImage(){
-                $extensions = array("jpg","bmp","gif","png");  
+                $extensions = array("jpeg","jpg","bmp","gif","png");  
                 $uploadFilename = $_FILES['upload']['name'];  
                 $extension = pathInfo($uploadFilename,PATHINFO_EXTENSION);  
                 echo $extension;

@@ -15,6 +15,7 @@ class Controller_Base extends FLEA_Controller_Action {
 	var $_question;
 	var $_admin;
 	var $_adminid;
+        var $_app_main;
 	
 	function __construct() {
 		$this->_common = get_singleton ( "Class_Common" );
@@ -26,7 +27,7 @@ class Controller_Base extends FLEA_Controller_Action {
 		$this->_user_tag_team = get_singleton ( "Model_BaseUserTagTeam" );
 		$this->_topic = get_singleton ( "Model_BaseTopic" );
 		$this->_question = get_singleton ( "Model_BaseQuestion" );
-		$this->_user_event_bbs = get_singleton ( "Model_UserEventBbs" );
+                $this->_app_main = get_singleton ("Model_AppMain");
 		$this->_adminid = isset ( $_SESSION ['loginuserid'] ) ? $_SESSION ['loginuserid'] : "";
 		if(empty($_SESSION ['loginuserid'])){
 			$url=url("Default","Login");
@@ -224,6 +225,85 @@ class Controller_Base extends FLEA_Controller_Action {
 		redirect($_SERVER['HTTP_REFERER']);
 	}
         
+        /*APP首页数据*/
+        function actionAppMain() {
+		$list=$this->_app_main->findAll();
+		$this->_common->show ( array ('main' => 'base/app_main_list.tpl','list'=>$list) );
+	}
+	function actionAddAppMain() {
+		$data=$_POST;
+		$Upload= & get_singleton ( "Service_UpLoad" );
+		$folder='../v2/upload/appmain/';
+		if (! file_exists ( $folder )) {
+			mkdir ( $folder, 0777 );
+		}
+		$Upload->setDir($folder.date("Ymd")."/");
+		$Upload->setReadDir(APP_SITE.'upload/appmain/'.date("Ymd")."/");
+                $img=$Upload->upload('img');
+                if($img['status']==1){
+                    $data['img']=$img['file_path'];
+                    $this->_app_main->create($data);
+                }else{
+                    echo "<script>alert('图片上传失败')</script>";
+                }
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+        function actionEditAppMain(){
+		$id=$this->_common->filter($_GET['id']);
+		if(empty($id)){
+			redirect($_SERVER['HTTP_REFERER']);
+		}
+		$msg='';
+		$act=isset ( $_POST ['act'] ) ? $_POST ['act'] : '';
+		if($act=='edit'){
+                        $oldmain=$this->_app_main->findByField('id',$id);
+                        
+			$data=$_POST;
+                        $Upload= & get_singleton ( "Service_UpLoad" );
+                        $folder='../v2/upload/appmain/';
+                        if (! file_exists ( $folder )) {
+                                mkdir ( $folder, 0777 );
+                        }
+                        $Upload->setDir($folder.date("Ymd")."/");
+                        $Upload->setReadDir(APP_SITE.'upload/appmain/'.date("Ymd")."/");
+                        $img=$Upload->upload('img');
+                        if($img['status']==1){
+                            $file=str_replace(APP_SITE, '../v2/', $oldmain['img']);
+                            if(file_exists($file))
+                            unlink($file);
+                            $data['img']=$img['file_path'];
+                        }else{
+                            $data['img']=$oldmain['img'];
+                        }
+                        $this->_app_main->update($data);
+                        $msg="更新成功";
+		}
+		$usertag=$this->_app_main->findByField('id',$id);
+		
+		$this->_common->show ( array ('main' => 'base/app_main_edit.tpl','data'=>$usertag,'msg'=>$msg) );
+		
+	}
+        function actionDelAppMain(){//删除
+		$id=$this->_common->filter($_GET['id']);
+                $oldmain=$this->_app_main->findByField('id',$id);
+                $file=str_replace(APP_SITE, '../v2/', $oldmain['img']);
+                if(file_exists($file))
+                unlink($file);
+		$this->_app_main->removeByPkv($id);
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+        function actionPublicAppMain(){//发布唯一
+		$id=$this->_common->filter($_GET['id']);
+                $data=array('id'=>$id,'status'=>1);
+		$this->_app_main->update($data);
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+        function actionDePublicAppMain(){//不发布
+		$id=$this->_common->filter($_GET['id']);
+                $data=array('id'=>$id,'status'=>2);
+		$this->_app_main->update($data);
+		redirect($_SERVER['HTTP_REFERER']);
+	}
 	
 }
 

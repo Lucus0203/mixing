@@ -146,32 +146,32 @@ input.cropit-image-zoom-input {
   overflow: hidden;
 }
 
-.shopimgBoxResize{
+.shopimgBoxResize,.eventimgBoxResize{
 	margin:10px 0 0 0;
 }
 
-.shopimgBoxResize span{
+.shopimgBoxResize span,.eventimgBoxResize span{
 	margin-right:20px;
 }
 
-.shopimgBoxResize .cropit-image-resize{
+.shopimgBoxResize .cropit-image-resize,.eventimgBoxResize .cropit-image-resize{
 	vertical-align: middle
 }
 
-/*店铺图片列表css*/
-#shopimgs li,#menuimgs li{
+/*详细图片css*/
+#shopimgs li,#menuimgs li,#eventimgs li{
 	width:240px;
 	min-height:190px;
 	float:left;
 	margin-right:10px;
 }
-#shopimgs li img,#menuimgs li img{
+#shopimgs li img,#menuimgs li img,#eventimgs li img{
 	border:solid 1px #000;
 	width:200px;
 	margin-bottom:10px;
 	height:200px;
 }
-#shopimgs li label,#menuimgs li label{
+#shopimgs li label,#menuimgs li label,#eventimgs li label{
 	display:block;
 	clear:both;
 	text-align:center;
@@ -182,20 +182,20 @@ input.cropit-image-zoom-input {
   height: 380px;
 }
 
-#shopimgtool,#menuimgtool{
+#shopimgtool,#menuimgtool,#eventimgtool{
 	width:100px;
 	display:block;
 	margin-bottom:10px;
 }
 
-#shopimgs li.loading,#menuimgs li.loading{
+#shopimgs li.loading,#menuimgs li.loading,#eventimgs li.loading{
 	border:solid 1px #000;
 	width:200px;
 	height:150px;
 	margin-bottom:10px;
 }
 
-#shopimgs li.loading img,#menuimgs li.loading img{
+#shopimgs li.loading img,#menuimgs li.loading img,#eventimgs li.loading img{
 	border:none;
 	width:32px;
 	height:32px;
@@ -284,4 +284,9 @@ ul.ultag li{
 }
 .border3{
     border: #9a9afb solid 1px;
+}
+
+.amount{
+    font-size:26px;
+    color:#ee7a16;
 }

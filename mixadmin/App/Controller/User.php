@@ -50,9 +50,6 @@ class Controller_User extends FLEA_Controller_Action {
 		$start = ($page_no - 1) * $page_size;
 
 		$list=$this->_user->findAll($conditions,"id desc limit $start,$page_size");
-		foreach ($list as $k=>$v){
-			$list[$k]['address']=$this->_common->getAddressFromBaidu($v['lng'],$v['lat']);
-		}
 
 		$this->_common->show ( array ('main' => 'user/user_list.tpl','list'=>$list,'page'=>$page) );
 	}

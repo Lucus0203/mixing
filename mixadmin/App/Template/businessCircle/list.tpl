@@ -39,7 +39,7 @@
                 </colgroup>
          	<tr>
                     <td>
-                        <select class="province_id">
+                        <select name="province_id" class="province_id">
                                 <option value="">选择</option>
                                 {section name=sec loop=$provinces}
                                 <option value="{$provinces[sec].id}" {if $province_id eq $provinces[sec].id}selected{/if}>{$provinces[sec].name}</option>
@@ -70,7 +70,7 @@
                 </colgroup>
          	<tr>
                     <td>
-                        <select class="province_id">
+                        <select name="province_id" class="province_id">
                                 <option value="">选择</option>
                                 {section name=sec loop=$provinces}
                                 <option value="{$provinces[sec].id}" {if $province_id eq $provinces[sec].id}selected{/if}>{$provinces[sec].name}</option>

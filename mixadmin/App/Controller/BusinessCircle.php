@@ -121,7 +121,7 @@ class Controller_BusinessCircle extends FLEA_Controller_Action {
                 foreach ($data['name'] as $n){
                     if(!empty($n)&&!empty($data['province_id'])&&!empty($data['city_id'])){
                         $obj=array('province_id'=>$data['province_id'],'city_id'=>$data['city_id'],'name'=>$n);
-                        $this->_shop_addarea->create($obj);
+                        $id=$this->_shop_addarea->create($obj);
                     }
                 }
 		redirect($_SERVER['HTTP_REFERER']);

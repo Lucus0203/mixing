@@ -22,20 +22,6 @@
                  <td><input name="title" type="text" value="" style="width:240px;"></td>
              </tr>
              <tr>
-                 <td style="text-align:center;">活动地址</td>
-                 <td><input id="address" name="address" type="text" value="" style="width:600px;">
-                 	<div id="allmap"></div>
-                 </td>
-             </tr>
-             <tr>
-                 <td style="text-align:center;">经度</td>
-                 <td><input id="lng" name="lng" type="text" value="" style="width:240px;"></td>
-             </tr>
-             <tr>
-                 <td style="text-align:center;">纬度</td>
-                 <td><input id="lat" name="lat" type="text" value="" style="width:240px;"></td>
-             </tr>
-             <tr>
                  <td style="text-align:center;">价格费用</td>
                  <td><input name="price" type="text" value="" style="width:240px;"></td>
              </tr>
@@ -56,26 +42,24 @@
                  <td><textarea id="content" name="content" style="width:540px;height:800px;"></textarea></td>
              </tr>
              <tr>
-                 <td style="text-align:center;">(宽高640:310)<br/>首页图片</td>
-                 <td><input name="img" type="file" style="width:240px;"></td>
+                 <td style="text-align:center;">活动地址</td>
+                 <td><input id="address" name="address" type="text" value="" style="width:600px;">
+                 	<div id="allmap"></div>
+                 </td>
              </tr>
              <tr>
-                 <td style="text-align:center;word-break:keep-all;">(宽高640:310)<br/>海报图片</td>
-                 <td><input name="photos[]" type="file" style="width:240px;"></td>
+                 <td style="text-align:center;">经度</td>
+                 <td><input id="lng" name="lng" type="text" value="" style="width:240px;"></td>
              </tr>
              <tr>
-                 <td style="text-align:center;">海报图片</td>
-                 <td><input name="photos[]" type="file" style="width:240px;"></td>
-             </tr>
-             <tr>
-                 <td style="text-align:center;">海报图片</td>
-                 <td><input name="photos[]" type="file" style="width:240px;"></td>
+                 <td style="text-align:center;">纬度</td>
+                 <td><input id="lat" name="lat" type="text" value="" style="width:240px;"></td>
              </tr>
              <tr id="photo_add"><td colspan="2" ><a style="margin-left:30px;" href="javascript:void(0)">添加海报</a></td></tr>
              <tr>
                  <td style="text-align:center;">是否发布</td>
                  <td>
-                 	<label><input name="ispublic" type="radio" value="1">发布中</label>
+                 	<!--<label><input name="ispublic" type="radio" value="1">发布中</label>-->
                  	<label><input name="ispublic" type="radio" value="2" checked="checked">不发布</label>
                  </td>
              </tr>

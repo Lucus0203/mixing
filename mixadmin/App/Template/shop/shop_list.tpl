@@ -6,30 +6,11 @@
          <input type="hidden" id="addcityApiURL" value="{url controller=Api action=GetShopCityByProvince}" />
          <input type="hidden" id="addareaApiURL" value="{url controller=Api action=GetShopAreaByCity}" />
          <input type="hidden" id="addcircleApiURL" value="{url controller=Api action=GetShopCircleByCity}" />
-         <div class="hd_t">咖啡店铺</div>
+         <div class="hd_t">咖啡店铺</div><p style="text-align: left;padding: 0 0 0 20px;font-size: 15px;"><a href="{url controller=Shop action=Add}">添加店铺</a></p>
          <form action="" method="get">
          <input type="hidden" name="controller" value="Shop" />
          <input type="hidden" name="action" value="Index" />
          <div class="hd_t1">
-         	旧版:<select name="province_id" class="province_id">
-				<option value="">不限</option>
-				{section name=sec loop=$provinces}
-				<option value="{$provinces[sec].id}" {if $province_id eq $provinces[sec].id}selected{/if}>{$provinces[sec].name}</option>
-				{/section}
-			</select>
-			<select name="city_id" class="city_id">
-				<option value="">不限</option>
-				{section name=sec loop=$city}
-				<option value="{$city[sec].id}" {if $city_id eq $city[sec].id}selected{/if}>{$city[sec].name}</option>
-				{/section}
-			</select>
-			<select name="town_id" class="town_id">
-				<option value="">不限</option>
-				{section name=sec loop=$towns}
-				<option value="{$towns[sec].id}" {if $town_id eq $towns[sec].id}selected{/if}>{$towns[sec].name}</option>
-				{/section}
-			</select>
-			&nbsp;
                 新版:<select name="addprovince_id" class="addprovince_id">
 				<option value="">不限</option>
 				{section name=sec loop=$provinces}

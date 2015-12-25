@@ -491,8 +491,6 @@ class Controller_Shop extends FLEA_Controller_Action {
 	}
 	
 	function actionDel(){//删除
-		$config = FLEA::getAppInf ( 'dbDSN' );
-		
 		$id=$this->_common->filter($_GET['id']);
 		$shopmenu=$this->_shop_menu->findAll(array('shop_id'=>$id));
 		foreach ($shopmenu as $shopm){
@@ -503,8 +501,8 @@ class Controller_Shop extends FLEA_Controller_Action {
 		$shopimg=$this->_shop_img->findAll(array('shop_id'=>$id));
 		foreach ($shopimg as $shopm){
 			$this->delAppImg($shopm['img']);
-			$this->_shop_img->removeByPkv($shopm['id']);
 		}
+		$this->_shop_img->removeByConditions(array('shop_id'=>$id));
 		$this->_shop_bbs->removeByConditions(array('shop_id'=>$id));
 		$this->_shop->removeByPkv($id);
 		redirect($_SERVER['HTTP_REFERER']);
@@ -534,7 +532,7 @@ class Controller_Shop extends FLEA_Controller_Action {
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 	
-	//图片处理
+	//图片文件处理
 	function delAppImg($path){
 		if(!empty($path)){
 			$file=str_replace(APP_SITE, '../v2/', $path);

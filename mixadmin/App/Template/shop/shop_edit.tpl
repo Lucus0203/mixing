@@ -16,8 +16,8 @@
          <input type="hidden" name="id" value="{$data.id}" />
          <table class="hd_del_ta" border="0" cellpadding="0" cellspacing="1" width="97%" align="center">
              <colgroup>
-				<col width="10%">
-			 </colgroup>
+                    <col width="10%">
+             </colgroup>
              <tr>
                  <td class="hd_ta_t" colspan="2">店铺编辑</td>
              </tr>
@@ -32,6 +32,10 @@
              <tr>
                  <td style="text-align:center;">别名</td>
                  <td><input name="subtitle" type="text" value="{$data.subtitle}" style="width:240px;"></td>
+             </tr>
+             <tr>
+                 <td style="text-align:center;">简介</td>
+                 <td><textarea name="introduction" style="width:540px;height:280px;">{$data.introduction}</textarea></td>
              </tr>
              <tr>
                  <td style="text-align:center;word-break:keep-all;">上传店铺图片<br/>(最小尺寸750x500)</td>
@@ -53,8 +57,8 @@
              </tr>
              <tr>
                  <td style="text-align:center;">店铺图片</td>
-                 <td>
-	                 <ul  id="shopimgs">
+                 <td >
+	                 <ul id="shopimgs">
              			{section name=spi loop=$shopimg}
 	                 		<li>
 	                 			<a href="{$shopimg[spi].img}" data-lightbox="roadtrip"><img src="{$shopimg[spi].img}"></a><a class="delShopImg" rel="{$shopimg[spi].id}" href="javascript:void(0)">删 除</a>
@@ -65,14 +69,8 @@
                  </td>
              </tr>
              <tr>
-                 <td style="text-align:center;">营业时间(旧版或店家输入的文字)</td>
-                 <td>
-                 	<input name="hours" type="text" value="{$data.hours}" style="width:240px;">
-                 </td>
-             </tr>
-             <tr>
                  <td style="text-align:center;">营业时间(管理员设定)</td>
-                 <td>
+                 <td >
                  	<select name="hours1" >
                  		{section name=loop loop=24}
                  		{if $smarty.section.loop.index lt 10}
@@ -159,29 +157,6 @@
                  <td><input name="tel" type="text" value="{$data.tel}" style="width:240px;"></td>
              </tr>
              <tr>
-                 <td style="text-align:center;">城市区域<br/>(旧版或店家输入信息)</td>
-                 <td>
-                        <select class="province_id">
-                            <option value="">选择</option>
-                            {section name=sec loop=$provinces}
-                                    <option value="{$provinces[sec].id}" {if $data.province_id eq $provinces[sec].id}selected{/if}>{$provinces[sec].name}</option>
-                            {/section}
-                        </select>
-                        <select name="city_id" class="city_id">
-                            <option value="">选择</option>
-                            {section name=sec loop=$city}
-                                    <option value="{$city[sec].id}" {if $data.city_id eq $city[sec].id}selected{/if}>{$city[sec].name}</option>
-                            {/section}
-                        </select>
-                        <select name="town_id" class="town_id">
-                            <option value="">选择</option>
-                            {section name=sec loop=$towns}
-                                    <option value="{$towns[sec].id}" {if $data.town_id eq $towns[sec].id}selected{/if}>{$towns[sec].name}</option>
-                            {/section}
-                        </select>
-                 </td>
-             </tr>
-             <tr>
                  <td style="text-align:center;">城市商圈<br/>(管理员设定)</td>
                  <td>
 	                <select name="province_id" class="addprovince_id">
@@ -238,10 +213,6 @@
                         </div>
                     {/section}
                  </td>
-             </tr>
-             <tr>
-                 <td style="text-align:center;">简介</td>
-                 <td><textarea name="introduction" style="width:540px;height:80px;">{$data.introduction}</textarea></td>
              </tr>
              <tr>
                  <td style="text-align:center;">是否发布</td>
