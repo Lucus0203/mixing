@@ -1,7 +1,7 @@
-var uri = window.location + '';
-if (uri.indexOf('/guanli/') != -1) {
-	window.location = 'http://www.coffee15.com';
-}
+//var uri = window.location + '';
+//if (uri.indexOf('/guanli/') != -1) {
+//	window.location = '';
+//}
 $(function() {
 	$(window).resize(function() {
 		$('.main_l').height($(window).height() - 160);

@@ -49,7 +49,7 @@ class Login extends CI_Controller {
 				$userinfo = $this->master_model->getRow(array('mobile'=>$mobile));
 				if(!empty($userinfo)&&$userinfo['captcha_code']==$code){
 					$code=rand(1000, 9999);//换个验证码
-					$this->master_model->update(array('user_name'=>$user,'user_password'=>md5($pass),'captcha_code'=>$code,'status'=>2),$userinfo['id']);
+					$this->master_model->update(array('user_name'=>$user,'user_password'=>md5($pass),'captcha_code'=>$code,'register_flag'=>2),$userinfo['id']);
 					$userinfo = $this->master_model->getRow(array('user_name'=>$user));
 					$this->session->set_userdata('loginInfo',$userinfo);
 					redirect ( 'index','index' );
@@ -74,7 +74,7 @@ class Login extends CI_Controller {
 		$mobile = $this->input->post('mobile');
 		$code=rand(1000, 9999);
 		$userinfo = $this->master_model->getRow(array('mobile'=>$mobile));
-		if($userinfo['status']==2){
+		if($userinfo['register_flag']==2){
 			echo '此手机号已注册';
 			return false;
 		}

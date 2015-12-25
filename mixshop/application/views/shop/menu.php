@@ -70,11 +70,11 @@
 	                 </ul>
                  </td>
                  <td style="text-align:center;">
-                 	<?php if($m['stauts']==1){?>待售<?php }else{ ?>寄售中<?php } ?>
+                 	<?php if($m['status']==1){?>待售<?php }else{ ?>寄售中<?php } ?>
                  </td>
                  <td class="opera">
                  	<a class="updatePrice" href="javascript:void(0)">更新价格</a>
-                 	<?php if($m['stauts']==1){?>
+                 	<?php if($m['status']==1){?>
                  		<a class="public" href="javascript:void(0)">上架</a>
                  	<?php }else{ ?>
                  		<a class="depublic" href="javascript:void(0)">下架</a>

@@ -146,7 +146,7 @@ $(function(){
 		}else{
 			prices=prices.slice(0,-1);
 			typies=typies.slice(0,-1);
-			if(confirm('确认更新价格么?')){
+			//if(confirm('确认更新价格么?')){
 				$.ajax({
 					type:'post',
 					url:baseUrl+'menu/menuPriceUpdate',
@@ -159,7 +159,7 @@ $(function(){
 						}
 					}
 				});
-			}
+			//}
 			
 		}
 

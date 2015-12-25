@@ -6,16 +6,16 @@ class Sms{
 	var $_pass;
 	var $_auth;
 	function __construct() {
-		$this->_uid="80265";
-		$this->_pass="zcsy123";
-		$this->_auth=md5("zcsyzcsy123");
+		$this->_uid="802651";
+		$this->_pass="kfyw666";
+		$this->_auth=md5("mixingkfyw666");
 	}
 	
 	private function __clone() {
 	}
 	
 	public function sendMsg($msg,$mobile){
-		$url='http://210.5.158.31:9011/hy?uid='.$this->_uid.'&auth='.$this->_auth.'&mobile='.$mobile.'&msg='.$msg.'&expid=0&encode=utf-8';
+		$url='http://210.5.158.31:9011/hy?uid='.$this->_uid.'&auth='.$this->_auth.'&mobile='.$mobile.'&msg='.urlencode($msg).'&expid=0&encode=utf-8';
 		return $this->Get($url);
 	}
 	

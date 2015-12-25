@@ -83,12 +83,12 @@ class Menu extends CI_Controller {
 	// 删除菜品
 	public function delmenu() {
 		$pid = $this->input->get ( 'pid' );
- 		$img = $this->menu_model->getRow ( array (
- 				'id' => $pid 
- 		) );
-		$fileurl=str_replace(config_item('img_base_url'), '../v2', $img ['img']);
- 		if (file_exists ( $fileurl ))
- 			unlink ( $fileurl );
+// 		$img = $this->menu_model->getRow ( array (
+// 				'id' => $pid 
+// 		) );
+//		$fileurl=str_replace(config_item('img_base_url'), '../v2', $img ['img']);
+// 		if (file_exists ( $fileurl ))
+// 			unlink ( $fileurl );
 		$this->menu_model->del ( $pid );
 		echo 1;
 	}

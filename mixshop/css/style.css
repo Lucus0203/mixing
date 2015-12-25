@@ -231,7 +231,7 @@ input.cropit-image-zoom-input {
 	margin:60px 0 0 80px;
 }
 table#menuList{
-	margin-top:30px;
+	margin-top:10px;
 }
 table#menuList .menu_img,table#menuList .menu_title{
 	text-align:center;
@@ -274,6 +274,56 @@ span.red{
 	color:#f00;
 }
 
+/*验券记录*/
+.input_box .f-input {
+    width: 223px;
+    font-weight: normal;
+    font-family: 'Microsoft YaHei';
+    padding: 0 5px;
+    font-size: 18px;
+    height: 45px;
+}
 
+.input_box .btn-yel {
+    color:#fff;
+    border: 0 none;
+    background: #ff911b;
+    border-bottom: #ee7a16 1px solid;
+    height: 49px;
+    font-size: 18px;
+    line-height: 49px;
+    font-family: 'Microsoft YaHei';
+    cursor: pointer;
+    padding: 0 28px;
+    border-radius: 5px;
+}
 
+.input_box .error{
+    color:#f00;
+}
 
+.price{
+    font-size:30px;
+    color:#f00;
+}
+
+.verifycode{
+    font-size:26px;
+    color:#ee7a16;
+}
+
+.today_amount{
+    font-size: 18px;
+    margin-left: 20px;
+    text-align: left;
+}
+.total_amount{
+    font-size: 15px;
+    margin-right: 20px;
+    float: right;
+}
+
+.pageClass{
+    font-size: 16px;
+    margin: 10px 0;
+}
