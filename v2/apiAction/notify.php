@@ -48,10 +48,13 @@ function readAll(){
 function countRead(){
 	global $db;
 	$loginid=filter($_REQUEST['loginid']);
-        $count=$db->getCount('notify',array('user_id'=>$loginid,'isread'=>1));
-        $lastRow="select msg,DATE_FORMAT(created,'%Y-%m-%d %H:%i') as created from ".DB_PREFIX."notify notify where user_id={$loginid} order by id desc limit 0,1 ";
+        $usercreated=$db->getRow('user',array('id'=>$loginid),array('created'));
+        $countSql="select * from ".DB_PREFIX."notify notify where (user_id={$loginid} and isread=1) ";
+        $count=$db->getCountBySql($countSql);
+        //$count=$db->getCount('notify',array('user_id'=>$loginid,'isread'=>1));
+        $lastRow="select msg,DATE_FORMAT(send_time,'%Y-%m-%d %H:%i') as created from ".DB_PREFIX."notify notify where (user_id={$loginid} or type='mixing') order by id desc limit 0,1 ";
         $data=$db->getRowBySql($lastRow);
-        $isHasGroup=$db->getCount('chatgroup',array('user_id'=>$loginid)) > 0 ? 1 : 2 ;//1有2无
+        $isHasGroup=$db->getCount('chatgroup_user',array('user_id'=>$loginid)) > 0 ? 1 : 2 ;//1有2无
         echo json_result(array('count'=>$count,'msg'=>$data['msg'],'created'=>$data['created'],'isHasGroup'=>$isHasGroup));
 }
 

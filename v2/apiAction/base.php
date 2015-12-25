@@ -64,7 +64,8 @@ function getHotShopCity(){
 function getShopCity(){
 	global $db;
         $data=array();
-	$sql="select id,name,pinyin,code from ".DB_PREFIX."shop_addcity city where 1=1 ";
+	$sql="select id,name,pinyin,code from ".DB_PREFIX."shop_addcity city where 1=1 "
+                . "and name<>'宁波' and name<>'嘉兴' and name<>'福州' and name<>'莆田' and name<>'三明' and name<>'泉州' and name<>'漳州' and name<>'南平' and name<>'龙岩' and name<>'宁德' and name<>'南京' and name<>'济南' and name<>'青岛' ";
 	
 	$z='A';
 	for($i=1;$i<=26;$i++){

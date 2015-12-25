@@ -3,6 +3,7 @@ require_once APP_DIR.DS.'apiLib'.DS.'ext'.DS.'Upload.php';
 require_once APP_DIR.DS.'apiLib'.DS.'ext'.DS.'Huanxin.php';
 require_once APP_DIR.DS.'apiLib'.DS.'ext'.DS.'Sms.php';
 require_once APP_DIR.DS.'apiLib'.DS.'ext'.DS.'Qrcode.php';
+require_once APP_DIR.DS.'apiLib'.DS.'ext'.DS.'GetCityByMobile.php';
 $act=filter($_REQUEST['act']);
 switch ($act){
 	case 'getVerificationCode':
@@ -50,6 +51,9 @@ switch ($act){
         case 'qrcode':
                 qrcode();//二维码名片
 		break;
+        case 'getCity':
+                getCity();
+                break;
 	default:
 		break;
 }
@@ -80,6 +84,15 @@ function getVerificationCode(){
 		$db->update('user',array('captcha_code'=>$code),array('mobile'=>$mobile));
 	}else{
 		$user=array('user_name'=>$mobile,'mobile'=>$mobile,'captcha_code'=>$code);
+                //获取城市
+                $cm=new GetCityByMobile();
+                $res=$cm->getCity($mobile);
+                if($res->showapi_res_body->ret_code == 0){
+                    $prov=$res->showapi_res_body->prov;
+                    $city=$res->showapi_res_body->city;
+                    $prov=$prov==$city?'':$prov;
+                    $user['address']=$prov.$city;
+                }
 		$db->create('user', $user);
 	}
 	$sms=new Sms();
@@ -232,6 +245,7 @@ function registerComplete(){
         
 	$info['pinyin']=!empty($nickname)?getFirstCharter($nickname):'';
         $info['mobile']=$user['mobile'];
+        $info['beans']=10;
 	$db->update('user', $info , array('id'=>$user['id']));
         $info['userid']=$user['id'];
         $info['user_name']=$user['user_name'];
@@ -514,6 +528,8 @@ function uploadHeadImg(){
                         unlink($path);
                         $path=str_replace("_s", "_b", $path);
                         unlink($path);
+                        //更新notify通知头像
+                        $db->update('notify',array('img'=>APP_SITE.$file['s_path']),array('img'=>$head_old['head_photo']));
                 }
 		$info['head_photo']=APP_SITE.$file['s_path'];
 	}else{
@@ -580,6 +596,17 @@ function qrcode(){
             QRcode::png($str,$qrfile,0,10,1);//生成二维码
         }
         echo json_result(array('qrcode'=>APP_SITE.$qrfile));
+}
+
+//获取城市地址
+function getCity(){
+	$mobile=filter($_REQUEST['mobile']);
+        $cm=new GetCityByMobile();
+        $res=$cm->getCity($mobile);
+        if($res->showapi_res_body->ret_code == 0){
+            $prov=$res->showapi_res_body->prov;
+            $city=$res->showapi_res_body->city;
+        }
 }
 
 function getRelationStatus($myself_id,$user_id){

@@ -174,10 +174,15 @@ function joinGroup(){
         }
         $group=$db->getRow('chatgroup',array('hx_group_id'=>$hxgroupid));
         if($db->getCount('chatgroup_user',array('user_id'=>$loginid,'chatgroup_id'=>$group['id']))<=0 && $db->getCount('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$loginid))<=0){
-            $db->create('chatgroup_user',array('user_id'=>$loginid,'chatgroup_id'=>$group['id'],'encouter_id'=>$group['encouter_id']));
+            $db->create('chatgroup_user',array('user_id'=>$loginid,'chatgroup_id'=>$group['id'],'encouter_id'=>$group['encouter_id']));//加入话题组
+            //最大人数
             if($group['maxusers']==0||$group['maxusers']==$db->getCount('chatgroup_user',array('chatgroup_id'=>$group['id']))){
                 $db->update('chatgroup',array('isend'=>2),array('id'=>$group['id']));
             }
+            //发送环信话题组欢迎消息
+            $HuanxinObj=Huanxin::getInstance();
+            $joiner=$db->getRow('user',array('id'=>$loginid),array('user_name','nick_name'));
+            $HuanxinObj->sendmsgToGroup('mixing',$group['hx_group_id'],'欢迎"'.$joiner['nick_name'].'"加入了话题组');
         }
         echo json_result(array('success'=>'TRUE'));
     

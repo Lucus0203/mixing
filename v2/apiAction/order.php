@@ -3,7 +3,7 @@ require_once APP_DIR . DS . 'apiLib' . DS . 'ext' . DS . 'Pingxx' . DS . 'init.p
 require_once APP_DIR . DS . 'apiLib' . DS . 'ext' . DS . 'Huanxin.php';
 require_once APP_DIR . DS . 'apiLib' . DS . 'ext' . DS . 'Sms.php';
 require_once APP_DIR . DS . 'apiAction' . DS . 'encouter_notifymsg.php';//通知消息
-define(PINGXXSK, 'sk_test_SSm1OOvD8anLzLaHSOGmnzzP');//sk_live_OJQEx4iDNUjsC0BuR7UdMbRd sk_test_SSm1OOvD8anLzLaHSOGmnzzP
+define(PINGXXSK, 'sk_live_OJQEx4iDNUjsC0BuR7UdMbRd');//sk_live_OJQEx4iDNUjsC0BuR7UdMbRd sk_test_SSm1OOvD8anLzLaHSOGmnzzP
 $act = filter($_REQUEST['act']);
 switch ($act) {
         case 'pay':
@@ -433,7 +433,7 @@ function updateOrderEncouter($order){
                                 if(!empty($hxgroupid)){
                                     $groupid=$db->create('chatgroup',array('hx_group_id'=>$hxgroupid,'user_id'=>$user['id'],'encouter_id'=>$order['encouter_id'],'name'=>$encouter['topic'],'note'=>$encouter['msg'],'maxusers'=>$maxusers,'created'=>date("Y-m-d H:i:s")));
                                     $db->create('chatgroup_user',array('user_id'=>$user['id'],'chatgroup_id'=>$groupid,'encouter_id'=>$order['encouter_id']));
-                                    $HuanxinObj->sendmsgToGroup($user['id'],$hxgroupid,'你创建了#'.$encouter['topic'].'#话题组');
+                                    $HuanxinObj->sendmsgToGroup('mixing',$hxgroupid,'你创建了#'.$encouter['topic'].'#话题组');
                                             
                                         
                                 }

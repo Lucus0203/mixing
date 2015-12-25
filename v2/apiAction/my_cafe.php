@@ -96,7 +96,7 @@ function depositInfo(){
     }
     $db->update('encouter',array('isread'=>'2'),array('id'=>$encouterid));
     //领取的人
-    $receiveSql = "select receive.id as receive_id,user.id as user_id,user.user_name,user.nick_name,user.head_photo,receive.msg,receive.status,receive.created from ".DB_PREFIX."encouter_receive receive "
+    $receiveSql = "select receive.id as receive_id,user.id as user_id,user.user_name,user.nick_name,user.head_photo,receive.msg,receive.datetime,receive.status,receive.created from ".DB_PREFIX."encouter_receive receive "
             . "left join ".DB_PREFIX."user user on user.id = receive.from_user "
             . "where receive.encouter_id = {$encouterid} and receive.status <> 4 and receive.status <> 99 order by receive.id desc ";
     $receiveSql .= " limit $start,$page_size";
@@ -136,7 +136,7 @@ function receiveInfo(){
     global $db;
     $loginid = filter($_REQUEST['loginid']);
     $receiveid=filter($_REQUEST['receiveid']);
-    $sql = "select encouter.user_id,encouter.shop_id,user.user_name,user.nick_name,user.head_photo,receive.encouter_id,receive.type,choice_menu,encouter.product1 as menu,encouter.product_img1 as menu_img,encouter.price1 as price,encouter.product2 as menu2,encouter.product_img2 as menu_img2,encouter.price2,encouter.shop_id,shop.title as shop_name,shop.img as shop_img,receive.verifycode,encouter.created,encouter.topic,receive.status,receive.isend from " . DB_PREFIX . "encouter_receive receive "
+    $sql = "select encouter.user_id,encouter.shop_id,user.user_name,user.nick_name,user.head_photo,receive.encouter_id,receive.type,choice_menu,encouter.product1 as menu,encouter.product_img1 as menu_img,encouter.price1 as price,encouter.product2 as menu2,encouter.product_img2 as menu_img2,encouter.price2,encouter.shop_id,shop.title as shop_name,shop.img as shop_img,receive.verifycode,encouter.created,encouter.topic,receive.datetime,receive.status,receive.isend from " . DB_PREFIX . "encouter_receive receive "
             . "left join " .DB_PREFIX . "encouter encouter on encouter.id = receive.encouter_id "
             . "left join " . DB_PREFIX . "shop shop on shop.id = encouter.shop_id "
             . "left join " . DB_PREFIX . "user user on user.id = encouter.user_id "

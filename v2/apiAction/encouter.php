@@ -308,6 +308,7 @@ function nearCafe() {
         global $db;
         $lng = filter($_REQUEST['lng']);
         $lat = filter($_REQUEST['lat']);
+        $shop_id = filter($_REQUEST['shopid']);
         $city_code = filter($_REQUEST['city_code']);
         $area_id = filter($_REQUEST['area_id']);
         $circle_id = filter($_REQUEST['circel_id']);
@@ -331,6 +332,7 @@ function nearCafe() {
         $sql.=(!empty($circle_id)) ? " and addcircle_id={$circle_id} " : '';
         $sql.=(!empty($tag_sex)) ? " and user.sex={$tag_sex} " : '';
         $sql.=(!empty($tag_ids)) ? " and user_tag.tag_id in ({$tag_ids}) " : '';
+        $sql.=(!empty($shop_id)) ? " and encouter.shop_id={$shop_id} " : '';
         if(!empty($type)){
                 $typeCond='';
                 $types=explode(',', $type);

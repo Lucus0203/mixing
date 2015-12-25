@@ -22,7 +22,7 @@ function getLoginBeans(){
 	$loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
         $sql="select id from ".DB_PREFIX."beans_log beans_log where user_id=$loginid and type=1 and created>='".date("Y-m-d")." 00:00:00' and created<='".date("Y-m-d")." 23:59:59' ";
         if($db->getCountBySql($sql)<=0){
-            $beanlog=array('user_id'=>$loginid,'content'=>'每日登录获得豆子'.$num.'颗','num'=>$num,'type'=>1);
+            $beanlog=array('user_id'=>$loginid,'content'=>'每日登录获得豆子'.$num.'颗','num'=>$num,'type'=>1);//途径类型1登录2发布漫生活3签到
             $db->create('beans_log',$beanlog);
             //增加用户豆子
             $updateBeansSql="update ".DB_PREFIX."user user set beans=beans+".$num." where id = ".$loginid;
@@ -56,9 +56,9 @@ function shopRegist(){
 		echo json_result(null,'5','您距离这家咖啡馆有点远');
 		return;
         }
-        $sql="select id from ".DB_PREFIX."beans_log beans_log where user_id=$loginid and shop_id=$shopid and type=2 and created>='".date("Y-m-d")." 00:00:00' and created<='".date("Y-m-d")." 23:59:59' ";
+        $sql="select id from ".DB_PREFIX."beans_log beans_log where user_id=$loginid and shop_id=$shopid and type=3 and created>='".date("Y-m-d")." 00:00:00' and created<='".date("Y-m-d")." 23:59:59' ";
         if($db->getCountBySql($sql)<=0){
-            $beanlog=array('user_id'=>$loginid,'shop_id'=>$shopid,'content'=>'签到获取豆子'.$num.'颗','num'=>$num,'type'=>2);
+            $beanlog=array('user_id'=>$loginid,'shop_id'=>$shopid,'content'=>'签到获取豆子'.$num.'颗','num'=>$num,'type'=>3);//途径类型1登录2发布漫生活3签到
             $db->create('beans_log',$beanlog);
             //增加用户豆子
             $updateBeansSql="update ".DB_PREFIX."user user set beans=beans+".$num." where id = ".$loginid;

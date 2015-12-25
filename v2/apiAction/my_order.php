@@ -35,7 +35,7 @@ function orderlist(){
         if($type==1){
                 $sql.=" and paid=1 and od.status=1 ";
         }elseif ($type==2) {
-                $sql.=" and paid=2 and od.status=1 ";
+                $sql.=" and paid=2 and od.status=1 group by od.encouter_id ";
         }else{
                 $sql.=" and TIMESTAMPDIFF(DAY,encouter.created,now())>encouter.days and encouter.days!=0 and (encouter.status=2 or encouter.status=8 or encouter.status=9) ";
         }

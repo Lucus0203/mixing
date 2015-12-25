@@ -309,7 +309,7 @@ function get_zodiac_sign($month, $day) {
                 return (false);
 // 星座名称以及开始日期 
         $signs = array(
-            array("20" => "宝瓶"),
+            array("20" => "水瓶"),
             array("19" => "双鱼"),
             array("21" => "白羊"),
             array("20" => "金牛"),

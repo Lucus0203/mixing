@@ -1,5 +1,6 @@
 <?php
 require_once APP_DIR . DS . 'apiLib' . DS . 'ext' . DS . 'Upload.php';
+require_once APP_DIR . DS . 'apiLib' . DS . 'constant_beans.php';
 $act=filter($_REQUEST['act']);
 switch ($act){
 	case 'addDiary':
@@ -32,6 +33,9 @@ switch ($act){
         case 'newMsg'://漫生活新消息列表
                 newMsg();
                 break;
+        case 'delNewMsg'://删除新消息列表记录
+                delNewMsg();
+                break;
         case 'detail'://漫生活详细
                 detail();
                 break;
@@ -52,15 +56,20 @@ function addDiary(){
 	$lng=filter(!empty($_REQUEST['lng'])?$_REQUEST['lng']:'');
 	$lat=filter(!empty($_REQUEST['lat'])?$_REQUEST['lat']:'');
 	$shopid=filter(!empty($_REQUEST['shopid'])?$_REQUEST['shopid']:'');
-        $data=array('user_id'=>$loginid,'note'=>$note,'voice'=>$voice,'voice_time'=>$voice_time,'address'=>$address,'lng'=>$lng,'lat'=>$lat);
+        $data=array('user_id'=>$loginid,'note'=>$note,'voice'=>$voice,'voice_time'=>$voice_time,'address'=>$address,'lng'=>$lng,'lat'=>$lat,'created'=>date("Y-m-d H:i:s"));
         if(empty($loginid)){
             echo json_result(null,'2','请先登录');
             return ;
         }
+        if(trim($note)==''){
+            echo json_result(null,'3','请说点什么吧~');
+            return ;
+        }
         if(!empty($shopid)){
             $data['shop_id']=$shopid;
-            $shopinfo=$db->getRow('shop',array('id'=>$shopid),array('title'));
-            $data['shop_title']=$shopinfo['title'];
+//            $shopinfo=$db->getRow('shop',array('id'=>$shopid),array('title','img'));
+//            $data['shop_title']=$shopinfo['title'];
+//            $data['shop_img']=$shopinfo['img'];
         }
         //声音
         $upload = new UpLoad();
@@ -99,6 +108,16 @@ function addDiary(){
                         $db->create('diary_img', $photo);
                 }
         }
+        //发布漫生活获取豆子
+        $num=BEANS_NUM_DIARY_ADD;
+        $sql="select id from ".DB_PREFIX."beans_log beans_log where user_id=$loginid and shop_id=$shopid and type=2 and created>='".date("Y-m-d")." 00:00:00' and created<='".date("Y-m-d")." 23:59:59' ";
+        if($db->getCountBySql($sql)<3){//漫生活发布小于3次获取豆子
+            $beanlog=array('user_id'=>$loginid,'diary_id'=>$diary_id,'content'=>'发布漫生活获取豆子'.$num.'颗','num'=>$num,'type'=>2);//途径类型1登录2发布漫生活3签到
+            $db->create('beans_log',$beanlog);
+            //增加用户豆子
+            $updateBeansSql="update ".DB_PREFIX."user user set beans=beans+".$num." where id = ".$loginid;
+            $db->excuteSql($updateBeansSql);
+        }
         echo json_result(array('success'=>'TRUE'));
 }
 
@@ -114,42 +133,47 @@ function getDiarys(){
             echo json_result(null,'2','请先登录');
             return ;
         }
-        if(empty($userid)){
-            echo json_result(null,'3','请选择你想查看的用户');
-            return ;
-        }
-        $userallow=$db->getRow('user',array('id'=>$userid),array('allow_news'));//访问权限
-        if($userid == $loginid){
-            $type = 1;//自己
-        }else{
-            $relation = getRelationStatus($loginid, $userid);
-            if($relation['relation_status']==4){
-                $type = 2;//好友
+        if(!empty($userid)){
+            $userallow=$db->getRow('user',array('id'=>$userid),array('allow_news'));//访问权限
+            if($userid == $loginid){
+                $type = 4;//自己
             }else{
-                $type = 3;//陌生人
+                $relation = getRelationStatus($loginid, $userid);
+                if($relation['relation_status']==4){
+                    $type = 2;//好友
+                }else{
+                    $type = 3;//陌生人
+                }
             }
+        }else{
+            $type=1;//查看关注的漫生活
         }
         if($type==3&&$userallow['allow_news']==2){//陌生人且不许查看
-            echo json_result(null,'3','成为TA的好友可以看到内容哦');
+            echo json_result(null,'4','成为TA的好友可以看到内容哦');
             return ;
         }
         if($type==3&&$page_no>1){//陌生人且只能查看8条信息
-            echo json_result(null,'4','成为TA的好友可以看到更多内容哦');
+            echo json_result(null,'5','成为TA的好友可以看到更多内容哦');
             return ;
         }
         
-        $sql="select diary.id as diary_id,diary.user_id,user.head_photo,diary.views,diary.beans,diary.note,diary.voice,diary.voice_time,diary.address,diary.lng,diary.lat,diary.shop_id,diary.shop_title,diary.created,if(diary_msg.msg <> '',1,2 ) as liked from ".DB_PREFIX."diary diary "
+        $sql="select diary.id as diary_id,diary.user_id,user.head_photo,user.nick_name,diary.views,diary.beans,diary.note,diary.voice,diary.voice_time,diary.address,diary.lng,diary.lat,diary.shop_id,shop.title as shop_title,shop.img as shop_img,diary.created,if(diary_msg.msg <> '',1,2 ) as liked from ".DB_PREFIX."diary diary "
                 . "left join ".DB_PREFIX."user user on diary.user_id=user.id "
+                . "left join ".DB_PREFIX."shop shop on shop.id=diary.shop_id "
                 . "left join (select diary_id,msg from ".DB_PREFIX."diary_msg diary_msg where type=2 and user_id =$loginid group by diary_id ) diary_msg on diary_msg.diary_id=diary.id "//是否点赞
-                . "where diary.isdel=2 and diary.user_id = $userid ";//isdel 1删除2正常 //liked 1 已赞 2 未赞
+                . "where diary.isdel=2 ";//isdel 1删除2正常 //liked 1 已赞 2 未赞
         //如果是自己的慢生活同时找出关注的咖啡馆漫生活
         if($type==1){
             $shopsql=" select s2.id from ".DB_PREFIX."shop_users su left join ".DB_PREFIX."shop s1 on su.shop_id=s1.id "
-                    . "left join ".DB_PREFIX."shop s2 on s1.addarea_id=s2.addarea_id "
+                    . "left join ".DB_PREFIX."shop s2 on s1.id=s2.id "//s1.addarea_id=s2.addarea_id
                     . "where su.user_id=$loginid ";
-            $sql.=" or diary.shop_id in ($shopsql) ";
+            $blacklist=" select relation_id from ".DB_PREFIX."user_relation relation where relation.user_id = $loginid and relation.status=2 ";
+            $sql.=" and diary.user_id = $loginid or (diary.shop_id in ($shopsql) and diary.user_id not in ($blacklist) ) ";
+        }else{
+            $sql.=" and diary.user_id = $userid ";
         }
 	$sql .= " order by created desc limit $start,$page_size";
+        
 	$diarys=$db->getAllBySql($sql);
         //更新浏览记录
         $updateViewsql="update ".DB_PREFIX."diary diary inner join ($sql) s on s.diary_id=diary.id set diary.views=diary.views+1 ";
@@ -157,7 +181,7 @@ function getDiarys(){
         //获取相册留言等内容
         foreach ($diarys as $k=>$d){
             //相册
-            $imgsql="select id as img_id,img,width,height from ".DB_PREFIX."diary_img as img where diary_id=".$d['diary_id'];
+            $imgsql="select id as img_id,user_id,img,width,height from ".DB_PREFIX."diary_img as img where diary_id=".$d['diary_id']." order by id desc ";
             $imgs=$db->getAllBySql($imgsql);
             if(count($imgs)>0){
                 $diarys[$k]['imgs']=$imgs;
@@ -214,6 +238,10 @@ function delDiaryImg(){
             return ;
         }
         $img=$db->getRow('diary_img',array('id'=>$imgid));
+        if($img['user_id']!=$loginid){
+            echo json_result(null,'2','不可删除别人的照片');
+            return ;
+        }
         $path=str_replace(APP_SITE, "", $img['img']);
         if(file_exists($path)){
             unlink($path);//删除图片
@@ -221,7 +249,7 @@ function delDiaryImg(){
         $db->delete('diary_img',array('id'=>$imgid,'user_id'=>$loginid));
         //返回慢生活信息
         if(empty($img['diary_id'])){
-            echo json_result(null,'2','图片已删除');
+            echo json_result(null,'3','图片已删除');
             return ;
         }
         $diary_id=$img['diary_id'];
@@ -260,14 +288,18 @@ function leaveMsg(){
             echo json_result(null,'3','请输入留言内容');
             return ;
         }
+        $diary=$db->getRow('diary',array('id'=>$diaryid),array('user_id'));
         $data=array('diary_id'=>$diaryid,'user_id'=>$loginid,'msg'=>$msg);
         if(!empty($to_userid)){
             $data['to_user_id']=$to_userid;
-            $data['isread']=1;
+        }
+        //给自己留言是已读状态
+        if($diary['user_id']==$loginid){
+            $data['isread_user']=2;
         }
         $db->create('diary_msg',$data);
         $msgsql="select msg.id as msg_id,msg.user_id as from_user_id,from_user.nick_name as from_nick_name,from_user.head_photo as from_head_photo,msg.to_user_id,to_user.nick_name as to_nick_name,to_user.head_photo as to_head_photo,msg.msg from ".DB_PREFIX."diary_msg msg left join " .DB_PREFIX. "user from_user on from_user.id=msg.user_id left join ".DB_PREFIX."user to_user on to_user.id=msg.to_user_id "
-                    . "where msg.diary_id = ".$diaryid;
+                    . "where msg.type=1 and msg.diary_id = ".$diaryid;
         $msges=$db->getAllBySql($msgsql);
         echo json_result(array('msges'=>$msges));
         
@@ -285,8 +317,10 @@ function delMsg(){
         $msg=$db->getRow('diary_msg',array('id'=>$msgid));
         $diary_id=$msg['diary_id'];
         $db->delete('diary_msg',array('id'=>$msgid,'user_id'=>$loginid));
-        $msgsql="select msg.id as msg_id,msg.user_id as from_user_id,from_user.nick_name as from_nick_name,from_user.head_photo as from_head_photo,msg.to_user_id,to_user.nick_name as to_nick_name,to_user.head_photo as to_head_photo,msg.msg from ".DB_PREFIX."diary_msg msg left join " .DB_PREFIX. "user from_user on from_user.id=msg.user_id left join ".DB_PREFIX."user to_user on to_user.id=msg.to_user_id "
-                    . "where msg.diary_id = ".$diary_id;
+        $msgsql="select msg.id as msg_id,msg.user_id as from_user_id,from_user.nick_name as from_nick_name,from_user.head_photo as from_head_photo,msg.to_user_id,to_user.nick_name as to_nick_name,to_user.head_photo as to_head_photo,msg.msg from ".DB_PREFIX."diary_msg msg "
+                . "left join " .DB_PREFIX. "user from_user on from_user.id=msg.user_id "
+                . "left join ".DB_PREFIX."user to_user on to_user.id=msg.to_user_id "
+                    . "where msg.type=1 and msg.diary_id = ".$diary_id;
         $msges=$db->getAllBySql($msgsql);
         echo json_result(array('msges'=>$msges));
         
@@ -303,6 +337,11 @@ function like(){
             echo json_result(null,'2','请先登录');
             return ;
         }
+        $userBeans=$db->getRow('user',array('id'=>$loginid),array('beans'));
+        if($userBeans['beans']<=0){
+            echo json_result(null,'3','您的豆子不够了');
+            return ;
+        }
         $diary=$db->getRow('diary',array('id'=>$diaryid));
         if($db->getCount('diary_msg',array('user_id'=>$loginid,'diary_id'=>$diaryid,'type'=>2))==0){//没点赞过
             $data=array('diary_id'=>$diaryid,'user_id'=>$loginid,'to_user_id'=>$diary['user_id'],'msg'=>'+1','type'=>2);
@@ -311,8 +350,11 @@ function like(){
             $updateBeansSql="update ".DB_PREFIX."diary diary set beans=beans+1 where id=$diaryid ";
             $db->excuteSql($updateBeansSql);
             
-            //增加用户豆子
+            //增加对方用户豆子
             $updateBeansSql="update ".DB_PREFIX."user user set beans=beans+1 where id = ".$diary['user_id'];
+            $db->excuteSql($updateBeansSql);
+            //减少自己的豆子
+            $updateBeansSql="update ".DB_PREFIX."user user set beans=beans-1 where id = ".$loginid;
             $db->excuteSql($updateBeansSql);
         }
         echo json_result(array('success'=>'TRUE'));
@@ -333,8 +375,11 @@ function deLike(){
             //减少漫生活豆子
             $updateBeansSql="update ".DB_PREFIX."diary diary set beans=beans-1 where id=$diaryid ";
             $db->excuteSql($updateBeansSql);
-            //减少用户豆子
+            //减少对方豆子
             $updateBeansSql="update ".DB_PREFIX."user user set beans=beans-1 where id={$diary['user_id']} ";
+            $db->excuteSql($updateBeansSql);
+            //增加自己豆子
+            $updateBeansSql="update ".DB_PREFIX."user user set beans=beans+1 where id = ".$loginid;
             $db->excuteSql($updateBeansSql);
         }
         echo json_result(array('success'=>'TRUE'));
@@ -344,10 +389,14 @@ function deLike(){
 function newReplyCount(){
         global $db;
 	$loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
-        $count=$db->getCount('diary_msg',array('to_user_id'=>$loginid,'isread'=>1));
+        $countSql="select diary_msg.id from ".DB_PREFIX."diary_msg diary_msg "
+                . "left join ".DB_PREFIX."diary diary on diary_msg.diary_id=diary.id "
+                . "where ((diary_msg.to_user_id = $loginid and diary_msg.isread_touser=1) or (diary.user_id = $loginid and diary_msg.isread_user=1)) and diary_msg.user_id <> $loginid  ";
+        $count=$db->getCountBySql($countSql);
         $lastUserSql="select head_photo from ".DB_PREFIX."diary_msg diary_msg left join ".DB_PREFIX."user user on diary_msg.user_id=user.id "
                 . "left join ".DB_PREFIX."diary diary on diary_msg.diary_id=diary.id "
-                . "where (diary_msg.to_user_id = $loginid or diary.user_id = $loginid ) and diary_msg.user_id <> $loginid order by diary_msg.id desc limit 0,1 ";
+                . "where ((diary_msg.to_user_id = $loginid and diary_msg.isread_touser=1) or (diary.user_id = $loginid and diary_msg.isread_user=1)) and diary_msg.user_id <> $loginid order by diary_msg.id desc limit 0,1 ";
+        
         $uesr=$db->getRowBySql($lastUserSql);
         echo json_result(array('count'=>$count,'head_photo'=>$uesr['head_photo']));
 }
@@ -360,17 +409,36 @@ function newMsg(){
 	$page_size = PAGE_SIZE;
 	$start = ($page_no - 1) * $page_size;
         
-        $sql="select diary_msg.id as msgid,user.id as user_id,user.head_photo,user.nick_name,diary_msg.type,diary_msg.msg,diary_msg.created,diary.id as diary_id,diary.note,diary_img.img from ".DB_PREFIX."diary_msg diary_msg "
+        $sql="select diary_msg.id as msgid,user.id as user_id,user.head_photo,user.nick_name,diary_msg.type,diary_msg.msg,diary_msg.created,diary.id as diary_id,diary.note,diary_img.img,diary.voice_time from ".DB_PREFIX."diary_msg diary_msg "
                 . "left join ".DB_PREFIX."diary diary on diary_msg.diary_id=diary.id "
                 . "left join ".DB_PREFIX."user user on diary_msg.user_id = user.id "
                 . "left join (select diary_id,img from ".DB_PREFIX."diary_img diary_img group by diary_id) diary_img on diary_img.diary_id=diary.id "
-                . "where diary_msg.to_user_id = $loginid or diary.user_id = $loginid ";//isdel 1删除2正常
-	$sql .= "order by diary_msg.isread,diary_msg.created desc limit $start,$page_size";
+                . "where (diary_msg.to_user_id = $loginid and diary_msg.isread_touser=1 and isdel_list_touser=1) or (diary.user_id = $loginid and diary_msg.isread_user=1 and isdel_list_user=1) ";
+	$sql .= "order by diary_msg.isread_touser asc,diary_msg.isread_user asc,diary_msg.created desc limit $start,$page_size";
         $data = $db->getAllBySql($sql);
         //更新未读状态
-        $db->update('diary_msg',array('isread'=>2),array('to_user_id'=>$loginid));
+        $db->update('diary_msg',array('isread_touser'=>2),array('to_user_id'=>$loginid));
+        
+        $updateSql="update ".DB_PREFIX."diary_msg set isread_user=2 where id in (select m.id from (select msg.id from ".DB_PREFIX."diary_msg msg left join ".DB_PREFIX."diary diary on msg.diary_id=diary.id where diary.user_id = $loginid and msg.isread_user=1) m )";
+        $db->excuteSql($updateSql);
         echo json_result(array('news'=>$data));
         
+}
+
+//删除消息列表
+function delNewMsg(){
+        global $db;
+	$loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
+	$msgid=filter(!empty($_REQUEST['msgid'])?$_REQUEST['msgid']:'');
+        $msg=$db->getRow('diary_msg',array('id'=>$msgid));
+        if($loginid==$msg['to_user_id']){
+            $db->update('diary_msg',array('isdel_list_touser'=>2),array('id'=>$msgid,'to_user_id'=>$loginid));
+        }
+        $diary=$db->getRow('diary',array('id'=>$msg['diary_id']),array('user_id'));
+        if($diary['user_id']==$loginid){
+            $db->update('diary_msg',array('isdel_list_user'=>2),array('id'=>$msgid));
+        }
+        echo json_result(array('success'=>'TRUE'));
 }
 
 //漫生活详情
@@ -382,8 +450,7 @@ function detail(){
             echo json_result(null,'2','请先登录');
             return ;
         }
-        $sql="select id as diary_id,views,beans,note,voice,voice_time,address,lng,lat,shop_id,shop_title,created from ".DB_PREFIX."diary diary where id = $diaryid ";
-        $sql="select diary.id as diary_id,diary.user_id,user.head_photo,diary.views,diary.beans,diary.note,diary.voice,diary.voice_time,diary.address,diary.lng,diary.lat,diary.shop_id,diary.shop_title,diary.created,if(diary_msg.msg <> '',1,2 ) as liked from ".DB_PREFIX."diary diary "
+        $sql="select diary.id as diary_id,diary.user_id,user.head_photo,user.nick_name,diary.views,diary.beans,diary.note,diary.voice,diary.voice_time,diary.address,diary.lng,diary.lat,diary.shop_id,diary.shop_title,shop_img,diary.created,if(diary_msg.msg <> '',1,2 ) as liked from ".DB_PREFIX."diary diary "
                 . "left join ".DB_PREFIX."user user on diary.user_id=user.id "
                 . "left join (select diary_id,msg from ".DB_PREFIX."diary_msg diary_msg where type=2 and user_id =$loginid group by diary_id ) diary_msg on diary_msg.diary_id=diary.id "
                 . "where diary.id = $diaryid ";//isdel 1删除2正常 //liked 1 已赞 2 未赞
@@ -418,8 +485,9 @@ function shopDiarys(){
             echo json_result(null,'2','请先登录');
             return ;
         }
-        $sql="select diary.id as diary_id,diary.user_id,user.head_photo,diary.views,diary.beans,diary.note,diary.voice,diary.voice_time,diary.address,diary.lng,diary.lat,diary.shop_id,diary.shop_title,diary.created,if(diary_msg.msg <> '',1,2 ) as liked from ".DB_PREFIX."diary diary "
+        $sql="select diary.id as diary_id,diary.user_id,user.head_photo,user.nick_name,diary.views,diary.beans,diary.note,diary.voice,diary.voice_time,diary.address,diary.lng,diary.lat,diary.shop_id,shop.title as shop_title,shop.img as shop_img,diary.created,if(diary_msg.msg <> '',1,2 ) as liked from ".DB_PREFIX."diary diary "
                 . "left join ".DB_PREFIX."user user on diary.user_id=user.id "
+                . "left join ".DB_PREFIX."shop shop on shop.id=diary.shop_id "
                 . "left join (select diary_id,msg from ".DB_PREFIX."diary_msg diary_msg where type=2 and user_id =$loginid group by diary_id ) diary_msg on diary_msg.diary_id=diary.id "
                 . "where diary.isdel=2 and diary.shop_id = $shopid ";//isdel 1删除2正常
 	$sql .= " order by created desc limit $start,$page_size";
