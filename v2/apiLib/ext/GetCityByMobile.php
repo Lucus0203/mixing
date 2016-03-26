@@ -1,4 +1,5 @@
 <?php
+//www.showapi.com 易源接口 kfyw021
 class GetCityByMobile{
 	var $_showapi_appid;
 	var $_showapi_sign;

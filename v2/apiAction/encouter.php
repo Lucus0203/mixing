@@ -401,8 +401,11 @@ function receive() {
         if(empty($userid)){
                 echo json_result(null,'2','请你先登录');return;
         }
+        if($encouter['user_id']==$userid){
+                echo json_result(null,'3','您无法操作自己的咖啡');return;
+        }
         if(empty($encouterid)){
-                echo json_result(null,'3','请求参数错误');return;
+                echo json_result(null,'4','请求参数错误');return;
         }
         switch ($type) {
                 case 1://爱心
@@ -529,6 +532,7 @@ function permit() {
         }
         $db->excuteSql('begin');
         $db->update('encouter_receive',array('status'=>2,'isread' => 1),array('id'=>$receiveid));//可领取
+        $db->update('order',array('encouter_receive_id'=>$receiveid),array('user_id'=>$userid,'encouter_id'=>$receive['encouter_id']));
         //拒绝其他
         $updateOrderSql="update ".DB_PREFIX."encouter_receive set status = 3,isread = 1 where id <> ".$receiveid." and encouter_id = ".$receive['encouter_id'];
         $db->excuteSql($updateOrderSql);

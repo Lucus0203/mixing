@@ -51,9 +51,27 @@ switch ($act){
         case 'qrcode':
                 qrcode();//二维码名片
 		break;
-        case 'getCity':
-                getCity();
+        case 'uploadUserLocation'://更新用户位置
+                uploadUserLocation();
                 break;
+        case 'hideLocation'://隐身
+                hideLocation();
+                break;
+        case 'usersMap'://地图附近的人
+                usersMap();
+                break;
+        case 'nearUsers'://附近的人瀑布流
+                nearUsers();
+                break;
+        case 'isHidden'://是否隐身
+                isHidden();
+                break;
+        case 'isFollow'://是否关注
+                isFollow();
+                break;
+//        case 'getCity':
+//                getCity();
+//                break;
 	default:
 		break;
 }
@@ -191,7 +209,9 @@ function register(){
 	$user['uuid']=$uuid;
 	$flag=$db->update('user', $user ,array('mobile'=>$mobile,'captcha_code'=>$code));
 	if($flag){
-                $userobj=$db->getRow('user',array('user_name'=>$mobile,'user_password'=>md5($user_pass)));
+                $userobj=$db->getRow('user',array('user_name'=>$mobile,'user_password'=>md5($user_pass),'uuid'=>$uuid));
+                $delrepeatuser="delete from ".DB_PREFIX."user where user_name='$mobile' and (uuid is null or uuid = '') ";
+                $db->excuteSql($delrepeatuser);
 		echo json_result(array('user_id'=>$userobj['id']));//成功
 	}else{
 		echo json_result(null,'101','注册失败,请联系客服');//失败
@@ -216,7 +236,7 @@ function registerComplete(){
 		return;
 	}
         if(empty($nickname)){
-                echo json_result(null,'4','没有昵称怎能让别人记住你');
+                echo json_result(null,'4','起个好听哒昵称吧');
 		return;
         }
         $info=array('nick_name'=>$nickname,'sex'=>$sex);
@@ -240,7 +260,10 @@ function registerComplete(){
 	if($file['status']==1){
 		$info['head_photo']=APP_SITE.$file['s_path'];
 	}else{
-            $info['head_photo']="http://www.xn--8su10a.com/img/default_head.png";
+            $str=($sex==1)?'选个帅帅哒的头像吧':'选个美美哒的头像吧';
+            echo json_result(null,'5',$str);
+            return;
+            //$info['head_photo']="http://www.xn--8su10a.com/img/default_head.png";
         }
         
 	$info['pinyin']=!empty($nickname)?getFirstCharter($nickname):'';
@@ -529,7 +552,7 @@ function uploadHeadImg(){
                         $path=str_replace("_s", "_b", $path);
                         unlink($path);
                         //更新notify通知头像
-                        $db->update('notify',array('img'=>APP_SITE.$file['s_path']),array('img'=>$head_old['head_photo']));
+                        $db->update('notify',array('img'=>APP_SITE.$file['s_path']),array('img'=>$head_old['head_photo'],'user_id'=>$user_id));
                 }
 		$info['head_photo']=APP_SITE.$file['s_path'];
 	}else{
@@ -598,16 +621,140 @@ function qrcode(){
         echo json_result(array('qrcode'=>APP_SITE.$qrfile));
 }
 
-//获取城市地址
-function getCity(){
-	$mobile=filter($_REQUEST['mobile']);
-        $cm=new GetCityByMobile();
-        $res=$cm->getCity($mobile);
-        if($res->showapi_res_body->ret_code == 0){
-            $prov=$res->showapi_res_body->prov;
-            $city=$res->showapi_res_body->city;
+//更新用户位置
+function uploadUserLocation(){
+        global $db;
+        $loginid=filter($_REQUEST['loginid']);
+        if(empty($loginid)){
+            echo json_result(null,'2','请先登录');
+            return;
         }
+        $info=array('lng'=>$_REQUEST['lng'],//经度
+            'lat'=>$_REQUEST['lat']);//纬度
+	$db->update('user', $info,array('id'=>$loginid));
+	echo json_result(array('success'=>'TRUE'));
 }
+
+//地图上隐身或者显示1隐身2有空
+function hideLocation(){
+        global $db;
+        $loginid=filter($_REQUEST['loginid']);
+        if(empty($loginid)){
+            echo json_result(null,'2','请先登录');
+            return;
+        }
+        $info=array('hide'=>$_REQUEST['hide']);
+	$db->update('user', $info,array('id'=>$loginid));
+	echo json_result(array('success'=>'TRUE'));
+}
+
+//附近用户地图
+function usersMap() {
+    global $db;
+    $lng = filter($_REQUEST['lng']);
+    $lat = filter($_REQUEST['lat']);
+    $loginid = filter($_REQUEST['loginid']);
+    $zoom = filter($_REQUEST['zoom']);
+    //$zoomarea = array(10,20,50,100,200,500,1000,2*1000,5*1000,10*1000,20*1000,25*1000,50*1000);
+    
+    if(empty($lng) || empty($lat)){
+        echo json_result(null, '2', '获取不到您的经纬度');
+        return;
+    }
+    if(empty($zoom)){
+        echo json_result(null, '3', '获取不到您的范围');
+        return;
+    }
+    //$zoomlevel=($zoomlevel-3)<0?0:$zoomlevel-3;
+    //$zoom=$zoomlevel>11?$zoomarea[11]:$zoomarea[$zoomlevel];
+    //是否营业中,1营业中,2休息
+    $sql = "select user.id,user_name,nick_name,head_photo,sex,lng,lat from " . DB_PREFIX . "user user "
+            . "where hide=2 ";//有空
+    
+    $sql.=(!empty($loginid)) ? " and user.id <> {$loginid} " : '';
+    $sql.=" and round(6378.138*2*asin(sqrt(pow(sin( ($lat*pi()/180-user.lat*pi()/180)/2),2)+cos($lat*pi()/180)*cos(user.lat*pi()/180)* pow(sin( ($lng*pi()/180-user.lng*pi()/180)/2),2)))*1000) <= ".($zoom * 20);
+    //$squarePoint = returnSquarePoint($lng, $lat, $zoom * 20);//RANGE_KILO 20倍的范围
+    //$sql .= " shop.lng >= ".$squarePoint['leftTop']['lng']." and shop.lng <= ".$squarePoint['rightTop']['lng']." and shop.lat >= ".$squarePoint['leftBottom']['lat']." and shop.lat <= ".$squarePoint['leftTop']['lat'];
+    $sql .= " order by id ";
+    $users = $db->getAllBySql($sql);
+     
+    $point=array();
+    $z=$zoom>50?$zoom*2:$zoom;
+    foreach ($users as $k => $v) {
+        $v['distance'] = getDistance($lat, $lng, $v['lat'], $v['lng']);
+        if(empty($point)){
+            $point[]=array('lng'=>$v['lng'],'lat'=>$v['lat'],'num'=>1,'users'=>array($v));
+        }else{
+            $addflag=false;
+            foreach ($point as $pk => $p){
+                if((getDistance($p['lat'], $p['lng'], $v['lat'], $v['lng'])*1000)<$z){
+                    $point[$pk]['num']++;
+                    $point[$pk]['users'][]=$v;
+                    $addflag=true;
+                    break;
+                }
+            }
+            if(!$addflag){
+                $point[]=array('lng'=>$v['lng'],'lat'=>$v['lat'],'num'=>1,'users'=>array($v));
+            }
+        }
+    }
+    
+    echo json_result(array('points'=>$point));
+}
+
+//附近的人瀑布流
+function nearUsers(){
+    global $db;
+    $lng = filter($_REQUEST['lng']);
+    $lat = filter($_REQUEST['lat']);
+    $loginid = filter($_REQUEST['loginid']);
+    $page_no = isset($_REQUEST ['page']) ? $_REQUEST ['page'] : 1;
+    $page_size = PAGE_SIZE;
+    $start = ($page_no - 1) * $page_size;
+    if(empty($lng) || empty($lat)){
+        echo json_result(null, '2', '获取不到您的经纬度');
+        return;
+    }
+    $sql = "select user.id,user_name,nick_name,head_photo,lng,lat,sex from " . DB_PREFIX . "user user "
+            . "where hide=2 and lng<>'' and lat<>'' ";
+    $sql.=(!empty($loginid)) ? " and user.id <> {$loginid} " : '';
+    $sql.=(!empty($lng) && !empty($lat)) ? " order by sqrt(power(lng-{$lng},2)+power(lat-{$lat},2)),id " : ' order by id ';
+    $sql .= " limit $start,$page_size";
+    $users = $db->getAllBySql($sql);
+    foreach ($users as $k => $v) {
+        $users[$k]['distance'] = (!empty($v['lat']) && !empty($v['lng']) && !empty($lng) && !empty($lat)) ? getDistance($lat, $lng, $v['lat'], $v['lng']) : lang_UNlOCATE;
+    }
+    //echo json_result(array('shops'=>$shops));
+    echo json_result(array('users'=>$users));
+    
+}
+
+function isHidden(){
+    global $db;
+    $loginid = filter($_REQUEST['loginid']);
+    $user=$db->getRow('user',array('id'=>$loginid),array('hide'));
+    echo json_result(array('ishide'=>$user['hide']));//1隐身2有空
+}
+
+function isFollow(){
+    global $db;
+    $loginid = filter($_REQUEST['loginid']);
+    $userid = filter($_REQUEST['userid']);
+    $myfav_count=$db->getCount('user_relation',array('user_id'=>$loginid,'relation_id'=>$userid));
+    $res=$myfav_count>0?1:2;
+    echo json_result(array('isfollow'=>$res));//1已关注2未关注
+}
+////获取城市地址
+//function getCity(){
+//	$mobile=filter($_REQUEST['mobile']);
+//        $cm=new GetCityByMobile();
+//        $res=$cm->getCity($mobile);
+//        if($res->showapi_res_body->ret_code == 0){
+//            $prov=$res->showapi_res_body->prov;
+//            $city=$res->showapi_res_body->city;
+//        }
+//}
 
 function getRelationStatus($myself_id,$user_id){
 	global $db;

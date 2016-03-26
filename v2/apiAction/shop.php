@@ -64,7 +64,7 @@ function nearbyShops() {
     $isopensql = getIsopensql();
     $sql = "select shop.id,title,img,address,lng,lat,n.msg_num,e.cup_num," . $isopensql . " from " . DB_PREFIX . "shop shop "
             . "left join " . DB_PREFIX . "shop_tag shop_tag on shop_tag.shop_id=shop.id "
-            . "left join (select shop_id,count(id) as msg_num from " . DB_PREFIX . "diary diary group by shop_id ) n on n.shop_id=shop.id "
+            . "left join (select shop_id,count(id) as msg_num from " . DB_PREFIX . "diary diary where diary.shop_view_status != 2 group by shop_id ) n on n.shop_id=shop.id "
             . "left join (select shop_id,count(id) as cup_num from " . DB_PREFIX . "encouter encouter where status=2 group by shop_id ) e on e.shop_id=shop.id "
             . "where status=2 ";
     if (!empty($city_code)) {
@@ -173,11 +173,11 @@ function shopInfo() {
     //$page_size = PAGE_SIZE;
     //$start = ($page_no - 1) * $page_size;
     if (!empty($shopid)) {
-        $shop = $db->getRow('shop', array('id' => $shopid), array('id', 'title', 'img', 'tel', 'address', 'feature', 'introduction', 'hours', 'hours1', 'hours2', 'holidayflag', 'holidays', 'holidayhours1', 'holidayhours2', 'lng', 'lat'));
+        $shop = $db->getRow('shop', array('id' => $shopid), array('id', 'title', 'img', 'tel', 'address', 'feature', 'introduction', 'hours', 'hours1', 'hours2', 'holidayflag', 'holidays', 'holidayhours1', 'holidayhours2', 'lng', 'lat','ispassed'));
         $shop['tel'] = trim($shop['tel']);
         $shop['distance'] = (!empty($shop['lat']) && !empty($shop['lng']) && !empty($lng) && !empty($lat)) ? getDistance($lat, $lng, $shop['lat'], $shop['lng']) : lang_UNlOCATE;
         //店内消息数
-        $shop['msg_num'] = $db->getCount('diary', array('shop_id' => $shopid));
+        $shop['msg_num'] = $db->getCount('diary', array('shop_id' => $shopid ."' and shop_view_status != '2"));
         //店内咖啡数
         $shop['cup_num'] = $db->getCount('encouter', array('shop_id' => $shopid, 'status' => 2));
         //店内菜品
@@ -309,10 +309,8 @@ function shopInfo() {
         } else {
             $shop['isDepositShop'] = 2;
         }
-        //$bbs_sql="select up.path,u.nick_name,u.user_name,bbs.user_id,bbs.shop_id,CONCAT(bbs.num,'楼:',bbs.content) as content,bbs.created from ".DB_PREFIX."shop_bbs bbs left join ".DB_PREFIX."user u on u.id=bbs.user_id left join ".DB_PREFIX."user_photo up on up.id=u.head_photo_id where bbs.allow=1 and bbs.shop_id=$shopid";
-        //$shop['bbsCount']=$db->getCountBySql($bbs_sql);
-        //$bbs_sql.=" order by bbs.id desc limit $start,$page_size";
-        //$shop['bbs']=$db->getAllBySql($bbs_sql);
+        
+        //$shop['isDepositShop']=$shopid==2052?2:1;
 
         $shop['regist_num']=$db->getCount('beans_log',array('shop_id'=>$shopid,'type'=>3));//1登录2发布漫生活3签到
         if(!empty($loginid)){
@@ -485,29 +483,30 @@ function diaryShops(){
     global $db;
     $lng = filter($_REQUEST['lng']);
     $lat = filter($_REQUEST['lat']);
+    $loginid = filter($_REQUEST['loginid']);
     $shopid = filter($_REQUEST['shopid']);
     $city_code = filter($_REQUEST['city_code']);
-    $area_id = filter($_REQUEST['area_id']);
-    $circle_id = filter($_REQUEST['circle_id']);
-    $keyword = filterSql(filterSql(filter($_REQUEST['keyword'])));
-    $tag_ids = filter($_REQUEST['tag_ids']);
     $page_no = isset($_REQUEST ['page']) ? $_REQUEST ['page'] : 1;
     $page_size = PAGE_SIZE;
     $start = ($page_no - 1) * $page_size;
     $shopsql = "select shop.id,title,img,lng,lat,hours1,hours2,holidays,holidayflag,holidayhours1,holidayhours2 from " . DB_PREFIX . "shop shop left join " . DB_PREFIX . "shop_tag shop_tag on shop_tag.shop_id=shop.id where shop.status=2 ";
+    
+    if(empty($loginid)){ //未登录
+        $shopsql = "select shop.id,title,img,lng,lat,hours1,hours2,holidays,holidayflag,holidayhours1,holidayhours2 from " . DB_PREFIX . "shop shop where shop.status=2 ";
+    }else{
+        $shopsql = "select shop.id,title,img,lng,lat,hours1,hours2,holidays,holidayflag,holidayhours1,holidayhours2,if(su.id<>'',if(su.id is not null,1,2),2) as likeshopflag from " . DB_PREFIX . "shop shop left join ".DB_PREFIX."shop_users su on su.shop_id = shop.id and su.user_id=$loginid where shop.status=2 ";
+    }
     if (!empty($city_code)) {
         $city = $db->getRow('shop_addcity', array('code' => $city_code));
         $shopsql.=(!empty($city['id'])) ? " and addcity_id={$city['id']} " : '';
     }
-    
     $shopsql.=(!empty($shopid)) ? " and shop.id={$shopid} " : '';
-    $shopsql.=(!empty($area_id)) ? " and addarea_id={$area_id} " : '';
-    $shopsql.=(!empty($circle_id)) ? " and addcircle_id={$circle_id} " : '';
-    $shopsql.=(!empty($keyword)) ? " and ( INSTR(title,'" . addslashes($keyword) . "') or INSTR(subtitle,'" . addslashes($keyword) . "') or INSTR(address,'" . addslashes($keyword) . "') ) " : '';
-    $shopsql.=(!empty($tag_ids)) ? " and shop_tag.tag_id in ({$tag_ids}) " : '';
     $shopsql .= " group by shop.id ";
-
-    $shopsql.=(!empty($lng) && !empty($lat)) ? " order by sqrt(power(lng-{$lng},2)+power(lat-{$lat},2)),id " : ' order by id ';
+    if(empty($loginid)){ //未登录
+        $shopsql.=(!empty($lng) && !empty($lat)) ? " order by sqrt(power(lng-{$lng},2)+power(lat-{$lat},2)),id " : ' order by shop.id ';
+    }else{
+        $shopsql.=(!empty($lng) && !empty($lat)) ? " order by likeshopflag,sqrt(power(lng-{$lng},2)+power(lat-{$lat},2)),shop.id " : ' order by shop.id ';
+    }
     $shopsql .= " limit $start,$page_size";
     $shops = $db->getAllBySql($shopsql);
     foreach ($shops as $k => $v) {

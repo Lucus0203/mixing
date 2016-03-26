@@ -25,6 +25,9 @@ switch ($act){
         case 'getQuestion'://获取问题
                 getQuestion();
                 break;
+        case 'getLink'://获取公告链接
+                getLink();
+                break;
 	case 'getCountryCityArea':
 		getCountryCityArea();//获取全国区域数据
 		break;
@@ -143,6 +146,13 @@ function getQuestion(){
         global $db;
         $data = $db->getAll('base_question',array(),array()," order by recommend desc ");
         echo json_result($data);
+}
+
+//获取链接
+function getLink(){
+        global $db;
+        $data = $db->getAll('link',array(),array('link','title','img','created')," order by created desc ");
+        echo json_result(array('links'=>$data));
 }
 
 //获取全国区域数据

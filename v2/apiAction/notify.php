@@ -24,7 +24,9 @@ function getNotifys(){
 	$page_no = isset ( $_REQUEST ['page'] ) ? $_REQUEST ['page'] : 1;
 	$page_size = PAGE_SIZE;
 	$start = ($page_no - 1) * $page_size;
-        $data=$db->getAll('notify',array('user_id'=>$loginid."' or type='mixing"),array('id','img','send_time','msg','url','type','dataid','isread'),"order by id desc limit $start,$page_size");
+        $sql="select id,img,send_time,msg,url,type,dataid,isread from ".DB_PREFIX."notify where user_id=$loginid or (user_id is null and type='mixing') order by id desc limit $start,$page_size";
+        $data=$db->getAllBySql($sql);
+        //$data=$db->getAll('notify',array('user_id'=>$loginid."' or (user_id is null and type='mixing')"),array('id','img','send_time','msg','url','type','dataid','isread'),"order by id desc limit $start,$page_size");
         echo json_result(array('notifys'=>$data));
 }
 

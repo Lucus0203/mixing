@@ -328,7 +328,7 @@ function invitationBySend(){
 		return;
 	}
         //1等待2接受3拒绝4取消
-	$sql1="select inv.id as invt_id,1 as invt_type,inv.to_user_id,tu.nick_name as to_nick_name,tu.head_photo as to_head_photo,inv.status,inv.isreaded_user as isreaded,inv.isreaded_to_user as to_isreaded,inv.created from ".DB_PREFIX."invitation inv 
+	$sql1="select inv.id as invt_id,1 as invt_type,inv.pay_type,inv.to_user_id,tu.nick_name as to_nick_name,tu.head_photo as to_head_photo,inv.status,inv.isreaded_user as isreaded,inv.isreaded_to_user as to_isreaded,inv.created from ".DB_PREFIX."invitation inv 
                 left join ".DB_PREFIX."user u on inv.user_id = u.id 
                 left join ".DB_PREFIX."user tu on inv.to_user_id = tu.id where 1=1 "
                 . " and inv.user_id=$loginid and inv.del_user <> '1' ";
@@ -337,7 +337,8 @@ function invitationBySend(){
                 . "left join ".DB_PREFIX."user p_u on pto.other_id = p_u.id "
                 . "left join ".DB_PREFIX."user p_tu on pto.user_id = p_tu.id where 1=1 "
                 . " and pto.other_id=$loginid and pto.del_other <> '1' ";
-        $sql="select * from ( $sql1 union all $sql2 ) s order by created desc limit $start,$page_size";
+        //$sql="select * from ( $sql1 union all $sql2 ) s order by created desc limit $start,$page_size";
+        $sql="select * from ( $sql1 ) s order by created desc limit $start,$page_size";
 	$data=$db->getAllBySql($sql);
 	echo json_result(array('list'=>$data));
 }
@@ -355,7 +356,7 @@ function invitationByAccept(){
 		return;
 	}
         //1等待2接受3拒绝4取消
-	$sql1="select inv.id as invt_id,1 as invt_type,inv.user_id as from_user_id,u.nick_name as from_nick_name,u.head_photo as from_head_photo,inv.status,inv.isreaded_user as from_isreaded,inv.isreaded_to_user as isreaded,inv.created from ".DB_PREFIX."invitation inv "
+	$sql1="select inv.id as invt_id,1 as invt_type,inv.pay_type,inv.user_id as from_user_id,u.nick_name as from_nick_name,u.head_photo as from_head_photo,inv.status,inv.isreaded_user as from_isreaded,inv.isreaded_to_user as isreaded,inv.created from ".DB_PREFIX."invitation inv "
                 . "left join ".DB_PREFIX."user u on inv.user_id = u.id "
                 . "left join ".DB_PREFIX."user tu on inv.to_user_id = tu.id where 1=1 "
                 . " and inv.to_user_id=$loginid and inv.del_to_user <> '1' ";
@@ -364,7 +365,8 @@ function invitationByAccept(){
                 . "left join ".DB_PREFIX."user p_u on pto.other_id = p_u.id "
                 . "left join ".DB_PREFIX."user p_tu on pto.user_id = p_tu.id where 1=1 "
                 . " and pto.user_id=$loginid and pto.del_user <> '1' ";
-        $sql="select * from ( $sql1 union all $sql2 ) s order by created desc limit $start,$page_size";
+        //$sql="select * from ( $sql1 union all $sql2 ) s order by created desc limit $start,$page_size";
+        $sql="select * from ( $sql1 ) s order by created desc limit $start,$page_size";
 	$data=$db->getAllBySql($sql);
 	echo json_result(array('list'=>$data));
 	

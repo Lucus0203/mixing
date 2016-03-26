@@ -108,6 +108,10 @@ function addDiary(){
                         $db->create('diary_img', $photo);
                 }
         }
+        //如果参加了胶片里的咖啡馆活动发送通知
+        if(strpos($note,'胶片里的咖啡馆') && $file['status'] == 1){
+            $db->create('notify',array('user_id'=>$loginid,'img'=>'http://www.xn--8su10a.com/img/office_mark_head.png','send_time'=>date("Y-m-d H:i:s"),'msg'=>'恭喜你成功参与"胶片里的咖啡馆活动"','url'=>'http://app.xn--8su10a.com/vote/participate.html?votenum='.$diary_id,'type'=>'mixing','isread'=>2));
+        }
         //发布漫生活获取豆子
         $num=BEANS_NUM_DIARY_ADD;
         $sql="select id from ".DB_PREFIX."beans_log beans_log where user_id=$loginid and shop_id=$shopid and type=2 and created>='".date("Y-m-d")." 00:00:00' and created<='".date("Y-m-d")." 23:59:59' ";
@@ -167,8 +171,13 @@ function getDiarys(){
             $shopsql=" select s2.id from ".DB_PREFIX."shop_users su left join ".DB_PREFIX."shop s1 on su.shop_id=s1.id "
                     . "left join ".DB_PREFIX."shop s2 on s1.id=s2.id "//s1.addarea_id=s2.addarea_id
                     . "where su.user_id=$loginid ";
-            $blacklist=" select relation_id from ".DB_PREFIX."user_relation relation where relation.user_id = $loginid and relation.status=2 ";
-            $sql.=" and diary.user_id = $loginid or (diary.shop_id in ($shopsql) and diary.user_id not in ($blacklist) ) ";
+            $blacklist=" select relation_id from ".DB_PREFIX."user_relation relation where relation.user_id = $loginid and relation.status=2 ";//黑名单
+            $firendlist=" select relation_id from ".DB_PREFIX."user_relation relation where relation.user_id = $loginid and relation.status=1 ";//关注的人
+            //$sql.=" and diary.user_id = $loginid or (diary.shop_id in ($shopsql) and diary.user_id not in ($blacklist) and diary.shop_view_status != 2 ) "; //关注自己收藏的咖啡馆
+            //查看范围 关注的人 或者 shop_id不为空且没屏蔽
+            //$sql.=" and (diary.user_id = $loginid or (diary.note <>'加入了搅拌' and (diary.user_id in ($firendlist) or  (diary.shop_id <>'' and diary.shop_id is not null and diary.shop_view_status != 2) ) ) )";
+            //查看所有慢生活除去屏蔽
+            $sql.=" and (diary.user_id = $loginid or (diary.note <>'加入了搅拌' and diary.shop_view_status != 2 ) )";
         }else{
             $sql.=" and diary.user_id = $userid ";
         }
@@ -181,7 +190,7 @@ function getDiarys(){
         //获取相册留言等内容
         foreach ($diarys as $k=>$d){
             //相册
-            $imgsql="select id as img_id,user_id,img,width,height from ".DB_PREFIX."diary_img as img where diary_id=".$d['diary_id']." order by id desc ";
+            $imgsql="select id as img_id,user_id,img,width,height from ".DB_PREFIX."diary_img as img where diary_id=".$d['diary_id']." order by id asc ";
             $imgs=$db->getAllBySql($imgsql);
             if(count($imgs)>0){
                 $diarys[$k]['imgs']=$imgs;
@@ -450,14 +459,15 @@ function detail(){
             echo json_result(null,'2','请先登录');
             return ;
         }
-        $sql="select diary.id as diary_id,diary.user_id,user.head_photo,user.nick_name,diary.views,diary.beans,diary.note,diary.voice,diary.voice_time,diary.address,diary.lng,diary.lat,diary.shop_id,diary.shop_title,shop_img,diary.created,if(diary_msg.msg <> '',1,2 ) as liked from ".DB_PREFIX."diary diary "
+        $sql="select diary.id as diary_id,diary.user_id,user.head_photo,user.nick_name,diary.views,diary.beans,diary.note,diary.voice,diary.voice_time,diary.address,diary.lng,diary.lat,diary.shop_id,shop.title as shop_title,shop.img as shop_img,diary.created,if(diary_msg.msg <> '',1,2 ) as liked from ".DB_PREFIX."diary diary "
                 . "left join ".DB_PREFIX."user user on diary.user_id=user.id "
+                . "left join ".DB_PREFIX."shop shop on diary.shop_id=shop.id "
                 . "left join (select diary_id,msg from ".DB_PREFIX."diary_msg diary_msg where type=2 and user_id =$loginid group by diary_id ) diary_msg on diary_msg.diary_id=diary.id "
                 . "where diary.id = $diaryid ";//isdel 1删除2正常 //liked 1 已赞 2 未赞
 	$diary=$db->getRowBySql($sql);
         
         //相册
-        $imgsql="select id as img_id,img,width,height from ".DB_PREFIX."diary_img as img where diary_id=".$diaryid;
+        $imgsql="select id as img_id,img,width,height from ".DB_PREFIX."diary_img as img where diary_id=".$diaryid." order by id asc ";
         $imgs=$db->getAllBySql($imgsql);
         if(count($imgs)>0){
             $diary['imgs']=$imgs;
@@ -489,7 +499,7 @@ function shopDiarys(){
                 . "left join ".DB_PREFIX."user user on diary.user_id=user.id "
                 . "left join ".DB_PREFIX."shop shop on shop.id=diary.shop_id "
                 . "left join (select diary_id,msg from ".DB_PREFIX."diary_msg diary_msg where type=2 and user_id =$loginid group by diary_id ) diary_msg on diary_msg.diary_id=diary.id "
-                . "where diary.isdel=2 and diary.shop_id = $shopid ";//isdel 1删除2正常
+                . "where diary.isdel=2 and diary.shop_id = $shopid and (diary.shop_view_status != 2 or diary.user_id=$loginid)";//isdel 1删除2正常
 	$sql .= " order by created desc limit $start,$page_size";
 	$diarys=$db->getAllBySql($sql);
         //更新浏览记录

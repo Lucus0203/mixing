@@ -123,7 +123,7 @@ function receiveList() {
     $sql .= " limit $start,$page_size";
     $data = $db->getAllBySql($sql);
     foreach ($data as $k => $v) {
-        //receive.status 1等待回复2可领取3被拒绝4待支付到账
+        //receive.status 1等待回复2可领取3被拒绝4待支付到账  8已领取9等候已领取
         $data[$k]['distance'] = (!empty($v['lat']) && !empty($v['lng']) && !empty($lng) && !empty($lat)) ? getDistance($lat, $lng, $v['lat'], $v['lng']) : lang_UNlOCATE;
     }
     //$db->update('encouter_receive',array('isread'=>'2'),array('user_id'=>$loginid));
