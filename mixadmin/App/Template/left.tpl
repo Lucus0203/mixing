@@ -7,10 +7,11 @@
     	<div class="main_l_menu"><a href="{url controller=Master action=Index}">店家审核</a></div>
         <div class="main_l_menu" style="margin-top:50px;"><a href="{url controller=Base action=Index}">APP基础数据</a></div>
     	<div class="main_l_menu"><a href="{url controller=Notify action=Index}">APP通知</a></div>
+        <div class="main_l_menu"><a href="{url controller=Appset action=Link}">APP公告</a></div>
         <div class="menu_b_box">
                 <div class="main_l_menu"><a href="{url controller=User action=Index}">用户管理</a></div>
                 <div class="main_l_menu"><a href="{url controller=Order action=Index}">订单管理</a></div>
-                <div class="main_l_menu"><a href="#">慢生活审核</a></div>
+                <div class="main_l_menu"><a href="{url controller=Diary action=Index}">慢生活审核</a></div>
 	        <div class="main_l_menu"><a href="{url controller=User action=Feedback}">用户反馈</a></div>
         </div>
     </div>

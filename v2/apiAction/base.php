@@ -38,13 +38,13 @@ switch ($act){
 function getVer(){
 	echo json_result(
                 array('HotShopCity'=>'1.0',
-                    'ShopCity'=>'1.0',
-                    'ShopCityAreaCircle'=>'1.0',
+                    'ShopCity'=>'1.2',
+                    'ShopCityAreaCircle'=>'1.3',//要删除服务器上静态文件city_circle.db
                     'ShopTag'=>'1.0',
                     'UserTag'=>'1.0',
                     'Topic'=>'1.0',
                     'Question'=>'1.0',
-                    'CountryCityArea'=>'1.0'
+                    'CountryCityArea'=>'1.1'
                     ));
 }
 
@@ -87,8 +87,9 @@ function getShopCityAreaCircle(){
 	global $db;
 	$circlefile=APP_DIR. '/upload/city_circle.db';
 	$circledata = file_get_contents($circlefile);
+	$ctime = filectime($circlefile);
         $data=array();
-	if(empty($circledata)){
+	if(empty($circledata)||(time() - $ctime)>=60*60*24*5){//五天
                 $city=$db->getAll('shop_addcity',array(),array('id as city_id','code as city_code'));
 		foreach ($city as $ck=>$c){
                         $areadata['citycircle']=$db->getAll('shop_addcircle',array('city_id'=>$c['city_id'],'type'=>2),array('id as circle_id','name as circle'));//热门商圈
@@ -151,7 +152,7 @@ function getQuestion(){
 //获取链接
 function getLink(){
         global $db;
-        $data = $db->getAll('link',array(),array('link','title','img','created')," order by created desc ");
+        $data = $db->getAll('link',array('status'=>1),array('link','title','img','created')," order by created desc ");
         echo json_result(array('links'=>$data));
 }
 

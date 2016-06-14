@@ -123,7 +123,7 @@ function pay() {
         try {
                 $ch = \Pingpp\Charge::create(
                         array(
-                            "subject" => "[搅拌]订单支付",
+                            "subject" => "[咖啡约我]订单支付",
                             "body" => $menubody,
                             "amount" => $totalamount,
                             "order_no" => $orderNo,
@@ -191,7 +191,7 @@ function refund(){
                 $ch->refunds->create(
                     array(
                         'amount' => $order['pay_amount'],
-                        'description' => '[搅拌]申请退款'
+                        'description' => '[咖啡约我]申请退款'
                     )
                 );
                 $db->excuteSql("begin;"); //使用事务查询状态并改变
@@ -308,7 +308,7 @@ function secondPay(){
         try {
                 $ch = \Pingpp\Charge::create(
                         array(
-                            "subject" => "[搅拌]订单支付",
+                            "subject" => "[咖啡约我]订单支付",
                             "body" => $menubody,
                             "amount" => $totalamount,
                             "order_no" => $orderNo,

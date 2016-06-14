@@ -27,7 +27,6 @@ body{ background:url(../img/download_bg.jpg) no-repeat; background-size:100% aut
 #container{ width:100%;}
 h1{ width:150px; margin:0 auto; padding:30px 0;font-size:43px;color:#45251b;}
 h1 img{ width:40%;float:left;vertical-align:bottom;}
-
 .main{ margin-top:15%;}
 .main p{ color:#fff; font-size:14px; text-align:center;}
 .main .text01{ font-size:54px; margin-bottom:10px;}
@@ -41,34 +40,11 @@ h1 img{ width:40%;float:left;vertical-align:bottom;}
 	<div class="main">
 		<p class="text01">搅拌<br>只为"陪伴"</p>
 		<p>搅拌Mixing Ver.1.0.0</p>
-		<div class="downloadBtn"><a href="#">立即下载</a></div>
+		<div class="downloadBtn"><a href="https://itunes.apple.com/app/jiao-ban/id1036717871?l=zh&ls=1&mt=8">立即下载</a></div>
 	</div>
-	
 </article>
-
-<script>
-if(navigator.userAgent.match(/MicroMessenger/i)){
-        alert('请点击右上角更多,在Safari中打开本页')
-  }else{
-  window.location='https://itunes.apple.com/app/jiao-ban/id1036717871?l=zh&ls=1&mt=8';
-  }
- if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) {
-    setTimeout(function () { window.location = 'https://itunes.apple.com/app/jiao-ban/id1036717871?l=zh&ls=1&mt=8'; },25);
-    window.location = "weixin://";
-  } else if (navigator.userAgent.match(/android/i)) {
-    var state = null;
-    try {
-      state = window.open("http://www.xn--8su10a.com", '_blank');//scheme
-    } catch(e) {}
-    if (state) {
-      window.close();
-    } else {
-      window.location = "http://www.xn--8su10a.com";
-    }
-  }else{
-      window.location = "http://www.xn--8su10a.com";
-  }
-</script>
+<script src="js/common.js"></script>
+<script src="js/userqrcode.js?0923"></script>
 </body>
 
 </html>

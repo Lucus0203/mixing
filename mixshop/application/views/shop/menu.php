@@ -50,7 +50,7 @@
                  <td class="menu_img">
                  	<a href="<?php echo $m['img']?>" data-lightbox="menu-group"><img src="<?php echo $m['img']?>"></a>
 	             </td>
-                 <td class="menu_title"><?php echo $m['title']?></td>
+                     <td class="menu_title"><input type="text" value="<?php echo $m['title']?>" /></td>
                  <td>
 	                 <ul class="menu_price">
 	                 	<?php foreach ($m['prices'] as $p){ $typeflag=1;?>
@@ -73,7 +73,7 @@
                  	<?php if($m['status']==1){?>待售<?php }else{ ?>寄售中<?php } ?>
                  </td>
                  <td class="opera">
-                 	<a class="updatePrice" href="javascript:void(0)">更新价格</a>
+                 	<a class="updatePrice" href="javascript:void(0)">更新内容</a>
                  	<?php if($m['status']==1){?>
                  		<a class="public" href="javascript:void(0)">上架</a>
                  	<?php }else{ ?>

@@ -290,3 +290,7 @@ ul.ultag li{
     font-size:26px;
     color:#ee7a16;
 }
+
+ul#msg li a{
+    color:#bcb868;
+}

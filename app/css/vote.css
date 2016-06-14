@@ -1,0 +1,104 @@
+div#main{
+    max-width: 750px;
+    margin: 0 auto;
+}
+h1{
+    text-align: center;
+    margin: 20px;
+    font-size: 1.5em;
+}
+form.search{
+    text-align: right;
+    font-size: 1em;
+}
+form.search input{
+    font-size:0.8em;
+    width: 30%;
+}
+form input.subbtn{
+    width: auto;
+    font-size:1em;
+}
+
+ul.box1 li img{
+    width: 96%;
+    padding: 2%;
+    margin-bottom: 10px;
+}
+ul.box1 li span{
+    font-size: 0.8em;
+    vertical-align: middle;
+    margin: 0 10px;
+}
+ul.box1 li{
+    border: solid 1px #ccc;
+    padding-bottom: 10px;
+    margin:30px 0;
+    font-size: 1.2em;
+    text-align: center;
+    
+}
+ul.box1 li font.nickname{
+    color:#5d9c0a;
+    font-weight: bold;
+    font-size:1em;
+}
+ul.box1 li font.votenum{
+    color:#f00;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+button.btn {
+  background: #d93434;
+  background-image: -webkit-linear-gradient(top, #d93434, #b82b2b);
+  background-image: -moz-linear-gradient(top, #d93434, #b82b2b);
+  background-image: -ms-linear-gradient(top, #d93434, #b82b2b);
+  background-image: -o-linear-gradient(top, #d93434, #b82b2b);
+  background-image: linear-gradient(to bottom, #d93434, #b82b2b);
+  -webkit-border-radius: 12;
+  -moz-border-radius: 12;
+  border-radius: 12px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 5px 20px;
+  text-decoration: none;
+  vertical-align: middle;
+}
+p.pageClass{
+    clear: both;
+    font-size: 16px;
+    margin: 10px 0;
+    text-align: right;
+}
+p.pageClass a,p.pageClass strong{
+    padding:10px;
+}
+p.voted{
+    text-align: center;
+    padding: 10px;
+    color:#fff;
+    background-color: #f00;
+}
+p.nocontent{
+    font-size: 1em;
+    text-align: center;
+    padding: 30px;
+    color:#f00;
+    margin: 50px 0;
+}
+p.note{
+    padding:0 30px;
+    text-align: left;
+    font-size: 0.8em;
+}
+p.join{
+    font-size: 0.9em;
+}
+p.join a{
+    color:#14bbfa;
+    font-size:1.1em;
+}
+#footer {
+	background-color:#fff;
+}

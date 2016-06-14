@@ -21,7 +21,7 @@
                  <th>昵称</th>
                  <th>性别</th>
                  <th>电话</th>
-                 <th>邮箱</th>
+                 <th>反馈店铺</th>
                  <th>反馈内容</th>
                  <th>反馈时间</th>
              </tr>
@@ -31,7 +31,7 @@
                  <td>{$list[sec].nick_name}</td>
                  <td>{if $list[sec].sex eq 1}男{elseif $list[sec].sex eq 2}女{/if}</td>
                  <td>{$list[sec].mobile}</td>
-                 <td>{$list[sec].email}</td>
+                 <td><a href="{url controller=Shop action=Edit id=$list[sec].id}">{$list[sec].title}</a></td>
                  <td>{$list[sec].content}</td>
                  <td>{$list[sec].created}</td>
              </tr>

@@ -17,8 +17,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://shop.xn--8su10a.com';
-$config['img_base_url'] = 'http://v2.xn--8su10a.com';
+$config['base_url'] = 'http://localhost/mixing/mixshop';//'http://shop.xn--8su10a.com';
+$config['img_base_url'] = 'http://localhost/mixing/v2';//'http://v.xn--8su10a.com';
 
 /*
 |--------------------------------------------------------------------------

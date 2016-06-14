@@ -1,4 +1,3 @@
-<script type="text/javascript" src="{$smarty.const.SITE}resource/js/business_circle.js"></script>
 <td valign="top" align="center">
  	<div class="main_ta_box">
          <div class="hd_t">通知消息</div>
@@ -26,7 +25,9 @@
          <table class="hd_ta" border="0" cellpadding="0" cellspacing="1" width="97%" align="center">
             <colgroup>
                     <col width="15%">
+                    <col width="30%">
                     <col width="15%">
+                    <col width="30%">
                     <col width="15%">
             </colgroup>
              <tr>
@@ -38,10 +39,10 @@
              </tr>
              {section name=sec loop=$list}
              <tr>
-                 <td class="hd_td_l">{$list[sec].img}</td>
+                 <td><img src="{$list[sec].img}" /></td>
                  <td class="hd_td_l">{$list[sec].msg}</td>
                  <td class="hd_td_l">官方</td>
-                 <td class="hd_td_l"><a href="{$list[sec].url}" target="_blank">{$list[sec].url}</a></td>
+                 <td class="hd_td_l"><a style="word-break: break-all;" href="{$list[sec].url}" target="_blank">链接详情</a></td>
                  <td style="word-break:keep-all;">
                  	<a href="{url controller=Notify action=EditNotify id=$list[sec].id}">编辑</a><a class="delBtn" href="{url controller=Notify action=DelNotify id=$list[sec].id}">删除</a>
                  </td>

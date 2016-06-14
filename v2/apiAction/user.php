@@ -273,7 +273,7 @@ function registerComplete(){
         $info['userid']=$user['id'];
         $info['user_name']=$user['user_name'];
         if($db->getCount('diary',array('user_id'=>$user['id']))<=0){
-            $diary=array('user_id'=>$user['id'],'note'=>'加入了搅拌');
+            $diary=array('user_id'=>$user['id'],'note'=>'加入了咖啡约我');
             $db->create('diary',$diary);
         }
 	
@@ -669,7 +669,7 @@ function usersMap() {
     //$zoom=$zoomlevel>11?$zoomarea[11]:$zoomarea[$zoomlevel];
     //是否营业中,1营业中,2休息
     $sql = "select user.id,user_name,nick_name,head_photo,sex,lng,lat from " . DB_PREFIX . "user user "
-            . "where hide=2 ";//有空
+            . "where hide=2 and head_photo <> '' ";//有空
     
     $sql.=(!empty($loginid)) ? " and user.id <> {$loginid} " : '';
     $sql.=" and round(6378.138*2*asin(sqrt(pow(sin( ($lat*pi()/180-user.lat*pi()/180)/2),2)+cos($lat*pi()/180)*cos(user.lat*pi()/180)* pow(sin( ($lng*pi()/180-user.lng*pi()/180)/2),2)))*1000) <= ".($zoom * 20);
@@ -679,7 +679,7 @@ function usersMap() {
     $users = $db->getAllBySql($sql);
      
     $point=array();
-    $z=$zoom>50?$zoom*2:$zoom;
+    $z=$zoom>50?$zoom:$zoom;
     foreach ($users as $k => $v) {
         $v['distance'] = getDistance($lat, $lng, $v['lat'], $v['lng']);
         if(empty($point)){
@@ -710,14 +710,14 @@ function nearUsers(){
     $lat = filter($_REQUEST['lat']);
     $loginid = filter($_REQUEST['loginid']);
     $page_no = isset($_REQUEST ['page']) ? $_REQUEST ['page'] : 1;
-    $page_size = PAGE_SIZE;
+    $page_size = 20;
     $start = ($page_no - 1) * $page_size;
     if(empty($lng) || empty($lat)){
         echo json_result(null, '2', '获取不到您的经纬度');
         return;
     }
     $sql = "select user.id,user_name,nick_name,head_photo,lng,lat,sex from " . DB_PREFIX . "user user "
-            . "where hide=2 and lng<>'' and lat<>'' ";
+            . "where head_photo<>'' and hide=2 and lng<>'' and lat<>'' ";
     $sql.=(!empty($loginid)) ? " and user.id <> {$loginid} " : '';
     $sql.=(!empty($lng) && !empty($lat)) ? " order by sqrt(power(lng-{$lng},2)+power(lat-{$lat},2)),id " : ' order by id ';
     $sql .= " limit $start,$page_size";

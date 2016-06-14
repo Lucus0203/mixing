@@ -127,6 +127,7 @@ $(function(){
 		var baseUrl=$('#baseUrl').val();
 		var menuid=$(this).parent().find('.delMenuImg').attr('rel');
 		var menuprice=$(this).parent().parent().find('.menu_price');
+                var menutitle=$(this).parent().parent().find('.menu_title input').val();
 		var prices='';
 		var typies='';
 		var number_flag=true;
@@ -147,11 +148,11 @@ $(function(){
 		}else{
 			prices=prices.slice(0,-1);
 			typies=typies.slice(0,-1);
-			if(confirm('确认更新价格么?')){
+			//if(confirm('确认更新价格么?')){
 				$.ajax({
 					type:'post',
 					url:baseUrl+'index.php?controller=ShopMenu&action=MenuPriceUpdate',
-					data:{'menuid':menuid,'prices':prices,'typies':typies},
+					data:{'menuid':menuid,'prices':prices,'typies':typies,'menutitle':menutitle},
 					success:function(res){
 						if(res==1){
 							alert('操作成功');
@@ -160,7 +161,7 @@ $(function(){
 						}
 					}
 				});
-			}
+			//}
 			
 		}
 		return false;

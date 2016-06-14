@@ -1,4 +1,3 @@
-<script type="text/javascript" src="{$smarty.const.SITE}resource/js/business_circle.js"></script>
 <td valign="top" align="center">
  	<div class="main_ta_box">
          <div class="hd_t">订单列表</div>

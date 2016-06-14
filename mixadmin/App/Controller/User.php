@@ -86,7 +86,7 @@ class Controller_User extends FLEA_Controller_Action {
 		$page_size = 20;
 		$keyword = isset ( $_GET ['keyword'] ) ? $this->_common->filter($_GET ['keyword']) : '';
 
-		$sql = "select f.*,u.user_name,u.nick_name,u.sex,u.mobile,u.email from ".$prefix."feedback f left join ".$prefix."user u on f.user_id = u.id where 1=1 ";
+		$sql = "select f.*,shop.title,u.user_name,u.nick_name,u.sex,u.mobile,u.email from ".$prefix."feedback f left join ".$prefix."user u on f.user_id = u.id left join ".$prefix."shop shop on f.shop_id=shop.id where 1=1 ";
 		
 		if(!empty($keyword)){
 			$sql.="and user_name like '%$keyword%' or nick_name like '%$keyword%' or content like '%$keyword%' ";

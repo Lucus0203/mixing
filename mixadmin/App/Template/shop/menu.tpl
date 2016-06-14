@@ -54,7 +54,7 @@
                  <td class="menu_img">
                  	<a href="{$menu[sec].img}" data-lightbox="menu-group"><img src="{$menu[sec].img}"></a>
 	             </td>
-                 <td class="menu_title">{$menu[sec].title}</td>
+                 <td class="menu_title"><input type="text" value="{$menu[sec].title}" /></td>
                  <td>
 	                 <ul class="menu_price">
 	                 	{section name=psec loop=$menu[sec].prices}
@@ -78,7 +78,7 @@
                  	{if $menu[sec].status eq 1}待售{else}寄售中{/if}
                  </td>
                  <td class="opera">
-                 	<a class="updatePrice" href="javascript:void(0)">更新价格</a>
+                 	<a class="updatePrice" href="javascript:void(0)">更新内容</a>
                  	{if $menu[sec].status eq 1}
                  		<a class="public" href="javascript:void(0)">上架</a>
                  	{else}

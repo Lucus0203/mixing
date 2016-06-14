@@ -14,6 +14,7 @@ class Verify extends CI_Controller {
 		$this->load->model ( array (
 				'order_model',
 				'encouter_model',
+				'receive_model',
                                 'shopverify_model'  
 		) );
 
@@ -61,7 +62,7 @@ class Verify extends CI_Controller {
                     if(!empty($verify)){
                         $msg = '此验证码已于 '.$verify['created'].' 被账号：'.$verify['mobile'].' 验证过了，请核实!';
                     }else{
-                        $sql="select encouter.id as encouter_id,encouter.shop_id,encouter.type,product1,product_img1,price1,product2,product_img2,price2,encouter.status,encouter.verifycode as encouter_verifycode,encouter_receive.choice_menu,encouter_receive.verifycode as receive_verifycode,depositer.mobile as depositer_mobile,receiver.mobile as receiver_mobile from ".$this->db->dbprefix('encouter')." encouter "
+                        $sql="select encouter.id as encouter_id,encouter_receive.id as encouter_receive_id,encouter.shop_id,encouter.type,product1,product_img1,price1,product2,product_img2,price2,encouter.status,encouter.verifycode as encouter_verifycode,encouter_receive.choice_menu,encouter_receive.verifycode as receive_verifycode,depositer.mobile as depositer_mobile,receiver.mobile as receiver_mobile from ".$this->db->dbprefix('encouter')." encouter "
                                 . "left join ".$this->db->dbprefix('user')." depositer on depositer.id = encouter.user_id "
                                 . "left join ".$this->db->dbprefix('encouter_receive')." encouter_receive on encouter_receive.encouter_id=encouter.id and (encouter_receive.status=2 or encouter_receive.status=7) "
                                 . "left join ".$this->db->dbprefix('user')." receiver on receiver.id = encouter_receive.from_user "
@@ -69,12 +70,13 @@ class Verify extends CI_Controller {
                         $query=$this->db->query($sql,array($loginInfo['shop_id'],$verifycode,$verifycode));
                         if ($query->num_rows() > 0){
                             $row=$query->row_array ();
-                            $encouterstatus=$row['status']==3?4:7;//4已领走,7等候已领走
-                            //$this->encouter_model->update(array('status'=>$encouterstatus),$row['encouter_id']);
                             //验证记录
                             $shopverify=array('shop_id'=>$row['shop_id'],'verifycode'=>$verifycode,'note'=>$row['product1'],'img'=>$row['product_img1'],'price'=>$row['priwce1']);
                             
                             if($row['receive_verifycode']==$verifycode){//领取者
+                                //领取状态变更
+                                $receivestatus=$row['status']==3?8:9;//4已领走,9等候已领走
+                                $this->receive_model->update(array('status'=>$receivestatus),$row['encouter_receive_id']);
                                 if($row['choice_menu']==2){
                                     $shopverify['note']=$row['product2'];
                                     $shopverify['img']=$row['product_img2'];
@@ -85,7 +87,15 @@ class Verify extends CI_Controller {
                                     $shopverify['price']=$row['price1'];
                                 }
                                 $shopverify['mobile']=$row['receiver_mobile'];
+                                
+                                if($row['type']!=3){//如果不是邂逅咖啡寄存者的领取状态也变更
+                                    $encouterstatus=$row['status']==3?4:7;//4已领走,7等候已领走
+                                    $this->encouter_model->update(array('status'=>$encouterstatus),$row['encouter_id']);
+                                }
                             }else{//寄存者
+                                //领取状态变更
+                                $encouterstatus=$row['status']==3?4:7;//4已领走,7等候已领走
+                                $this->encouter_model->update(array('status'=>$encouterstatus),$row['encouter_id']);
                                 if($row['choice_menu']==2){//领取者选择2 寄存者则是1
                                     $shopverify['note']=$row['product1'];
                                     $shopverify['img']=$row['product_img1'];
@@ -114,7 +124,7 @@ class Verify extends CI_Controller {
                 $config['total_rows'] = $total_page;
                 $this->pagination->initialize($config);
                 
-                $this->db->from('shop_verify')->where('shop_id', $loginInfo['shop_id'])->limit($page_size, ($page-1)*$page_size);
+                $this->db->from('shop_verify')->where('shop_id', $loginInfo['shop_id'])->limit($page_size, ($page-1)*$page_size)->order_by('id','desc');
                 $query = $this->db->get();
 		$orders = $query->result_array();
                 

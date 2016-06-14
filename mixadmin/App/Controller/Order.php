@@ -59,7 +59,7 @@ class Controller_Order extends FLEA_Controller_Action {
 		$pages->_page_no = $page_no;
 		$pages->_page_num = $page_size;
 		$pages->_total = $total;
-		$pages->_url = url ( "Notify", "Index" );
+		$pages->_url = url ( "Order", "Index" );
 		$pages->_parm = $pageparm;
 		$page = $pages->page ();
 		$start = ($page_no - 1) * $page_size;

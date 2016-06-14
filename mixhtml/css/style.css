@@ -219,7 +219,7 @@ h2, h3 {
 /* bg-color */
 /*---------------------------page01---------------------------*/
 #page01 {	
-	background-image:url(../img/qrcode_ios.png);
+	background-image:url(../img/qrcode_ios.jpg);
 	background-size:cover;
 }
 
@@ -254,7 +254,7 @@ h2, h3 {
 	
 /* ------------------------page03---------------------------*/
 #page03 {	
-	background-image:url(../img/page03.png);
+	background-image:url(../img/page03.jpg);
 	background-size:cover;
 }
 #page03 .content2 {
@@ -312,19 +312,22 @@ h2, h3 {
     color: #959595;
     font-size:24px;
 }
-/* page06 */
+/* -----------------------page06-------------------- */
 
 #page06 {
     height:500px;
 }
 #page06 .linkBox{
-    width: 1230px;
+    width: 100%;
     text-align: center;
     margin:0 auto 100px;
 }
 #page06 ul li{
-    margin: 0 53px;
     float: left;
+	width:20%;
+}
+#page06 .linkBox ul li img{
+	margin:0 auto;
 }
 /*---------------------------footer---------------------------*/
 

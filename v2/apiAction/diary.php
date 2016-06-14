@@ -175,9 +175,9 @@ function getDiarys(){
             $firendlist=" select relation_id from ".DB_PREFIX."user_relation relation where relation.user_id = $loginid and relation.status=1 ";//关注的人
             //$sql.=" and diary.user_id = $loginid or (diary.shop_id in ($shopsql) and diary.user_id not in ($blacklist) and diary.shop_view_status != 2 ) "; //关注自己收藏的咖啡馆
             //查看范围 关注的人 或者 shop_id不为空且没屏蔽
-            //$sql.=" and (diary.user_id = $loginid or (diary.note <>'加入了搅拌' and (diary.user_id in ($firendlist) or  (diary.shop_id <>'' and diary.shop_id is not null and diary.shop_view_status != 2) ) ) )";
+            //$sql.=" and (diary.user_id = $loginid or (diary.note <>'加入了咖啡约我' and (diary.user_id in ($firendlist) or  (diary.shop_id <>'' and diary.shop_id is not null and diary.shop_view_status != 2) ) ) )";
             //查看所有慢生活除去屏蔽
-            $sql.=" and (diary.user_id = $loginid or (diary.note <>'加入了搅拌' and diary.shop_view_status != 2 ) )";
+            $sql.=" and (diary.user_id = $loginid or (diary.shop_view_status != 2 ) )";
         }else{
             $sql.=" and diary.user_id = $userid ";
         }

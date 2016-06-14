@@ -141,6 +141,7 @@ class Controller_ShopMenu extends FLEA_Controller_Action {
 	 *菜品价格更新
 	 */
 	function actionMenuPriceUpdate(){
+                $menutitle=isset ( $_POST ['menutitle'] ) ? $_POST ['menutitle'] : '';
 		$menuid=isset ( $_POST ['menuid'] ) ? $_POST ['menuid'] : '';
 		$prices=isset ( $_POST ['prices'] ) ? $_POST ['prices'] : '';//1待售,2寄售中
 		$prices=explode(',' , $prices);
@@ -148,6 +149,8 @@ class Controller_ShopMenu extends FLEA_Controller_Action {
 		$typies=explode(',' , $typies);
 		$this->_shop_menu_price->removeByConditions(array('menu_id'=>$menuid));
                 $menu=$this->_shop_menu->findByField('id',$menuid,null,"shop_id");
+                $titlename=array('id'=>$menuid,'title'=>$menutitle);
+                $this->_shop_menu->update($titlename);
 		foreach ($prices as $k=>$p){
 			$mp=array('shop_id'=>$menu['shop_id'],'menu_id'=>$menuid,'price'=>$p,'type'=>$typies[$k]);
 			$this->_shop_menu_price->create($mp);

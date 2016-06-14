@@ -9,6 +9,7 @@ class Index extends CI_Controller {
 		
 		$this->_logininfo=$this->session->userdata('loginInfo');
 		if(empty($this->_logininfo)){
+                    echo 1;
 			redirect('login','index');
 		}else{
 			$this->load->vars(array('loginInfo'=>$this->_logininfo));

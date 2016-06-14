@@ -1,5 +1,5 @@
 <?php
-//ini_set('display_errors',0);
+ini_set('display_errors',0);
 //session_set_cookie_params(1800); 
 //ini_set('session.gc_maxlifetime',5);
 //ini_set("max_execution_time", 6000);

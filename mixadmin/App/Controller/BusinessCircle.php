@@ -110,6 +110,8 @@ class Controller_BusinessCircle extends FLEA_Controller_Action {
                         if(!empty($cityCode)){
                             $obj['code']=$cityCode;
                             $this->_shop_addcity->create($obj);
+                        }else{
+                            echo '<script type="text/javascript">alert("城市code未获取到,试试XX市")</script>';
                         }
                     }
                 }

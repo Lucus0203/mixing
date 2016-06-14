@@ -100,6 +100,7 @@ class Menu extends CI_Controller {
 	 */
 	public function menuPriceUpdate(){
 		$menuid=$this->input->post('menuid');
+                $menutitle=$this->input->post('menutitle');
 		$prices=$this->input->post('prices');
 		$prices=explode(',' , $prices);
 		$typies=$this->input->post('typies');
@@ -110,6 +111,7 @@ class Menu extends CI_Controller {
 		) );
 		$loginInfo = $this->session->userdata ( 'loginInfo' );
 		if($menu['shop_id']==$loginInfo ['shop_id'] ){//属于本人的菜品
+                        $this->menu_model->update(array('title'=>$menutitle),$menuid);
 			$this->menuprice_model->delByCond(array('menu_id'=>$menuid));
 			foreach ($prices as $k=>$p){
 				$mp=array('shop_id'=>$menu['shop_id'],'menu_id'=>$menuid,'price'=>$p,'type'=>$typies[$k]);

@@ -126,6 +126,7 @@ $(function(){
 		var baseUrl=$('#baseUrl').val();
 		var menuid=$(this).parent().find('.delMenuImg').attr('rel');
 		var menuprice=$(this).parent().parent().find('.menu_price');
+                var menutitle=$(this).parent().parent().find('.menu_title input').val();
 		var prices='';
 		var typies='';
 		var number_flag=true;
@@ -150,7 +151,7 @@ $(function(){
 				$.ajax({
 					type:'post',
 					url:baseUrl+'menu/menuPriceUpdate',
-					data:{'menuid':menuid,'prices':prices,'typies':typies},
+					data:{'menuid':menuid,'prices':prices,'typies':typies,'menutitle':menutitle},
 					success:function(res){
 						if(res==1){
 							alert('操作成功');

@@ -9,9 +9,11 @@ class Controller_Notify extends FLEA_Controller_Action {
         var $_notify;
 	var $_admin;
 	var $_adminid;
+        var $_sms;
 	
 	function __construct() {
 		$this->_common = get_singleton ( "Class_Common" );
+		$this->_sms = get_singleton ( "Class_Sms" );
                 $this->_notify = get_singleton( "Model_Notify" );
 		$this->_adminid = isset ( $_SESSION ['loginuserid'] ) ? $_SESSION ['loginuserid'] : "";
 		if(empty($_SESSION ['loginuserid'])){
@@ -75,6 +77,17 @@ class Controller_Notify extends FLEA_Controller_Action {
 		$this->_notify->removeByPkv($id);
 		redirect($_SERVER['HTTP_REFERER']);
 	}
+        
+        function actionSendMobileMsg(){
+		$mobile=$this->_common->filter($_GET['mobile']);
+                $msg="恭喜您在参加的<胶片里的咖啡馆-搅拌APP>活动中获得了三等奖,奖品为瑞士军刀双肩背包一个,请把您的联系方式及邮寄地址发送给微信公众号'咖啡约我',工作人员会与您确认";
+                if(!empty($mobile)){
+                    $this->_sms->sendMsg($msg,$mobile);
+                }else{
+                    $mobile="参数手机号必须";
+                }
+                $this->_common->show ( array ('main' => 'notify/sendmobilemsg.tpl','msg'=>$msg,'mobile'=>$mobile) );
+        }
 	
 	
 	

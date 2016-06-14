@@ -24,7 +24,7 @@
                  <td class="hd_ta_t">领取内容</td>
                  <td class="hd_ta_t">价格</td>
                  <td class="hd_ta_t">领取时间</td>
-                 <td class="hd_ta_t">操作</td>
+                 <td class="hd_ta_t">状态</td>
              </tr>
              
              <?php foreach ($orders as $o){ ?>
@@ -33,7 +33,7 @@
                  <td class="menu_title"><?php echo $o['note']?></td>
                  <td class="menu_title price"><?php echo number_format($o['price'])?>元</td>
                  <td class="menu_title"><?php echo $o['created']?></td>
-                 <td class="menu_title">取消</td>
+                 <td class="menu_title">验券成功</td>
              </tr>
 	     <?php } ?>
          </table>

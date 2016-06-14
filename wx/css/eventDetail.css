@@ -1,0 +1,56 @@
+/* CSS Document */
+body {
+	overflow-x:hidden;
+	margin:0px;
+	background-color:#f6fbfa;
+	}
+
+#container{
+	width:100%;
+	}
+	
+#header{
+	text-align:center;
+	}
+#header img{margin: 0;float: left;}
+#main {
+    margin-bottom: 10px;
+}
+#main .title{
+	font-size:20px;
+	margin-left:10%;
+	margin-top:10px;
+}
+#main p{
+	font-size:14px;
+	margin-left:10px;
+	margin-top:10px;
+	text-indent:2em;
+	margin-bottom:20px;
+	margin-right:10px;
+	color:#636161;
+	}
+#main h2{
+	font-size:16px;
+	margin:3px auto auto 20px;
+	color:#636161;
+	font-weight: normal;
+	}
+#main table h2 a{
+	color:#636161;
+	font-weight: normal;
+	}
+#footer p{
+	margin-left:10px;
+	}
+#footer ul{
+	margin-left:20px;
+	margin-top:10px;
+	}
+#footer ul li{
+		float:left;
+		margin:10px;
+		}
+#footer ul li img{
+	width:44px;
+	}

@@ -64,9 +64,9 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'rdsg15050y16nv5xags9.mysql.rds.aliyuncs.com',
-	'username' => 'kfyw',
-	'password' => 'kfyw6688',
+	'hostname' => '127.0.0.1',//'mixingdatabase.mysql.rds.aliyuncs.com',
+	'username' => 'root',//'kfyw',
+	'password' => 'root',//'kfyw6688',
 	'database' => 'mixing',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => 'cofe_',

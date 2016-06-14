@@ -1,0 +1,154 @@
+/* 导航 */
+body {
+	background-color: #FFFFFF;
+	overflow-x: hidden;
+	font-size: 1em;
+}
+#container {
+	width: 100%;
+	margin: 0 auto;
+	background-color: #FFFFFF;
+}
+
+h2.title{
+	margin-top:40px;
+	text-align:center;
+	font-size:1.8em;
+}
+
+.line img {
+	width: 100%;
+}
+.page {
+	margin-top: 20px;
+	clear: both;
+}
+.page01 .boxleft {
+	float: left;
+	width: 50%;
+	padding:25% 0 0 0;
+}
+.page01 .boxleft .side {
+	font-size:0.9em;
+	padding:5%
+}
+.page01 .boxleft .side img {
+	vertical-align: middle;
+	width: 25%;
+}
+
+.page01 .boxright{
+	float:right;
+	width: 50%;
+}
+	
+.page01 .boxright img {
+	margin-right:10px;
+	width: 90%;
+}
+/*page-2 main*/
+.page02 .boxleft {
+	float: left;
+	width: 50%;
+}
+.page02 .boxleft img {
+	margin-left:10px;
+	width: 90%;
+}
+.page02 .boxright {
+	float: right;
+	padding: 30% 0 0 0;
+	width: 50%;
+}
+.page02 .boxright img {
+	vertical-align: middle;
+	width: 20%;
+	margin-left:10px;
+}
+.page02 .boxright .side span{
+	font-size:0.9em;
+}
+/*page-3 main*/
+.page03 .boxleft {
+	float: left;
+	margin: 20% 0 0 10px;
+	width: 45%;
+	text-align:center;
+}
+.page03 .boxleft img {
+	vertical-align: middle;
+	width: 20%;
+}
+.page03 .boxleft h2{
+	font-size: 0.9em;
+	font-weight:normal;
+	text-align:center;
+}
+.page03 .boxright img {
+	width: 50%;
+}
+/*page-4 main*/
+.page04 .boxleft {
+	float: left;
+	width: 45%;
+}
+.page04 .boxleft img {
+	margin-left:10px;
+	width: 100%;
+}
+.page04 .boxright {
+	float: right;
+	padding: 30% 0 0 0;
+	width: 50%;
+}
+.page04 .boxright h2 {
+	font-size: 0.9em;
+	font-weight:normal;
+	text-align:center;
+}
+/*page-5 main*/
+.page05 .boxleft {
+	float: left;
+	margin: 40% 0 0 10px;
+	width: 45%;
+}
+.page05 .boxleft h2{
+	font-size: 0.9em;
+	font-weight:normal;
+	text-align:center;
+}
+.page05 .boxright img {
+	width: 50%;
+}
+/*page-6 main*/
+
+.page06 .boxleft {
+	float: left;
+	width: 45%;
+}
+.page06 .boxleft img {
+	margin-left:10px;
+	width: 100%;
+}
+.page06 .boxright {
+	float: right;
+	padding: 30% 0 0 0;
+	width: 50%;
+}
+.page06 .boxright h2 {
+	font-size: 0.9em;
+	font-weight:normal;
+	text-align:center;
+}
+/*page-7 main*/
+
+.page07 {
+	margin: 20px 20px 40px;
+}
+.page07 p {
+	text-indent: 2em;
+	font-size: 1em;
+	margin:20px 0;
+}
+
+/* 下载*/

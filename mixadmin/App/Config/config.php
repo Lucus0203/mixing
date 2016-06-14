@@ -5,7 +5,7 @@ return array(
 
 		'driver' => 'mysql',
 
-		'host' => 'rdsg15050y16nv5xags9.mysql.rds.aliyuncs.com',
+		'host' => 'mixingdatabase.mysql.rds.aliyuncs.com',
 
 		'login' => 'kfyw',
 
@@ -36,7 +36,7 @@ return array(
     ),
     'internalCacheDir'=>APP_DIR. DS . 'lib' . DS . 'Cache',
     'dbMetaCached'=>true,
-	'displayErrors'=>false
+	'displayErrors'=>true
 );
 
 ?>

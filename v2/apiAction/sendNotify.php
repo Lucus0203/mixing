@@ -117,7 +117,7 @@ function sendNotifyToWaiter($fromid,$toid,$dataid,$msg){
 }
 
 // 	$Aumeng=new Umeng('Android');
-// 	$Aumeng->sendAndroidCustomizedcast("invitation",$to_userid,"你有新的邀约","搅拌","新的邀请函","go_app","");//go_activity
+// 	$Aumeng->sendAndroidCustomizedcast("invitation",$to_userid,"你有新的邀约","咖啡约我","新的邀请函","go_app","");//go_activity
 //发送消息并建立通知数据
 function sendNotify($sendObj){
     global $db;
