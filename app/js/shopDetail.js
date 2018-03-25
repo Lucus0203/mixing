@@ -9,10 +9,10 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) {
 }
 $(document).ready(function(){
         $('#header').css('visibility','hidden');
-
-$(document).load("http://v2.xn--8su10a.com/upload/shop/20150928/1443425353.jpg", function() {
-alert("加载完成");
-});
+//
+// $(document).load("http://v2.xn--8su10a.com/upload/shop/20150928/1443425353.jpg", function() {
+// alert("加载完成");
+// });
 	setTimeout(function(){
         $("#header").carouFredSel({
                 items : 1,

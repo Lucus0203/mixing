@@ -64,8 +64,8 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'mixingdatabase.mysql.rds.aliyuncs.com',
-	'username' => 'kfyw',
+	'hostname' => '127.0.0.1',//'mixingdatabase.mysql.rds.aliyuncs.com',
+	'username' => 'root',//'kfyw',
 	'password' => 'kfyw6688',
 	'database' => 'mixing',
 	'dbdriver' => 'mysqli',

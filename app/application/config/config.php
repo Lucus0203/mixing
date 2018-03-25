@@ -17,8 +17,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://app.coffee15.com';
-$config['img_base_url'] = 'http://v2.xn--8su10a.com';
+$config['base_url'] = 'http://app.coffee15.cn';
+$config['img_base_url'] = 'http://v2.coffee15.cn';
 
 /*
 |--------------------------------------------------------------------------

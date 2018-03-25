@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="<?php echo base_url();?>css/shopDetail.css" type="text/css" />
-<script src="<?php echo base_url();?>js/shopDetail.js?100801"></script>
+<script src="<?php echo base_url();?>js/shopDetail.js?180325"></script>
 <div id="header">
         <?php foreach ($shopimg as $img){ ?>
     <img src="<?php echo $img['img']?>" width="420">

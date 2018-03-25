@@ -45,7 +45,7 @@ class Wxresponse extends CI_Controller {
                 $msgType = "text";
                 $contentStr = "邮箱:wx@mixing.win
 电话:021-63560568
-官方网址:http://app.xn--8su10a.com";
+官方网址:http://app.coffee15.cn";
                 $resultStr = sprintf($textTpl, $fromUsername,$toUsername, $time, $msgType, $contentStr);
                 echo $resultStr;
             }else if(!empty( $keyword )){

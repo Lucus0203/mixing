@@ -7,7 +7,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <title>咖啡约我</title>
-<link rel="shortcut icon" href="http://www.xn--8su10a.com/favicon.ico" />
+<link rel="shortcut icon" href="http://www.coffee15.cn/favicon.ico" />
 <script>
 function opendownload(){
  if(navigator.userAgent.match(/MicroMessenger/i)){

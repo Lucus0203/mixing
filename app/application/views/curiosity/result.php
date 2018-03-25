@@ -7,7 +7,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <title>内含福利！<?php echo $user['nickname'] ?>的好奇心指数居然是<?php echo $data['percent']>100?100:round($data['percent']) ?>%</title>
-<link rel="shortcut icon" href="http://www.xn--8su10a.com/favicon.ico" />
+<link rel="shortcut icon" href="http://www.coffee15.cn/favicon.ico" />
 <link rel="stylesheet" href="<?php echo base_url();?>css/curiosity.css" type="text/css" />
 </head>
 <body style="background: #fff;">

@@ -7,7 +7,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <title>咖啡约我</title>
-<link rel="shortcut icon" href="http://www.xn--8su10a.com/favicon.ico" />
+<link rel="shortcut icon" href="http://www.coffee15.cn/favicon.ico" />
 <script src="<?php echo base_url();?>js/common.js?0102"></script>
 <script src="<?php echo base_url();?>js/userqrcode.js?0102"></script>
 <style type="text/css">
