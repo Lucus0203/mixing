@@ -171,7 +171,7 @@ function replaceNull($arr) {
 function json_result($res, $errCode = "1", $errMsg = "") {
         $res = replaceNull($res);
         $jsonStr = array('err' => $errCode, 'errMsg' => $errMsg, 'result' => $res);
-        return json_encode($jsonStr);
+        return str_replace('xn--8su10a.com','coffee15.cn',json_encode($jsonStr));
 }
 
 /**

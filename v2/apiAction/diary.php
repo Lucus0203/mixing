@@ -2,6 +2,7 @@
 require_once APP_DIR . DS . 'apiLib' . DS . 'ext' . DS . 'Upload.php';
 require_once APP_DIR . DS . 'apiLib' . DS . 'constant_beans.php';
 $act=filter($_REQUEST['act']);
+
 switch ($act){
 	case 'addDiary':
 		addDiary();//新增慢生活
@@ -51,10 +52,10 @@ function addDiary(){
 	$loginid=filter(!empty($_REQUEST['loginid'])?$_REQUEST['loginid']:'');
 	$note=filterIlegalWord(!empty($_REQUEST['note'])?$_REQUEST['note']:'');
 	$voice=filter(!empty($_REQUEST['voice'])?$_REQUEST['voice']:'');
-	$voice_time=filter(!empty($_REQUEST['voice_time'])?$_REQUEST['voice_time']:'');
+	$voice_time=!empty($_REQUEST['voice_time'])?filter($_REQUEST['voice_time']):0;
 	$address=filter(!empty($_REQUEST['address'])?$_REQUEST['address']:'');
-	$lng=filter(!empty($_REQUEST['lng'])?$_REQUEST['lng']:'');
-	$lat=filter(!empty($_REQUEST['lat'])?$_REQUEST['lat']:'');
+	$lng=!empty($_REQUEST['lng'])?filter($_REQUEST['lng']):0;
+	$lat=!empty($_REQUEST['lat'])?filter($_REQUEST['lat']):0;
 	$shopid=filter(!empty($_REQUEST['shopid'])?$_REQUEST['shopid']:'');
         $data=array('user_id'=>$loginid,'note'=>$note,'voice'=>$voice,'voice_time'=>$voice_time,'address'=>$address,'lng'=>$lng,'lat'=>$lat,'created'=>date("Y-m-d H:i:s"));
         if(empty($loginid)){
@@ -107,10 +108,6 @@ function addDiary(){
                         $photo['created'] = date("Y-m-d H:i:s");
                         $db->create('diary_img', $photo);
                 }
-        }
-        //如果参加了胶片里的咖啡馆活动发送通知
-        if(strpos($note,'胶片里的咖啡馆') && $file['status'] == 1){
-            $db->create('notify',array('user_id'=>$loginid,'img'=>'http://www.xn--8su10a.com/img/office_mark_head.png','send_time'=>date("Y-m-d H:i:s"),'msg'=>'恭喜你成功参与"胶片里的咖啡馆活动"','url'=>'http://app.xn--8su10a.com/vote/participate.html?votenum='.$diary_id,'type'=>'mixing','isread'=>2));
         }
         //发布漫生活获取豆子
         $num=BEANS_NUM_DIARY_ADD;

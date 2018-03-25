@@ -38,13 +38,13 @@ switch ($act){
 function getVer(){
 	echo json_result(
                 array('HotShopCity'=>'1.0',
-                    'ShopCity'=>'1.2',
-                    'ShopCityAreaCircle'=>'1.3',//要删除服务器上静态文件city_circle.db
+                    'ShopCity'=>'2.0',
+                    'ShopCityAreaCircle'=>'2.0',//要删除服务器上静态文件city_circle.db
                     'ShopTag'=>'1.0',
                     'UserTag'=>'1.0',
                     'Topic'=>'1.0',
                     'Question'=>'1.0',
-                    'CountryCityArea'=>'1.1'
+                    'CountryCityArea'=>'2.0'
                     ));
 }
 
@@ -68,7 +68,7 @@ function getShopCity(){
 	global $db;
         $data=array();
 	$sql="select id,name,pinyin,code from ".DB_PREFIX."shop_addcity city where 1=1 "
-                . "and name<>'宁波' and name<>'嘉兴' and name<>'福州' and name<>'莆田' and name<>'三明' and name<>'泉州' and name<>'漳州' and name<>'南平' and name<>'龙岩' and name<>'宁德' and name<>'南京' and name<>'济南' and name<>'青岛' ";
+                . "and name<>'宁波' and name<>'嘉兴' and name<>'莆田' and name<>'三明' and name<>'泉州' and name<>'漳州' and name<>'南平' and name<>'龙岩' and name<>'宁德' and name<>'济南' and name<>'青岛' ";
 	
 	$z='A';
 	for($i=1;$i<=26;$i++){

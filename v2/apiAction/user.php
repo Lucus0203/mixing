@@ -198,7 +198,7 @@ function register(){
 		echo json_result(null,'9','此手机号已经注册过');
 		return;
 	}
-	$user=array('user_name'=>$mobile,'user_password'=>md5($user_pass),'mobile'=>$mobile,'age'=>'0','birthday'=>date("Y-m-d H:i:s"),'constellation'=>'保密','created'=>date("Y-m-d H:i:s"));
+	$user=array('user_name'=>$mobile,'user_password'=>md5($user_pass),'mobile'=>$mobile,'age'=>'0','birthday'=>date("Y-m-d"),'constellation'=>'保密','created'=>date("Y-m-d H:i:s"));
 	$HuanxinObj=Huanxin::getInstance();
 	$huserObj=$HuanxinObj->addNewAppUser(strtolower($mobile), md5($user_pass));
 	$uuid=$huserObj->entities[0]->uuid;
@@ -651,8 +651,10 @@ function hideLocation(){
 //附近用户地图
 function usersMap() {
     global $db;
-    $lng = filter($_REQUEST['lng']);
-    $lat = filter($_REQUEST['lat']);
+	$clng = filter($_REQUEST['clng']);
+	$clat = filter($_REQUEST['clat']);
+	$lng = !empty($clng)?$clng:filter($_REQUEST['lng']);
+	$lat = !empty($clat)?$clat:filter($_REQUEST['lat']);
     $loginid = filter($_REQUEST['loginid']);
     $zoom = filter($_REQUEST['zoom']);
     //$zoomarea = array(10,20,50,100,200,500,1000,2*1000,5*1000,10*1000,20*1000,25*1000,50*1000);

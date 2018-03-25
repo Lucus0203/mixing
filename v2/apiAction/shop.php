@@ -90,8 +90,12 @@ function nearbyShops() {
 //店铺地图
 function shopsMap() {
     global $db;
-    $lng = filter($_REQUEST['lng']);
-    $lat = filter($_REQUEST['lat']);
+    $clng = filter($_REQUEST['clng']);
+    $clat = filter($_REQUEST['clat']);
+    $lng = !empty($clng)?$clng:filter($_REQUEST['lng']);
+    $lat = !empty($clat)?$clat:filter($_REQUEST['lat']);
+    $clng = filter($_REQUEST['clng']);
+    $clat = filter($_REQUEST['clat']);
     $city_code = filter($_REQUEST['city_code']);
     $area_id = filter($_REQUEST['area_id']);
     $circle_id = filter($_REQUEST['circle_id']);
@@ -446,7 +450,7 @@ function depositShops() {
     $shopsql = "select shop.id,title,img,lng,lat from " . DB_PREFIX . "shop shop left join " . DB_PREFIX . "shop_tag shop_tag on shop_tag.shop_id=shop.id where shop.status=2 and shop.ispassed=1 ";
     if (!empty($city_code)) {
         $city = $db->getRow('shop_addcity', array('code' => $city_code));
-        $sql.=(!empty($city['id'])) ? " and addcity_id={$city['id']} " : '';
+        $shopsql.=(!empty($city['id'])) ? " and addcity_id={$city['id']} " : '';
     }
     $shopsql.=(!empty($area_id)) ? " and addarea_id={$area_id} " : '';
     $shopsql.=(!empty($circle_id)) ? " and addcircle_id={$circle_id} " : '';
