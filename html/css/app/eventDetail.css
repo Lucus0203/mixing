@@ -1,0 +1,23 @@
+/* CSS Document */
+/*初始化样式*/
+body, dl, dd, h1, h2, h3, h4, h5, h6, p, form{margin:0;font-family: "Microsoft YaHei",tahoma,arial,宋体;}
+ol,ul{margin:0; padding:0;}
+article,aside,canvas,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section,summary { display:block;}
+ol,ul{list-style:none;}
+blockquote,q{quotes:none;}
+:focus{outline:0;}
+ins{text-decoration:none;}
+del{text-decoration:line-through;}
+img{vertical-align:top;}
+a{color:#000;text-decoration:none;}
+a:hover{text-decoration:none;}
+/*shop详情*/
+body{}
+#container{ width:100%;}
+h1{ width:150px; margin:0 auto; padding:30px 0;font-size:43px;color:#45251b;}
+h1 img{ width:40%;float:left;vertical-align:bottom;}
+
+.main{ margin-top:15%;}
+.main p{ color:#fff; font-size:14px; text-align:center;}
+.main .text01{ font-size:54px; margin-bottom:10px;}

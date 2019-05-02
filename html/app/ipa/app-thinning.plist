@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>variants</key>
+	<dict>
+		<key>Apps/MyCoffee-iPad (4th generation)-etc.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>42587214</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>42587214</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>69838132</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>69838132</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPad3,2</string>
+				<string>iPad3,3</string>
+				<string>iPad3,1</string>
+				<string>iPad3,6</string>
+				<string>iPad3,4</string>
+				<string>iPad3,5</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPad (3rd generation)</string>
+				<string>iPad (3rd generation)</string>
+				<string>iPad (3rd generation)</string>
+				<string>iPad (4th generation)</string>
+				<string>iPad (4th generation)</string>
+				<string>iPad (4th generation)</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPad 2-etc.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>42587208</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>42587208</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>69838163</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>69838163</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPad2,3</string>
+				<string>iPad2,2</string>
+				<string>iPad2,1</string>
+				<string>iPad2,4</string>
+				<string>iPad2,7</string>
+				<string>iPad2,6</string>
+				<string>iPad2,5</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPad 2</string>
+				<string>iPad 2</string>
+				<string>iPad 2</string>
+				<string>iPad 2</string>
+				<string>iPad mini</string>
+				<string>iPad mini</string>
+				<string>iPad mini</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPad Pro.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>41992388</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>41992388</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>72181826</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>72181826</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPad6,7</string>
+				<string>iPad6,8</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPad Pro</string>
+				<string>iPad Pro</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPad mini 3-etc.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>41992362</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>41992362</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>72181865</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>72181865</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPad4,3</string>
+				<string>iPad4,2</string>
+				<string>iPad4,1</string>
+				<string>iPad4,6</string>
+				<string>iPad4,5</string>
+				<string>iPad4,4</string>
+				<string>iPad4,9</string>
+				<string>iPad4,8</string>
+				<string>iPad4,7</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPad Air</string>
+				<string>iPad Air</string>
+				<string>iPad Air</string>
+				<string>iPad mini 2</string>
+				<string>iPad mini 2</string>
+				<string>iPad mini 2</string>
+				<string>iPad mini 3</string>
+				<string>iPad mini 3</string>
+				<string>iPad mini 3</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPad mini 4-etc.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>41992355</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>41992355</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>72181752</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>72181752</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPad5,3</string>
+				<string>iPad5,4</string>
+				<string>iPad5,1</string>
+				<string>iPad5,2</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPad Air 2</string>
+				<string>iPad Air 2</string>
+				<string>iPad mini 4</string>
+				<string>iPad mini 4</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPhone 4S.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>42587200</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>42587200</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>69837979</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>69837979</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPhone4,1</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPhone 4S</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPhone 5-etc.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>42587256</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>42587256</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>69838261</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>69838261</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPhone5,2</string>
+				<string>iPhone5,1</string>
+				<string>iPhone5,3</string>
+				<string>iPhone5,4</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPhone 5</string>
+				<string>iPhone 5</string>
+				<string>iPhone 5c</string>
+				<string>iPhone 5c</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPhone 5s.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>41992382</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>41992382</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>72181835</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>72181835</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPhone6,1</string>
+				<string>iPhone6,2</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPhone 5s</string>
+				<string>iPhone 5s</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPhone 6 Plus.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>43470562</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>43470562</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>73666297</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>73666297</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPhone7,1</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPhone 6 Plus</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPhone 6.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>41992396</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>41992396</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>72181844</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>72181844</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPhone7,2</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPhone 6</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPhone 6s Plus.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>43470573</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>43470573</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>73666339</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>73666339</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPhone8,2</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPhone 6s Plus</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPhone 6s.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>41992402</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>41992402</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>72181886</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>72181886</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPhone8,1</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPhone 6s</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPod touch (6th generation).ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>41992370</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>41992370</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>72181752</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>72181752</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPod7,1</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPod touch (6th generation)</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee-iPod touch.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>42587230</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>42587230</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>69838070</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>69838070</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPod5,1</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPod touch</string>
+			</array>
+		</dict>
+		<key>Apps/MyCoffee.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>51182117</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>51182117</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>88068854</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>88068854</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+		</dict>
+	</dict>
+</dict>
+</plist>

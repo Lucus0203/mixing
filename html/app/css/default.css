@@ -1,0 +1,15 @@
+/*初始化样式*/
+ody, dl, dd, h1, h2, h3, h4, h5, h6, p, form{margin:0;font-family: "Microsoft YaHei",tahoma,arial,宋体;}
+ol,ul{margin:0; padding:0;}
+article,aside,canvas,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section,summary { display:block;}
+ol,ul{list-style:none;}
+blockquote,q{quotes:none;}
+:focus{outline:0;}
+ins{text-decoration:none;}
+del{text-decoration:line-through;}
+img{vertical-align:top;}
+a{color:#000;text-decoration:none;}
+a:hover{text-decoration:none;}
+/*CSS样式＊／
+

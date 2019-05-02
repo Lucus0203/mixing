@@ -1,0 +1,106 @@
+
+App Thinning Size Report for All Variants of MyCoffee
+
+Variant: MyCoffee-iPad (4th generation)-etc.ipa
+Supported devices: iPad (3rd generation) and iPad (4th generation)
+App + On Demand Resources size: 42.6 MB compressed, 69.8 MB uncompressed
+App size: 42.6 MB compressed, 69.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPad 2-etc.ipa
+Supported devices: iPad 2 and iPad mini
+App + On Demand Resources size: 42.6 MB compressed, 69.8 MB uncompressed
+App size: 42.6 MB compressed, 69.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPad Pro.ipa
+Supported devices: iPad Pro
+App + On Demand Resources size: 42 MB compressed, 72.2 MB uncompressed
+App size: 42 MB compressed, 72.2 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPad mini 3-etc.ipa
+Supported devices: iPad Air, iPad mini 2, and iPad mini 3
+App + On Demand Resources size: 42 MB compressed, 72.2 MB uncompressed
+App size: 42 MB compressed, 72.2 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPad mini 4-etc.ipa
+Supported devices: iPad Air 2 and iPad mini 4
+App + On Demand Resources size: 42 MB compressed, 72.2 MB uncompressed
+App size: 42 MB compressed, 72.2 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPhone 4S.ipa
+Supported devices: iPhone 4S
+App + On Demand Resources size: 42.6 MB compressed, 69.8 MB uncompressed
+App size: 42.6 MB compressed, 69.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPhone 5-etc.ipa
+Supported devices: iPhone 5 and iPhone 5c
+App + On Demand Resources size: 42.6 MB compressed, 69.8 MB uncompressed
+App size: 42.6 MB compressed, 69.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPhone 5s.ipa
+Supported devices: iPhone 5s
+App + On Demand Resources size: 42 MB compressed, 72.2 MB uncompressed
+App size: 42 MB compressed, 72.2 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPhone 6 Plus.ipa
+Supported devices: iPhone 6 Plus
+App + On Demand Resources size: 43.5 MB compressed, 73.7 MB uncompressed
+App size: 43.5 MB compressed, 73.7 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPhone 6.ipa
+Supported devices: iPhone 6
+App + On Demand Resources size: 42 MB compressed, 72.2 MB uncompressed
+App size: 42 MB compressed, 72.2 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPhone 6s Plus.ipa
+Supported devices: iPhone 6s Plus
+App + On Demand Resources size: 43.5 MB compressed, 73.7 MB uncompressed
+App size: 43.5 MB compressed, 73.7 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPhone 6s.ipa
+Supported devices: iPhone 6s
+App + On Demand Resources size: 42 MB compressed, 72.2 MB uncompressed
+App size: 42 MB compressed, 72.2 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPod touch (6th generation).ipa
+Supported devices: iPod touch (6th generation)
+App + On Demand Resources size: 42 MB compressed, 72.2 MB uncompressed
+App size: 42 MB compressed, 72.2 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee-iPod touch.ipa
+Supported devices: iPod touch
+App + On Demand Resources size: 42.6 MB compressed, 69.8 MB uncompressed
+App size: 42.6 MB compressed, 69.8 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
+
+
+Variant: MyCoffee.ipa
+Supported devices: Universal
+App + On Demand Resources size: 51.2 MB compressed, 88.1 MB uncompressed
+App size: 51.2 MB compressed, 88.1 MB uncompressed
+On Demand Resources size: Zero KB compressed, Zero KB uncompressed
